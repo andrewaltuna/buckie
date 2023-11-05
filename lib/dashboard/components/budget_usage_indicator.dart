@@ -31,7 +31,13 @@ class BudgetUsageIndicator extends StatelessWidget {
             backgroundColor: backgroundColor,
           ),
         ),
-        Text('hi'),
+        Text(
+          '60%',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 23,
+          ),
+        ),
       ],
     );
   }

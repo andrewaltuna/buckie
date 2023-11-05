@@ -4,17 +4,16 @@ import 'package:flutter/material.dart';
 class BudgetUsageCard extends StatelessWidget {
   const BudgetUsageCard({
     super.key,
+    this.height = 200,
   });
+
+  final double height;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        color: Colors.lightGreen.withOpacity(0.6),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
+    return SizedBox(
+      height: height,
+      child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           BudgetUsageIndicator(
