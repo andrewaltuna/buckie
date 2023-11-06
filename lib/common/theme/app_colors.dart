@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  const AppColors._();
+
   /// Font Colors
   static const fontSubtitle = Color(0xFF8E8E93);
 
@@ -10,4 +12,7 @@ class AppColors {
   static const categoryGreen = Color(0xFFd0f4de);
   static const categoryBlue = Color(0xFFa9def9);
   static const categoryPurple = Color(0xFFe4c1f9);
+
+  /// Dashboard
+  static const dashboardBackground = Color(0xFF1EFFBC);
 }

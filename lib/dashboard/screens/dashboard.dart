@@ -2,12 +2,15 @@ import 'dart:math';
 
 import 'package:expense_tracker/categories/models/budget_category.dart';
 import 'package:expense_tracker/common/components/see_more_button.dart';
+import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/dashboard/blocs/budget_usage_display_cubit.dart';
 import 'package:expense_tracker/dashboard/components/budget_usage_display.dart';
 import 'package:expense_tracker/dashboard/components/category_preview_card.dart';
 import 'package:expense_tracker/dashboard/components/dashboard_section.dart';
 import 'package:expense_tracker/dashboard/helpers/dashboard_drawer_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
@@ -32,17 +35,14 @@ class Dashboard extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: Colors.deepPurpleAccent,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(20),
           ),
-          child: Icon(
-            Icons.add,
-            size: 50,
-          )),
+          child: const Icon(Icons.add, size: 50)),
       body: Stack(
         children: [
           // Background color
           Container(
-            color: const Color(0xFF1EFFBC),
+            color: AppColors.dashboardBackground,
           ),
           Positioned.fill(
             child: _Content(
@@ -87,6 +87,14 @@ class _Content extends StatelessWidget {
     );
   }
 
+  double _getTotalBudget(List<BudgetCategory> categories) {
+    double totalBudget = 0;
+    for (var category in categories) {
+      totalBudget += category.allottedBudget;
+    }
+    return totalBudget;
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -94,9 +102,14 @@ class _Content extends StatelessWidget {
         return Stack(
           alignment: Alignment.topCenter,
           children: [
-            BudgetUsageDisplay(
-              height: constraints.maxHeight *
-                  (1 - DashboardDrawerHelper.percentageMinHeight),
+            BlocProvider(
+              create: (_) => BudgetUsageDisplayCubit(),
+              child: BudgetUsageDisplay(
+                totalBudget: _getTotalBudget(categories),
+                categories: categories,
+                height: constraints.maxHeight *
+                    (1 - DashboardDrawerHelper.percentageMinHeight),
+              ),
             ),
             DraggableScrollableSheet(
               controller: controller,

@@ -1,37 +1,92 @@
+import 'package:expense_tracker/categories/models/budget_category.dart';
 import 'package:expense_tracker/common/constants.dart';
-import 'package:expense_tracker/dashboard/components/budget_usage_indicator.dart';
+import 'package:expense_tracker/dashboard/blocs/budget_usage_display_cubit.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BudgetUsageDisplay extends StatelessWidget {
   const BudgetUsageDisplay({
     super.key,
+    required this.totalBudget,
+    required this.categories,
     this.height = 200,
   });
 
+  final double totalBudget;
+  final List<BudgetCategory> categories;
   final double height;
+
+  List<PieChartSectionData> _categoryToPieChartSectionData(
+    List<BudgetCategory> categories,
+  ) {
+    double totalAmountSpent = 0;
+    for (final category in categories) {
+      totalAmountSpent += category.amountSpent;
+    }
+
+    return categories
+        .map((category) => PieChartSectionData(
+              title: category.label,
+              value: category.amountSpent,
+              badgeWidget: Icon(category.icon),
+              color: category.color,
+              showTitle: false,
+              radius: 60,
+            ))
+        .toList()
+      // Fill remainder with Remaining budget
+      ..add(PieChartSectionData(
+        title: 'Remaining',
+        showTitle: false,
+        value: totalBudget - totalAmountSpent,
+        color: Colors.black.withOpacity(0.5),
+        radius: 60,
+      ));
+  }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: height,
-      child: const Column(
+      child: Column(
         children: [
-          Padding(
+          const Padding(
             padding: EdgeInsets.all(20),
             child: Row(
               children: [
-                _ValueLabel(label: 'Spent', value: r'$3,000'),
+                _ValueLabel(label: 'Spent', value: '${r'$'}3,000'),
                 SizedBox(width: 15),
-                _ValueLabel(label: 'Total', value: r'$5,000'),
+                _ValueLabel(label: 'Total', value: '${r'$'}5,000'),
               ],
             ),
           ),
-          SizedBox(height: 30),
-          BudgetUsageIndicator(
-            color: Colors.blueGrey,
-            size: 120,
-            strokeWidth: 40,
-            value: 0.6,
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: PieChart(
+                PieChartData(
+                  pieTouchData: PieTouchData(
+                    enabled: true,
+                    touchCallback: (event, response) {
+                      final noSelection = !event.isInterestedForInteractions ||
+                          response == null ||
+                          response.touchedSection == null;
+
+                      context.read<BudgetUsageDisplayCubit>().changeSelection(
+                            noSelection
+                                ? -1
+                                : response.touchedSection!.touchedSectionIndex,
+                          );
+                    },
+                  ),
+                  sectionsSpace: 2,
+                  centerSpaceRadius: double.infinity,
+                  startDegreeOffset: -90,
+                  sections: _categoryToPieChartSectionData(categories),
+                ),
+              ),
+            ),
           ),
         ],
       ),
