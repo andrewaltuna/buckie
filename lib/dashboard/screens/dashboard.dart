@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:expense_tracker/categories/models/budget_category.dart';
 import 'package:expense_tracker/common/components/see_more_button.dart';
-import 'package:expense_tracker/dashboard/components/budget_usage_card.dart';
+import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/dashboard/components/budget_usage_display.dart';
 import 'package:expense_tracker/dashboard/components/category_preview_card.dart';
 import 'package:expense_tracker/dashboard/components/dashboard_section.dart';
 import 'package:expense_tracker/dashboard/helpers/dashboard_drawer_helper.dart';
@@ -12,35 +14,30 @@ class Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const categories = [
-      'Transport',
-      'Clothing',
-      'Food',
-      'Transport',
-      'Clothing',
-      'Food',
-      'Transport',
-      'Clothing',
-      'Food',
-      'Transport',
-      'Clothing',
-      'Food',
-    ];
+    final categories = DashboardDrawerHelper.generatePlaceholderCategories(5);
     final controller = DraggableScrollableController();
 
     return Scaffold(
       appBar: AppBar(
         title: const Center(
           child: Text(
-            'Expense Tracker',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
+            'Overview',
+            style: TextStyles.title,
           ),
         ),
         elevation: 10,
         shadowColor: Colors.black.withOpacity(0.8),
       ),
+      floatingActionButton: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.deepPurpleAccent,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            Icons.add,
+            size: 50,
+          )),
       body: Stack(
         children: [
           // Background color
@@ -65,7 +62,7 @@ class _Content extends StatelessWidget {
     required this.controller,
   });
 
-  final List<String> categories;
+  final List<BudgetCategory> categories;
   final DraggableScrollableController controller;
 
   void _onDrawerDrag(
@@ -97,7 +94,7 @@ class _Content extends StatelessWidget {
         return Stack(
           alignment: Alignment.topCenter,
           children: [
-            BudgetUsageCard(
+            BudgetUsageDisplay(
               height: constraints.maxHeight *
                   (1 - DashboardDrawerHelper.percentageMinHeight),
             ),
@@ -130,23 +127,15 @@ class _Content extends StatelessWidget {
                           child: Center(
                             child: Container(
                               height: 8,
-                              width: 45,
+                              width: 50,
                               decoration: BoxDecoration(
-                                color: Colors.grey,
+                                color: Colors.grey[350],
                                 borderRadius: BorderRadius.circular(50),
                               ),
                             ),
                           ),
                         ),
                       ),
-
-                      // Workaround for scrolling
-                      ListView(
-                        shrinkWrap: true,
-                        controller: scrollController,
-                        padding: EdgeInsets.zero,
-                      ),
-
                       Expanded(
                         child: ListView(
                           physics: const ClampingScrollPhysics(),
@@ -159,6 +148,13 @@ class _Content extends StatelessWidget {
                             ),
                           ],
                         ),
+                      ),
+
+                      // Workaround for scrolling
+                      ListView(
+                        shrinkWrap: true,
+                        controller: scrollController,
+                        padding: EdgeInsets.zero,
                       ),
                     ],
                   ),
@@ -177,7 +173,7 @@ class _CategoriesSection extends StatelessWidget {
     required this.categories,
   });
 
-  final List<String> categories;
+  final List<BudgetCategory> categories;
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +185,7 @@ class _CategoriesSection extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: ((context, index) {
-              return CategoryPreviewCard(label: categories[index]);
+              return CategoryPreviewCard(category: categories[index]);
             }),
             separatorBuilder: ((context, index) {
               // replace with childcount
@@ -201,7 +197,7 @@ class _CategoriesSection extends StatelessWidget {
             }),
             itemCount: min(categories.length, 2),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           const SeeMoreButton(),
         ],
       ),

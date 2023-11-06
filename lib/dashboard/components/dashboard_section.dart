@@ -1,3 +1,4 @@
+import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class DashboardSection extends StatelessWidget {
@@ -18,12 +19,9 @@ class DashboardSection extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyles.title,
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 10),
         child,
       ],
     );

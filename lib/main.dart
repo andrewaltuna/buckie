@@ -1,3 +1,4 @@
+import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/dashboard/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 
@@ -12,12 +13,13 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Expense Tracker',
       theme: ThemeData(
+        fontFamily: Constants.fontFamilySecondary,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Dashboard(),
+      home: const Dashboard(),
     );
   }
 }
