@@ -1,11 +1,11 @@
 import 'dart:math';
 
 import 'package:expense_tracker/categories/models/budget_category.dart';
+import 'package:expense_tracker/common/components/app_scaffold.dart';
 import 'package:expense_tracker/common/components/see_more_button.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
-import 'package:expense_tracker/dashboard/blocs/budget_usage_display_cubit.dart';
-import 'package:expense_tracker/dashboard/components/budget_usage_display.dart';
+import 'package:expense_tracker/dashboard/blocs/budget_breakdown_cubit.dart';
+import 'package:expense_tracker/dashboard/components/budget_breakdown_display.dart';
 import 'package:expense_tracker/dashboard/components/category_preview_card.dart';
 import 'package:expense_tracker/dashboard/components/dashboard_section.dart';
 import 'package:expense_tracker/dashboard/helpers/dashboard_drawer_helper.dart';
@@ -20,24 +20,16 @@ class Dashboard extends StatelessWidget {
     final categories = DashboardDrawerHelper.generatePlaceholderCategories(5);
     final controller = DraggableScrollableController();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-          child: Text(
-            'Overview',
-            style: TextStyles.title,
-          ),
-        ),
-        elevation: 10,
-        shadowColor: Colors.black.withOpacity(0.8),
-      ),
+    return AppScaffold(
+      title: 'Overview',
       floatingActionButton: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.deepPurpleAccent,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: const Icon(Icons.add, size: 50)),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.deepPurpleAccent,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: const Icon(Icons.add, size: 50),
+      ),
       body: Stack(
         children: [
           // Background color
@@ -103,8 +95,8 @@ class _Content extends StatelessWidget {
           alignment: Alignment.topCenter,
           children: [
             BlocProvider(
-              create: (_) => BudgetUsageDisplayCubit(),
-              child: BudgetUsageDisplay(
+              create: (_) => BudgetBreakdownCubit(),
+              child: BudgetBreakdownDisplay(
                 totalBudget: _getTotalBudget(categories),
                 categories: categories,
                 height: constraints.maxHeight *
