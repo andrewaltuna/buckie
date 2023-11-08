@@ -15,7 +15,7 @@ class BudgetCategory extends Equatable {
   // TODO: transactions list
   final Color color;
   final double allottedBudget;
-  final double amountSpent;
+  final double amountSpent; // TODO: turn into getter; value from trx list
 
   static const empty = BudgetCategory(
     label: '',

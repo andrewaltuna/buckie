@@ -3,6 +3,8 @@ import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/common/helpers/navigation_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/dashboard/screens/dashboard_screen.dart';
+import 'package:expense_tracker/settings/screens/settings_screen.dart';
+import 'package:expense_tracker/transactions/screens/transactions_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -20,7 +22,6 @@ class App extends StatelessWidget {
       routes: [
         GoRoute(
           path: DashboardScreen.routeName,
-          // builder: (context, state) => const DashboardScreen(),
           pageBuilder: (context, state) =>
               NavigationHelper.of(context).buildPageWithDefaultTransition(
             state: state,
@@ -35,6 +36,22 @@ class App extends StatelessWidget {
             child: const CategoriesScreen(),
           ),
         ),
+        GoRoute(
+          path: TransactionsScreen.routeName,
+          pageBuilder: (context, state) =>
+              NavigationHelper.of(context).buildPageWithDefaultTransition(
+            state: state,
+            child: const TransactionsScreen(),
+          ),
+        ),
+        GoRoute(
+          path: SettingsScreen.routeName,
+          pageBuilder: (context, state) =>
+              NavigationHelper.of(context).buildPageWithDefaultTransition(
+            state: state,
+            child: const SettingsScreen(),
+          ),
+        ),
       ],
     );
 
@@ -44,20 +61,10 @@ class App extends StatelessWidget {
         useMaterial3: true,
         fontFamily: Constants.fontFamilySecondary,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.dashboardBackground,
+          seedColor: AppColors.defaultBackground,
         ),
       ),
       routerConfig: router,
-    );
-
-    return MaterialApp(
-      title: 'Expense Tracker',
-      theme: ThemeData(
-        fontFamily: Constants.fontFamilySecondary,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const DashboardScreen(),
     );
   }
 }

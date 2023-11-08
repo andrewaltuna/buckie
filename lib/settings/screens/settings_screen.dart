@@ -1,15 +1,15 @@
 import 'package:expense_tracker/common/components/main_scaffold.dart';
 import 'package:flutter/material.dart';
 
-class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key});
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
 
-  static const routeName = '/categories';
+  static const routeName = '/settings';
 
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      title: 'Categories',
+      title: 'Settings',
       body: Container(),
     );
   }

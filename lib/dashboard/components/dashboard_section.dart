@@ -1,3 +1,4 @@
+import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,9 @@ class DashboardSection extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyles.title,
+          style: TextStyles.title.copyWith(
+            color: AppColors.fontPrimary,
+          ),
         ),
         const SizedBox(height: 10),
         child,

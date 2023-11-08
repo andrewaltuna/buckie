@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:expense_tracker/categories/models/budget_category.dart';
+import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/dashboard/components/budget_breakdown_info_badge.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -51,13 +52,15 @@ class BudgetUsageDisplayHelper {
       final key = UniqueKey();
       final hasSelection = selectedIndex != -1;
       final isSelected = index == selectedIndex;
+      final percentageText = toPercentageDisplay(
+        category.amountSpent / (showRemaining ? totalBudget : totalAmountSpent),
+      );
 
       final badge = switch (isSelected) {
         true => BudgetBreakdownInfoBadge(
             key: key,
             label: category.label,
-            info:
-                '${category.amountSpent} (${toPercentageDisplay(category.amountSpent / (showRemaining ? totalBudget : totalAmountSpent))}',
+            info: '${category.amountSpent} ($percentageText)',
           ),
         false => hasSelection
             ? null
@@ -87,7 +90,8 @@ class BudgetUsageDisplayHelper {
         value: showRemaining
             ? totalBudget - totalAmountSpent
             : _pieSectionZeroValue,
-        color: Colors.black.withOpacity(0.3),
+        // color: Colors.black.withOpacity(0.3),
+        color: AppColors.widgetBackgroundSecondary,
         radius: _pieSectionRemainingRadius,
       ),
     );

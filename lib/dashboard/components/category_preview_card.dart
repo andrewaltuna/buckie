@@ -1,5 +1,6 @@
 import 'package:expense_tracker/categories/models/budget_category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
+import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class CategoryPreviewCard extends StatelessWidget {
@@ -15,6 +16,8 @@ class CategoryPreviewCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
+        color: AppColors.widgetBackgroundSecondary,
+        borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -22,8 +25,6 @@ class CategoryPreviewCard extends StatelessWidget {
             spreadRadius: 1,
           ),
         ],
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
       ),
       child: Row(
         children: [
@@ -48,13 +49,13 @@ class CategoryPreviewCard extends StatelessWidget {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       category.label,
                       style: const TextStyle(
+                        color: AppColors.fontPrimary,
                         fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
@@ -62,7 +63,7 @@ class CategoryPreviewCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 14,
                         color: AppColors.fontSubtitle,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.bold,
                         fontFamily: 'Montserrat',
                       ),
                     ),
@@ -77,14 +78,14 @@ class CategoryPreviewCard extends StatelessWidget {
                           value: category.percentageSpent,
                           minHeight: 15,
                           color: category.color,
-                          backgroundColor: Colors.black.withOpacity(0.1),
+                          backgroundColor: Colors.black.withOpacity(0.2),
                         ),
                       ),
                     ),
                     const SizedBox(width: 10),
                     Text(
                       '${category.percentageSpentDisplay}%',
-                      style: const TextStyle(
+                      style: TextStyles.body.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),

@@ -30,22 +30,41 @@ class BudgetBreakdownDisplay extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Colors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(12),
+                color: AppColors.widgetBackgroundSecondary,
               ),
-              child: const IntrinsicHeight(
+              child: IntrinsicHeight(
                 child: Row(
                   children: [
-                    _ValueLabel(label: 'Spent', value: '${r'$'}3,000'),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: VerticalDivider(
-                        thickness: 2,
-                        width: 0,
-                        color: Colors.white,
-                      ),
+                    const _ValueLabel(label: 'Spent', value: '${r'$'}3,000'),
+                    // const Padding(
+                    //   padding: EdgeInsets.symmetric(vertical: 10),
+                    //   child: VerticalDivider(
+                    //     thickness: 2,
+                    //     width: 0,
+                    //     color: Colors.white,
+                    //   ),
+                    // ),
+                    BlocBuilder<BudgetBreakdownCubit, BudgetBreakdownState>(
+                      builder: (context, state) {
+                        return _ValueLabel(
+                          label: 'Total',
+                          value: '${r'$'}5,000',
+                          suffixIcon: IconButton(
+                            onPressed: () => context
+                                .read<BudgetBreakdownCubit>()
+                                .toggleShowRemaining(),
+                            icon: Icon(
+                              state.showRemaining
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.white,
+                              size: 22,
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                    _ValueLabel(label: 'Total', value: '${r'$'}5,000'),
                   ],
                 ),
               ),
@@ -60,52 +79,10 @@ class BudgetBreakdownDisplay extends StatelessWidget {
               ),
             ),
           ),
-          const _ToggleRemainingButton(),
-          const SizedBox(height: 15),
+          // const _ToggleRemainingButton(),
+          // const SizedBox(height: 15),
         ],
       ),
-    );
-  }
-}
-
-class _ToggleRemainingButton extends StatelessWidget {
-  const _ToggleRemainingButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<BudgetBreakdownCubit, BudgetBreakdownState>(
-      builder: (context, state) {
-        final labelPrefix = state.showRemaining ? 'Hide' : 'Show';
-
-        return TextButton(
-          style: TextButton.styleFrom(
-            backgroundColor: Colors.white,
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          ),
-          onPressed: () =>
-              context.read<BudgetBreakdownCubit>().toggleShowRemaining(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  state.showRemaining ? Icons.visibility_off : Icons.visibility,
-                  color: AppColors.dashboardBackground,
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  'Remaining',
-                  style: TextStyles.body.copyWith(
-                    color: AppColors.dashboardBackground,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }
@@ -114,16 +91,18 @@ class _ValueLabel extends StatelessWidget {
   const _ValueLabel({
     required this.label,
     required this.value,
+    this.suffixIcon,
   });
 
   final String label;
   final String value;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 2),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -145,6 +124,7 @@ class _ValueLabel extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            if (suffixIcon != null) suffixIcon!,
           ],
         ),
       ),

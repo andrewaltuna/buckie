@@ -1,4 +1,5 @@
 import 'package:expense_tracker/common/constants.dart';
+import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class TextStyles {
@@ -19,5 +20,6 @@ class TextStyles {
     fontFamily: _fontFamilySecondary,
     fontSize: 14,
     fontWeight: FontWeight.w400,
+    color: AppColors.fontPrimary,
   );
 }

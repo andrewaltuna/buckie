@@ -1,17 +1,19 @@
 import 'dart:math';
 
 import 'package:expense_tracker/categories/models/budget_category.dart';
-import 'package:expense_tracker/common/components/app_scaffold.dart';
+import 'package:expense_tracker/common/components/main_scaffold.dart';
 import 'package:expense_tracker/common/components/see_more_button.dart';
 import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/dashboard/blocs/budget_breakdown_cubit.dart';
+import 'package:expense_tracker/dashboard/blocs/dashboard_drawer_cubit.dart';
 import 'package:expense_tracker/dashboard/components/budget_breakdown_display.dart';
 import 'package:expense_tracker/dashboard/components/category_preview_card.dart';
 import 'package:expense_tracker/dashboard/components/dashboard_section.dart';
 import 'package:expense_tracker/dashboard/helpers/dashboard_drawer_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -23,35 +25,20 @@ class DashboardScreen extends StatelessWidget {
     final categories = DashboardDrawerHelper.generatePlaceholderCategories(5);
     final controller = DraggableScrollableController();
 
-    return AppScaffold(
+    return MainScaffold(
       title: 'Overview',
-      // floatingActionButton: Container(
-      //   padding: const EdgeInsets.all(8),
-      //   decoration: BoxDecoration(
-      //     color: Colors.deepPurpleAccent,
-      //     borderRadius: BorderRadius.circular(25),
-      //   ),
-      //   child: const Icon(Icons.add, size: 50),
-      // ),
-      body: Stack(
-        children: [
-          // Background color
-          Container(
-            color: AppColors.dashboardBackground,
-          ),
-          Positioned.fill(
-            child: _Content(
-              categories: categories,
-              controller: controller,
-            ),
-          ),
-        ],
+      body: BlocProvider(
+        create: (_) => DashboardDrawerCubit(),
+        child: _Content(
+          categories: categories,
+          controller: controller,
+        ),
       ),
     );
   }
 }
 
-class _Content extends StatelessWidget {
+class _Content extends HookWidget {
   const _Content({
     required this.categories,
     required this.controller,
@@ -92,6 +79,23 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          controller.addListener(
+            () {
+              context
+                  .read<DashboardDrawerCubit>()
+                  .updateOverlayOpacity(controller.size);
+            },
+          );
+        });
+
+        return;
+      },
+      [],
+    );
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return Stack(
@@ -106,21 +110,29 @@ class _Content extends StatelessWidget {
                     (1 - DashboardDrawerHelper.percentageMinHeight),
               ),
             ),
+            Positioned.fill(
+              child: BlocBuilder<DashboardDrawerCubit, DashboardDrawerState>(
+                builder: (context, state) {
+                  return IgnorePointer(
+                    child: Container(
+                      color: Colors.black.withOpacity(state.overlayOpacity),
+                    ),
+                  );
+                },
+              ),
+            ),
             DraggableScrollableSheet(
               controller: controller,
               initialChildSize: DashboardDrawerHelper.percentageMinHeight,
               minChildSize: DashboardDrawerHelper.percentageMinHeight - 0.2,
               builder: (context, scrollController) {
                 return Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    // vertical: 15,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(20),
                     ),
-                    color: Colors.white,
+                    color: AppColors.widgetBackgroundPrimary,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,7 +164,7 @@ class _Content extends StatelessWidget {
                             _CategoriesSection(categories: categories),
                             const DashboardSection(
                               label: 'Recent Transactions',
-                              child: Text('hi'),
+                              child: Text(''),
                             ),
                             const SizedBox(height: Constants.navBarHeight),
                           ],

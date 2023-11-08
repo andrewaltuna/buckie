@@ -1,41 +1,54 @@
 import 'package:expense_tracker/categories/screens/categories_screen.dart';
 import 'package:expense_tracker/dashboard/screens/dashboard_screen.dart';
+import 'package:expense_tracker/settings/screens/settings_screen.dart';
+import 'package:expense_tracker/transactions/screens/transactions_screen.dart';
 import 'package:flutter/material.dart';
 
 enum NavigationItemType {
   none,
   dashboard,
-  categories;
+  categories,
+  transactions,
+  settings,
+  create;
 
   String get label {
     return switch (this) {
-      NavigationItemType.dashboard => 'Dashboard',
-      NavigationItemType.categories => 'Categories',
-      _ => throw Exception('Invalid type $this'),
+      dashboard => 'Dashboard',
+      categories => 'Categories',
+      transactions => 'Transactions',
+      settings => 'Settings',
+      _ => '',
     };
   }
 
   String get routeName {
     return switch (this) {
-      NavigationItemType.dashboard => DashboardScreen.routeName,
-      NavigationItemType.categories => CategoriesScreen.routeName,
-      _ => throw Exception('Invalid type $this'),
+      dashboard => DashboardScreen.routeName,
+      categories => CategoriesScreen.routeName,
+      transactions => TransactionsScreen.routeName,
+      settings => SettingsScreen.routeName,
+      _ => '/',
     };
   }
 
   IconData get defaultIcon {
     return switch (this) {
-      NavigationItemType.dashboard => Icons.home_outlined,
-      NavigationItemType.categories => Icons.library_books_outlined,
-      _ => throw Exception('Invalid type $this'),
+      dashboard => Icons.home_outlined,
+      categories => Icons.library_books_outlined,
+      transactions => Icons.receipt_outlined,
+      settings => Icons.settings_outlined,
+      _ => Icons.abc_outlined,
     };
   }
 
   IconData get selectedIcon {
     return switch (this) {
-      NavigationItemType.dashboard => Icons.home,
-      NavigationItemType.categories => Icons.library_books,
-      _ => throw Exception('Invalid type $this'),
+      dashboard => Icons.home,
+      categories => Icons.library_books,
+      transactions => Icons.receipt,
+      settings => Icons.settings,
+      _ => Icons.abc,
     };
   }
 }
