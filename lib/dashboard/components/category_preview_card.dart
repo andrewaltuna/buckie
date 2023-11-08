@@ -10,21 +10,6 @@ class CategoryPreviewCard extends StatelessWidget {
 
   final BudgetCategory category;
 
-  Color darken(Color c, [int percent = 10]) {
-    assert(1 <= percent && percent <= 100);
-    var f = 1 - percent / 100;
-    return Color.fromARGB(c.alpha, (c.red * f).round(), (c.green * f).round(),
-        (c.blue * f).round());
-  }
-
-  Color changeColorSaturation(Color color, double saturation) =>
-      HSLColor.fromColor(color).withSaturation(saturation).toColor();
-
-  Color changeColorHue(Color color, double hue) {
-    final currentHue = HSLColor.fromColor(color).hue;
-    return HSLColor.fromColor(color).withHue(currentHue + hue).toColor();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -38,19 +23,6 @@ class CategoryPreviewCard extends StatelessWidget {
           ),
         ],
         color: Colors.white,
-        // gradient: LinearGradient(
-        //   tileMode: TileMode.clamp,
-        //   // begin: Alignment.bottomLeft,
-        //   // end: Alignment.topRight,
-        //   colors: [
-        //     // category.color,
-        //     // category.color,
-        //     Colors.blueGrey,
-        //     Colors.blueGrey,
-        //     // category.color.withOpacity(0.3),
-        //     // Colors.white,
-        //   ],
-        // ),
         borderRadius: BorderRadius.circular(15),
       ),
       child: Row(

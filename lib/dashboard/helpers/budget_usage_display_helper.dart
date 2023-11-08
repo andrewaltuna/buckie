@@ -56,10 +56,8 @@ class BudgetUsageDisplayHelper {
         true => BudgetBreakdownInfoBadge(
             key: key,
             label: category.label,
-            info: toPercentageDisplay(
-              category.amountSpent /
-                  (showRemaining ? totalBudget : totalAmountSpent),
-            ),
+            info:
+                '${category.amountSpent} (${toPercentageDisplay(category.amountSpent / (showRemaining ? totalBudget : totalAmountSpent))}',
           ),
         false => hasSelection
             ? null

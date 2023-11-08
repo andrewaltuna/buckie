@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:expense_tracker/categories/models/budget_category.dart';
 import 'package:expense_tracker/common/components/app_scaffold.dart';
 import 'package:expense_tracker/common/components/see_more_button.dart';
+import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/dashboard/blocs/budget_breakdown_cubit.dart';
 import 'package:expense_tracker/dashboard/components/budget_breakdown_display.dart';
@@ -12,8 +13,10 @@ import 'package:expense_tracker/dashboard/helpers/dashboard_drawer_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Dashboard extends StatelessWidget {
-  const Dashboard({super.key});
+class DashboardScreen extends StatelessWidget {
+  const DashboardScreen({super.key});
+
+  static const routeName = '/dashboard';
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +25,14 @@ class Dashboard extends StatelessWidget {
 
     return AppScaffold(
       title: 'Overview',
-      floatingActionButton: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.deepPurpleAccent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: const Icon(Icons.add, size: 50),
-      ),
+      // floatingActionButton: Container(
+      //   padding: const EdgeInsets.all(8),
+      //   decoration: BoxDecoration(
+      //     color: Colors.deepPurpleAccent,
+      //     borderRadius: BorderRadius.circular(25),
+      //   ),
+      //   child: const Icon(Icons.add, size: 50),
+      // ),
       body: Stack(
         children: [
           // Background color
@@ -148,9 +151,10 @@ class _Content extends StatelessWidget {
                           children: [
                             _CategoriesSection(categories: categories),
                             const DashboardSection(
-                              label: 'Transaction History',
+                              label: 'Recent Transactions',
                               child: Text('hi'),
                             ),
+                            const SizedBox(height: Constants.navBarHeight),
                           ],
                         ),
                       ),
