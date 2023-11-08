@@ -1,4 +1,6 @@
 import 'package:expense_tracker/common/components/main_scaffold.dart';
+import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/transactions/models/transaction.dart';
 import 'package:flutter/material.dart';
 
 class TransactionsScreen extends StatelessWidget {
@@ -8,9 +10,26 @@ class TransactionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final transactions = Transaction.generatePlaceholderTransactions(30);
+
     return MainScaffold(
       title: 'Transactions',
-      body: Container(),
+      body: ListView(
+        children: [
+          const Text(
+            'TODAY',
+            style: TextStyles.title,
+          ),
+          Text(
+            'PAST WEEK',
+            style: TextStyles.title,
+          ),
+          Text(
+            'PAST MONTH',
+            style: TextStyles.title,
+          ),
+        ],
+      ),
     );
   }
 }

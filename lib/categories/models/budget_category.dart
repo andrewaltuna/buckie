@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:expense_tracker/transactions/models/transaction.dart';
 import 'package:flutter/material.dart';
 
 class BudgetCategory extends Equatable {
@@ -6,36 +7,66 @@ class BudgetCategory extends Equatable {
     required this.label,
     required this.icon,
     required this.color,
+    required this.transactions,
     required this.allottedBudget,
-    required this.amountSpent,
   });
 
   final String label;
   final IconData icon;
-  // TODO: transactions list
+  final List<Transaction> transactions;
   final Color color;
   final double allottedBudget;
-  final double amountSpent; // TODO: turn into getter; value from trx list
 
   static const empty = BudgetCategory(
     label: '',
     icon: Icons.category,
     color: Colors.transparent,
+    transactions: [],
     allottedBudget: 0,
-    amountSpent: 0,
   );
-  double get percentageSpent => amountSpent / allottedBudget;
-  String get percentageSpentDisplay =>
-      (percentageSpent * 100).toStringAsFixed(2);
-  String get amountRemainingDisplay =>
-      (allottedBudget - amountSpent).toStringAsFixed(2);
+
+  double get amountTotal {
+    return transactions.fold(0, (previousValue, transaction) {
+      return previousValue + transaction.value;
+    });
+  }
+
+  double get incomeTotal {
+    return transactions.fold(0, (previousValue, transaction) {
+      if (transaction.value <= 0) {
+        return previousValue;
+      }
+
+      return previousValue + transaction.value;
+    });
+  }
+
+  double get expenseTotal {
+    return transactions.fold(0, (previousValue, transaction) {
+      if (transaction.value >= 0) {
+        return previousValue;
+      }
+
+      return previousValue + transaction.value;
+    });
+  }
+
+  double get percentageSpent => amountTotal / allottedBudget;
+
+  String get percentageSpentDisplay {
+    return (percentageSpent * 100).toStringAsFixed(2);
+  }
+
+  String get amountRemainingDisplay {
+    return (allottedBudget - amountTotal).toStringAsFixed(2);
+  }
 
   @override
   List<Object?> get props => [
         label,
         color,
         icon,
+        transactions,
         allottedBudget,
-        amountSpent,
       ];
 }

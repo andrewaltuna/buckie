@@ -13,6 +13,7 @@ class TextStyles {
     fontFamily: _fontFamilyPrimary,
     fontSize: 20,
     fontWeight: FontWeight.bold,
+    color: AppColors.fontPrimary,
   );
 
   /// Open Sans

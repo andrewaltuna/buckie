@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:expense_tracker/categories/models/budget_category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class DashboardDrawerHelper {
@@ -51,7 +48,6 @@ class DashboardDrawerHelper {
         icon: icons.first,
         color: colors.first,
         allottedBudget: 1000,
-        amountSpent: Random().nextInt(1000).toDouble(),
       );
     });
   }
