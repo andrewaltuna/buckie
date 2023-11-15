@@ -1,5 +1,6 @@
 import 'package:expense_tracker/categories/models/budget_category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
+import 'package:expense_tracker/transactions/models/transaction.dart';
 import 'package:flutter/material.dart';
 
 class DashboardDrawerHelper {
@@ -47,7 +48,8 @@ class DashboardDrawerHelper {
         label: categories.first,
         icon: icons.first,
         color: colors.first,
-        allottedBudget: 1000,
+        transactions: Transaction.generatePlaceholderTransactions(10),
+        budget: 2000,
       );
     });
   }

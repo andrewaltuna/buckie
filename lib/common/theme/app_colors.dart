@@ -7,6 +7,7 @@ class AppColors {
   // General
   static const fontPrimary = Color(0xFFFFFFFF);
   static const fontSubtitle = Color(0xFF8E8E93);
+  static const fontWarning = Color(0xFFF45B69);
 
   /// WIDGET COLORS
   // General

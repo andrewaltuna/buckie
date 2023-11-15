@@ -1,7 +1,7 @@
+import 'package:expense_tracker/categories/blocs/categories_bloc.dart';
 import 'package:expense_tracker/categories/models/budget_category.dart';
 import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:expense_tracker/dashboard/blocs/budget_breakdown_cubit.dart';
 import 'package:expense_tracker/dashboard/components/budget_breakdown_chart.dart';
 import 'package:flutter/material.dart';
@@ -26,50 +26,7 @@ class BudgetBreakdownDisplay extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: AppColors.widgetBackgroundSecondary,
-              ),
-              child: IntrinsicHeight(
-                child: Row(
-                  children: [
-                    const _ValueLabel(label: 'Spent', value: '${r'$'}3,000'),
-                    // const Padding(
-                    //   padding: EdgeInsets.symmetric(vertical: 10),
-                    //   child: VerticalDivider(
-                    //     thickness: 2,
-                    //     width: 0,
-                    //     color: Colors.white,
-                    //   ),
-                    // ),
-                    BlocBuilder<BudgetBreakdownCubit, BudgetBreakdownState>(
-                      builder: (context, state) {
-                        return _ValueLabel(
-                          label: 'Total',
-                          value: '${r'$'}5,000',
-                          suffixIcon: IconButton(
-                            onPressed: () => context
-                                .read<BudgetBreakdownCubit>()
-                                .toggleShowRemaining(),
-                            icon: Icon(
-                              state.showRemaining
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
-                              color: Colors.white,
-                              size: 22,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          const _BalanceDisplay(),
           Expanded(
             child: Center(
               child: BudgetBreakdownChart(
@@ -79,10 +36,62 @@ class BudgetBreakdownDisplay extends StatelessWidget {
               ),
             ),
           ),
-          // const _ToggleRemainingButton(),
-          // const SizedBox(height: 15),
         ],
       ),
+    );
+  }
+}
+
+class _BalanceDisplay extends StatelessWidget {
+  const _BalanceDisplay();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CategoriesBloc, CategoriesState>(
+      builder: (context, categoriesState) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: AppColors.widgetBackgroundSecondary,
+            ),
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _ValueLabel(
+                    label: 'BAL',
+                    value: categoriesState.allBalanceTotalDisplay,
+                  ),
+                  BlocBuilder<BudgetBreakdownCubit, BudgetBreakdownState>(
+                    builder: (context, budgetBreakdownState) {
+                      return _ValueLabel(
+                        label: 'TOT',
+                        value: categoriesState.allBudgetTotalDisplay,
+                        suffixIcon: IconButton(
+                          onPressed: () => context
+                              .read<BudgetBreakdownCubit>()
+                              .toggleShowRemaining(),
+                          iconSize: 22,
+                          icon: Icon(
+                            budgetBreakdownState.showRemaining
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Colors.white,
+                          ),
+                          padding: EdgeInsets.zero,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -100,33 +109,31 @@ class _ValueLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 2),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontFamily: Constants.fontFamilySecondary,
-              ),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 14,
+              color: AppColors.accent,
+              fontWeight: FontWeight.w600,
+              fontFamily: Constants.fontFamilySecondary,
             ),
-            const SizedBox(width: 10),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 20,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 18,
+              color: AppColors.fontPrimary,
+              fontWeight: FontWeight.bold,
             ),
-            if (suffixIcon != null) suffixIcon!,
-          ],
-        ),
+          ),
+          if (suffixIcon != null) suffixIcon!,
+        ],
       ),
     );
   }

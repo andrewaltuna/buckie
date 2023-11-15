@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:expense_tracker/categories/blocs/categories_bloc.dart';
 import 'package:expense_tracker/categories/models/budget_category.dart';
 import 'package:expense_tracker/common/components/main_scaffold.dart';
 import 'package:expense_tracker/common/components/see_more_button.dart';
@@ -22,7 +23,6 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categories = DashboardDrawerHelper.generatePlaceholderCategories(5);
     final controller = DraggableScrollableController();
 
     return MainScaffold(
@@ -30,7 +30,6 @@ class DashboardScreen extends StatelessWidget {
       body: BlocProvider(
         create: (_) => DashboardDrawerCubit(),
         child: _Content(
-          categories: categories,
           controller: controller,
         ),
       ),
@@ -40,11 +39,9 @@ class DashboardScreen extends StatelessWidget {
 
 class _Content extends HookWidget {
   const _Content({
-    required this.categories,
     required this.controller,
   });
 
-  final List<BudgetCategory> categories;
   final DraggableScrollableController controller;
 
   void _onDrawerDrag(
@@ -69,16 +66,10 @@ class _Content extends HookWidget {
     );
   }
 
-  double _getTotalBudget(List<BudgetCategory> categories) {
-    double totalBudget = 0;
-    for (var category in categories) {
-      totalBudget += category.allottedBudget;
-    }
-    return totalBudget;
-  }
-
   @override
   Widget build(BuildContext context) {
+    final categoriesState = context.watch<CategoriesBloc>().state;
+
     useEffect(
       () {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -104,8 +95,8 @@ class _Content extends HookWidget {
             BlocProvider(
               create: (_) => BudgetBreakdownCubit(),
               child: BudgetBreakdownDisplay(
-                totalBudget: _getTotalBudget(categories),
-                categories: categories,
+                totalBudget: categoriesState.allBudgetTotal,
+                categories: categoriesState.categories,
                 height: constraints.maxHeight *
                     (1 - DashboardDrawerHelper.percentageMinHeight),
               ),
@@ -161,7 +152,9 @@ class _Content extends HookWidget {
                           physics: const ClampingScrollPhysics(),
                           shrinkWrap: true,
                           children: [
-                            _CategoriesSection(categories: categories),
+                            _CategoriesSection(
+                              categories: categoriesState.categories,
+                            ),
                             const DashboardSection(
                               label: 'Recent Transactions',
                               child: Text(''),

@@ -20,7 +20,7 @@ class BudgetUsageDisplayHelper {
   ) {
     double totalAmountSpent = 0;
     for (final category in categories) {
-      totalAmountSpent += category.amountSpent;
+      totalAmountSpent += category.balance;
     }
 
     return totalAmountSpent;
@@ -53,14 +53,14 @@ class BudgetUsageDisplayHelper {
       final hasSelection = selectedIndex != -1;
       final isSelected = index == selectedIndex;
       final percentageText = toPercentageDisplay(
-        category.amountSpent / (showRemaining ? totalBudget : totalAmountSpent),
+        category.balance / (showRemaining ? totalBudget : totalAmountSpent),
       );
 
       final badge = switch (isSelected) {
         true => BudgetBreakdownInfoBadge(
             key: key,
             label: category.label,
-            info: '${category.amountSpent} ($percentageText)',
+            info: '${category.balanceDisplay} ($percentageText)',
           ),
         false => hasSelection
             ? null
@@ -73,7 +73,7 @@ class BudgetUsageDisplayHelper {
 
       return PieChartSectionData(
         showTitle: false,
-        value: category.amountSpent,
+        value: category.balance,
         badgeWidget: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           child: badge,
@@ -87,10 +87,9 @@ class BudgetUsageDisplayHelper {
       PieChartSectionData(
         title: 'Remaining',
         showTitle: false,
-        value: showRemaining
+        value: showRemaining && totalAmountSpent < totalBudget
             ? totalBudget - totalAmountSpent
             : _pieSectionZeroValue,
-        // color: Colors.black.withOpacity(0.3),
         color: AppColors.widgetBackgroundSecondary,
         radius: _pieSectionRemainingRadius,
       ),

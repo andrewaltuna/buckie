@@ -33,7 +33,7 @@ class Transaction extends Equatable {
       labels.shuffle();
       return Transaction(
         label: labels.first,
-        value: Random().nextDouble() * 500,
+        value: Random().nextDouble() * 100,
         remarks: 'Example remarks',
         dateCreated: DateTime.now().subtract(
           Duration(days: Random().nextInt(30)),

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:expense_tracker/common/helpers/formatter.dart';
 import 'package:expense_tracker/transactions/models/transaction.dart';
 import 'package:flutter/material.dart';
 
@@ -8,30 +9,30 @@ class BudgetCategory extends Equatable {
     required this.icon,
     required this.color,
     required this.transactions,
-    required this.allottedBudget,
+    required this.budget,
   });
 
   final String label;
   final IconData icon;
   final List<Transaction> transactions;
   final Color color;
-  final double allottedBudget;
+  final double budget;
 
   static const empty = BudgetCategory(
     label: '',
     icon: Icons.category,
     color: Colors.transparent,
     transactions: [],
-    allottedBudget: 0,
+    budget: 0,
   );
 
-  double get amountTotal {
+  double get balance {
     return transactions.fold(0, (previousValue, transaction) {
       return previousValue + transaction.value;
     });
   }
 
-  double get incomeTotal {
+  double get income {
     return transactions.fold(0, (previousValue, transaction) {
       if (transaction.value <= 0) {
         return previousValue;
@@ -41,7 +42,7 @@ class BudgetCategory extends Equatable {
     });
   }
 
-  double get expenseTotal {
+  double get expense {
     return transactions.fold(0, (previousValue, transaction) {
       if (transaction.value >= 0) {
         return previousValue;
@@ -51,15 +52,20 @@ class BudgetCategory extends Equatable {
     });
   }
 
-  double get percentageSpent => amountTotal / allottedBudget;
+  String get balanceDisplay => Formatter.formatNum(balance);
+  String get incomeDisplay => Formatter.formatNum(income);
+  String get expenseDisplay => Formatter.formatNum(expense);
 
-  String get percentageSpentDisplay {
-    return (percentageSpent * 100).toStringAsFixed(2);
-  }
+  double get percentageSpent => balance / budget;
 
-  String get amountRemainingDisplay {
-    return (allottedBudget - amountTotal).toStringAsFixed(2);
-  }
+  bool get isWithinBudget => percentageSpent <= 1;
+
+  String get percentageSpentDisplay =>
+      '${Formatter.formatNum(percentageSpent * 100)}%';
+
+  double get amountRemaining => budget - balance;
+
+  // String get amountRemainingDisplay => Formatter.formatNum(budget - balance);
 
   @override
   List<Object?> get props => [
@@ -67,6 +73,6 @@ class BudgetCategory extends Equatable {
         color,
         icon,
         transactions,
-        allottedBudget,
+        budget,
       ];
 }

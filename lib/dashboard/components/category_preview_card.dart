@@ -1,4 +1,5 @@
 import 'package:expense_tracker/categories/models/budget_category.dart';
+import 'package:expense_tracker/common/helpers/formatter.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,10 @@ class CategoryPreviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final amount = Formatter.formatNum(category.amountRemaining.abs());
+    final amountRemainingLabel =
+        '$amount ${category.isWithinBudget ? 'LEFT' : 'OVER'}';
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -31,7 +36,6 @@ class CategoryPreviewCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              // color: Colors.white.withOpacity(0.8),
               color: category.color,
               borderRadius: BorderRadius.circular(15),
             ),
@@ -59,12 +63,13 @@ class CategoryPreviewCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${category.amountRemainingDisplay} LEFT',
-                      style: const TextStyle(
+                      amountRemainingLabel,
+                      style: TextStyles.title.copyWith(
                         fontSize: 14,
-                        color: AppColors.fontSubtitle,
+                        color: category.isWithinBudget
+                            ? AppColors.fontSubtitle
+                            : AppColors.fontWarning,
                         fontWeight: FontWeight.bold,
-                        fontFamily: 'Montserrat',
                       ),
                     ),
                   ],
@@ -84,7 +89,7 @@ class CategoryPreviewCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      '${category.percentageSpentDisplay}%',
+                      category.percentageSpentDisplay,
                       style: TextStyles.body.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
