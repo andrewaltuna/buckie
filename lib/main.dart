@@ -1,17 +1,17 @@
-import 'package:expense_tracker/categories/screens/categories_screen.dart';
+import 'package:expense_tracker/categories/presentation/screen/categories_screen.dart';
 import 'package:expense_tracker/common/constants.dart';
-import 'package:expense_tracker/common/helpers/navigation_helper.dart';
+import 'package:expense_tracker/common/helper/navigation_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/dashboard/screens/dashboard_screen.dart';
-import 'package:expense_tracker/global_blocs.dart';
-import 'package:expense_tracker/settings/screens/settings_screen.dart';
-import 'package:expense_tracker/transactions/screens/transactions_screen.dart';
+import 'package:expense_tracker/dashboard/presentation/screen/dashboard_screen.dart';
+import 'package:expense_tracker/global_view_models.dart';
+import 'package:expense_tracker/settings/presentation/screen/settings_screen.dart';
+import 'package:expense_tracker/transactions/presentation/screen/transactions_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {
   runApp(
-    const GlobalBlocs(
+    const GlobalViewModels(
       child: App(),
     ),
   );

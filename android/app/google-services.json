@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "272762613970",
+    "project_id": "buckie-d60da",
+    "storage_bucket": "buckie-d60da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272762613970:android:e538eda42c9853f1427d0b",
+        "android_client_info": {
+          "package_name": "com.andrewaltuna.buckie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_0HxoV2T3GSh-7rkmjSvnvNzpQJAJcOI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
