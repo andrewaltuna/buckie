@@ -1,3 +1,4 @@
+import 'package:expense_tracker/account/presentation/screen/login_screen.dart';
 import 'package:expense_tracker/categories/presentation/screen/categories_screen.dart';
 import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/common/helper/navigation_helper.dart';
@@ -23,8 +24,16 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final router = GoRouter(
-      initialLocation: DashboardScreen.routeName,
+      initialLocation: LoginScreen.routeName,
       routes: [
+        GoRoute(
+          path: LoginScreen.routeName,
+          pageBuilder: (context, state) =>
+              NavigationHelper.of(context).buildPageWithDefaultTransition(
+            state: state,
+            child: const LoginScreen(),
+          ),
+        ),
         GoRoute(
           path: DashboardScreen.routeName,
           pageBuilder: (context, state) =>
@@ -68,6 +77,9 @@ class App extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: AppColors.defaultBackground,
         ),
+        textTheme: Theme.of(context).textTheme.apply(
+              bodyColor: AppColors.fontPrimary,
+            ),
       ),
       routerConfig: router,
     );

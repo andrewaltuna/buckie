@@ -23,4 +23,11 @@ class TextStyles {
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
   );
+
+  static const buttonPrimary = TextStyle(
+    fontFamily: _fontFamilySecondary,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: AppColors.defaultBackground,
+  );
 }

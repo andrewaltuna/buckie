@@ -15,8 +15,8 @@ class TransactionsScreen extends StatelessWidget {
     return MainScaffold(
       title: 'Transactions',
       body: ListView(
-        children: [
-          const Text(
+        children: const [
+          Text(
             'TODAY',
             style: TextStyles.title,
           ),

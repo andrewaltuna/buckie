@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:expense_tracker/categories/data/model/budget_category.dart';
 import 'package:expense_tracker/categories/presentation/view_model/categories_view_model.dart';
 import 'package:expense_tracker/common/component/main_scaffold.dart';
-import 'package:expense_tracker/common/component/see_more_button.dart';
+import 'package:expense_tracker/common/component/button/see_more_button.dart';
 import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/dashboard/presentation/component/budget_breakdown_display.dart';

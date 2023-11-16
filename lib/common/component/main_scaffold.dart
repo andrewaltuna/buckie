@@ -6,32 +6,38 @@ import 'package:flutter/material.dart';
 class MainScaffold extends StatelessWidget {
   const MainScaffold({
     super.key,
-    required this.title,
     required this.body,
+    this.title,
+    this.showAppBar = true,
+    this.showNavBar = true,
     this.floatingActionButton,
   });
 
-  final String title;
+  final String? title;
   final Widget body;
+  final bool showAppBar;
+  final bool showNavBar;
   final Widget? floatingActionButton;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text(
-            title,
-            style: TextStyles.title.copyWith(
-              color: AppColors.accent,
-            ),
-          ),
-        ),
-        backgroundColor: AppColors.widgetBackgroundPrimary,
-      ),
+      appBar: showAppBar && title != null
+          ? AppBar(
+              title: Center(
+                child: Text(
+                  title ?? '',
+                  style: TextStyles.title.copyWith(
+                    color: AppColors.accent,
+                  ),
+                ),
+              ),
+              backgroundColor: AppColors.widgetBackgroundPrimary,
+            )
+          : null,
       floatingActionButton: floatingActionButton,
       backgroundColor: AppColors.defaultBackground,
-      bottomNavigationBar: const MainNavigationBar(),
+      bottomNavigationBar: showNavBar ? const MainNavigationBar() : null,
       extendBody: true,
       body: body,
     );
