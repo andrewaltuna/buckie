@@ -8,11 +8,22 @@ class AuthService implements AuthServiceInterface {
   bool get isAuth => _firebaseAuth.currentUser != null;
 
   @override
-  Future<void> signInWithEmailAndPassword({
+  Future<UserCredential> signInWithEmailAndPassword({
     required String email,
     required String password,
   }) {
     return _firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
+
+  @override
+  Future<UserCredential> registerWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) {
+    return _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );

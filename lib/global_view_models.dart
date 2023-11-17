@@ -1,3 +1,5 @@
+import 'package:expense_tracker/account/data/di/auth_service_locator.dart';
+import 'package:expense_tracker/account/presentation/view_model/account_view_model.dart';
 import 'package:expense_tracker/categories/presentation/view_model/categories_view_model.dart';
 import 'package:expense_tracker/transactions/presentation/view_model/transactions_view_model.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,9 @@ class GlobalViewModels extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (_) => AccountViewModel(authRepository),
+        ),
         BlocProvider(
           create: (_) => CategoriesViewModel()..add(CategoriesLoaded()),
         ),

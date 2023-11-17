@@ -8,29 +8,53 @@ class MainScaffold extends StatelessWidget {
     super.key,
     required this.body,
     this.title,
+    this.widget,
     this.showAppBar = true,
+    this.showBackButton = false,
     this.showNavBar = true,
     this.floatingActionButton,
   });
 
   final String? title;
+  final Widget? widget;
   final Widget body;
   final bool showAppBar;
+  final bool showBackButton;
   final bool showNavBar;
   final Widget? floatingActionButton;
 
   @override
   Widget build(BuildContext context) {
+    final title = this.title;
+    final widget = this.widget;
+
     return Scaffold(
-      appBar: showAppBar && title != null
+      appBar: showAppBar
           ? AppBar(
-              title: Center(
-                child: Text(
-                  title ?? '',
-                  style: TextStyles.title.copyWith(
-                    color: AppColors.accent,
-                  ),
-                ),
+              leadingWidth: 0,
+              title: Stack(
+                alignment: Alignment.center,
+                children: [
+                  if (showBackButton)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(
+                          Icons.arrow_back_ios,
+                          color: AppColors.accent,
+                        ),
+                      ),
+                    ),
+                  if (widget != null) widget,
+                  if (title != null)
+                    Text(
+                      title,
+                      style: TextStyles.title.copyWith(
+                        color: AppColors.accent,
+                      ),
+                    ),
+                ],
               ),
               backgroundColor: AppColors.widgetBackgroundPrimary,
             )

@@ -6,6 +6,7 @@ class RoundedTextField extends StatelessWidget {
   const RoundedTextField({
     super.key,
     required this.label,
+    this.controller,
     this.errorText,
     this.keyboardType,
     this.obscureText = false,
@@ -13,6 +14,7 @@ class RoundedTextField extends StatelessWidget {
   });
 
   final String label;
+  final TextEditingController? controller;
   final String? errorText;
   final TextInputType? keyboardType;
   final bool obscureText;
@@ -47,6 +49,7 @@ class RoundedTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: TextFormField(
+            controller: controller,
             keyboardType: keyboardType,
             obscureText: obscureText,
             style: TextStyles.body,

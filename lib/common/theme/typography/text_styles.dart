@@ -19,7 +19,7 @@ class TextStyles {
   /// Open Sans
   static const body = TextStyle(
     fontFamily: _fontFamilySecondary,
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
   );

@@ -1,4 +1,5 @@
 import 'package:expense_tracker/account/presentation/screen/login_screen.dart';
+import 'package:expense_tracker/account/presentation/screen/registration_screen.dart';
 import 'package:expense_tracker/categories/presentation/screen/categories_screen.dart';
 import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/common/helper/navigation_helper.dart';
@@ -23,7 +24,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final navigatorKey = GlobalKey<NavigatorState>();
+
     final router = GoRouter(
+      navigatorKey: navigatorKey,
       initialLocation: LoginScreen.routeName,
       routes: [
         GoRoute(
@@ -33,6 +37,18 @@ class App extends StatelessWidget {
             state: state,
             child: const LoginScreen(),
           ),
+          routes: [
+            GoRoute(
+              name: RegistrationScreen.routeName,
+              path: RegistrationScreen.routeName,
+              // pageBuilder: (context, state) =>
+              //     NavigationHelper.of(context).buildPageWithDefaultTransition(
+              //   state: state,
+              //   child: const RegisterScreen(),
+              // ),
+              builder: (_, __) => const RegistrationScreen(),
+            ),
+          ],
         ),
         GoRoute(
           path: DashboardScreen.routeName,

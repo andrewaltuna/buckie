@@ -1,8 +1,10 @@
+import 'package:expense_tracker/account/presentation/screen/registration_screen.dart';
 import 'package:expense_tracker/common/component/main_scaffold.dart';
 import 'package:expense_tracker/common/component/text_field/rounded_text_field.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -59,6 +61,10 @@ class LoginScreen extends StatelessWidget {
                     GestureDetector(
                       onTap: () {
                         print('Sign Up');
+                        // context.go(
+                        //   '${LoginScreen.routeName}/${RegisterScreen.routeName}',
+                        // );
+                        context.pushNamed(RegistrationScreen.routeName);
                       },
                       child: Text(
                         'Sign Up',
