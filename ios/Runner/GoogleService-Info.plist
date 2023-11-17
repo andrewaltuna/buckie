@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDTEcBrr70CLGrhSbffwddU1b4r5-NqPbg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>272762613970</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.andrewaltuna.buckie</string>
+	<key>PROJECT_ID</key>
+	<string>buckie-d60da</string>
+	<key>STORAGE_BUCKET</key>
+	<string>buckie-d60da.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:272762613970:ios:4ac205bfee591971427d0b</string>
+</dict>
+</plist>
