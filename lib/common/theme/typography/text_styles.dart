@@ -8,7 +8,7 @@ class TextStyles {
   static const _fontFamilyPrimary = Constants.fontFamilyPrimary;
   static const _fontFamilySecondary = Constants.fontFamilySecondary;
 
-  /// Montserrat
+  // Font Primary
   static const title = TextStyle(
     fontFamily: _fontFamilyPrimary,
     fontSize: 20,
@@ -16,17 +16,34 @@ class TextStyles {
     color: AppColors.fontPrimary,
   );
 
-  /// Open Sans
+  static const label = TextStyle(
+    fontFamily: _fontFamilyPrimary,
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+    color: AppColors.fontPrimary,
+  );
+
+  // Font Secondary
+  // General
   static const body = TextStyle(
     fontFamily: _fontFamilySecondary,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
   );
 
-  static const buttonPrimary = TextStyle(
+  // Text Field
+  static const textFieldWarning = TextStyle(
     fontFamily: _fontFamilySecondary,
-    fontSize: 16,
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+    color: AppColors.fontWarning,
+  );
+
+  // Button
+  static const btnPrimary = TextStyle(
+    fontFamily: _fontFamilySecondary,
+    fontSize: 14,
     fontWeight: FontWeight.w600,
     color: AppColors.defaultBackground,
   );

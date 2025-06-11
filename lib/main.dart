@@ -1,20 +1,25 @@
-import 'package:expense_tracker/account/presentation/screen/login_screen.dart';
-import 'package:expense_tracker/account/presentation/screen/registration_screen.dart';
-import 'package:expense_tracker/categories/presentation/screen/categories_screen.dart';
 import 'package:expense_tracker/common/constants.dart';
-import 'package:expense_tracker/common/helper/navigation_helper.dart';
+import 'package:expense_tracker/common/navigation/app_router.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/dashboard/presentation/screen/dashboard_screen.dart';
+import 'package:expense_tracker/env.dart';
+import 'package:expense_tracker/global_listeners.dart';
 import 'package:expense_tracker/global_view_models.dart';
-import 'package:expense_tracker/settings/presentation/screen/settings_screen.dart';
-import 'package:expense_tracker/transactions/presentation/screen/transactions_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: AppConfig.supabaseUrl,
+    anonKey: AppConfig.supabaseKey,
+  );
+
   runApp(
     const GlobalViewModels(
-      child: App(),
+      child: GlobalListeners(
+        child: App(),
+      ),
     ),
   );
 }
@@ -24,69 +29,8 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final navigatorKey = GlobalKey<NavigatorState>();
-
-    final router = GoRouter(
-      navigatorKey: navigatorKey,
-      initialLocation: LoginScreen.routeName,
-      routes: [
-        GoRoute(
-          path: LoginScreen.routeName,
-          pageBuilder: (context, state) =>
-              NavigationHelper.of(context).buildPageWithDefaultTransition(
-            state: state,
-            child: const LoginScreen(),
-          ),
-          routes: [
-            GoRoute(
-              name: RegistrationScreen.routeName,
-              path: RegistrationScreen.routeName,
-              // pageBuilder: (context, state) =>
-              //     NavigationHelper.of(context).buildPageWithDefaultTransition(
-              //   state: state,
-              //   child: const RegisterScreen(),
-              // ),
-              builder: (_, __) => const RegistrationScreen(),
-            ),
-          ],
-        ),
-        GoRoute(
-          path: DashboardScreen.routeName,
-          pageBuilder: (context, state) =>
-              NavigationHelper.of(context).buildPageWithDefaultTransition(
-            state: state,
-            child: const DashboardScreen(),
-          ),
-        ),
-        GoRoute(
-          path: CategoriesScreen.routeName,
-          pageBuilder: (context, state) =>
-              NavigationHelper.of(context).buildPageWithDefaultTransition(
-            state: state,
-            child: const CategoriesScreen(),
-          ),
-        ),
-        GoRoute(
-          path: TransactionsScreen.routeName,
-          pageBuilder: (context, state) =>
-              NavigationHelper.of(context).buildPageWithDefaultTransition(
-            state: state,
-            child: const TransactionsScreen(),
-          ),
-        ),
-        GoRoute(
-          path: SettingsScreen.routeName,
-          pageBuilder: (context, state) =>
-              NavigationHelper.of(context).buildPageWithDefaultTransition(
-            state: state,
-            child: const SettingsScreen(),
-          ),
-        ),
-      ],
-    );
-
     return MaterialApp.router(
-      title: 'Expense Tracker',
+      title: 'buckie',
       theme: ThemeData(
         useMaterial3: true,
         fontFamily: Constants.fontFamilySecondary,
@@ -97,7 +41,7 @@ class App extends StatelessWidget {
               bodyColor: AppColors.fontPrimary,
             ),
       ),
-      routerConfig: router,
+      routerConfig: AppNavigation.router,
     );
   }
 }

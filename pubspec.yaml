@@ -42,8 +42,7 @@ dependencies:
   go_router: ^12.1.0
   flutter_hooks: ^0.20.3
   intl: ^0.18.1
-  firebase_core: ^2.22.0
-  firebase_auth: ^4.14.0
+  supabase_flutter: ^2.9.1
 
 dev_dependencies:
   flutter_test:

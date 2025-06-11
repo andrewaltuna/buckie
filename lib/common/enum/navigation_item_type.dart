@@ -1,7 +1,7 @@
-import 'package:expense_tracker/categories/presentation/screen/categories_screen.dart';
-import 'package:expense_tracker/dashboard/presentation/screen/dashboard_screen.dart';
-import 'package:expense_tracker/settings/presentation/screen/settings_screen.dart';
-import 'package:expense_tracker/transactions/presentation/screen/transactions_screen.dart';
+import 'package:expense_tracker/feature/categories/presentation/screen/categories_screen.dart';
+import 'package:expense_tracker/feature/dashboard/presentation/screen/dashboard_screen.dart';
+import 'package:expense_tracker/feature/settings/presentation/screen/settings_screen.dart';
+import 'package:expense_tracker/feature/transactions/presentation/screen/transactions_screen.dart';
 import 'package:flutter/material.dart';
 
 enum NavigationItemType {

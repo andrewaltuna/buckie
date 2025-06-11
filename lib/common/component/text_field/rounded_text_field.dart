@@ -4,18 +4,22 @@ import 'package:flutter/material.dart';
 
 class RoundedTextField extends StatelessWidget {
   const RoundedTextField({
-    super.key,
     required this.label,
     this.controller,
-    this.errorText,
+    this.errorText = '',
+    this.onChanged,
+    this.onTap,
     this.keyboardType,
     this.obscureText = false,
     this.icon,
+    super.key,
   });
 
   final String label;
   final TextEditingController? controller;
-  final String? errorText;
+  final String errorText;
+  final void Function(String value)? onChanged;
+  final VoidCallback? onTap;
   final TextInputType? keyboardType;
   final bool obscureText;
   final Widget? icon;
@@ -35,14 +39,13 @@ class RoundedTextField extends StatelessWidget {
             ],
             Text(
               label,
-              style: TextStyles.body.copyWith(
-                fontSize: 16,
+              style: TextStyles.label.copyWith(
                 color: AppColors.accent,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 3),
+        const SizedBox(height: 4),
         Container(
           decoration: BoxDecoration(
             color: AppColors.widgetBackgroundSecondary,
@@ -59,28 +62,31 @@ class RoundedTextField extends StatelessWidget {
               contentPadding: EdgeInsets.symmetric(horizontal: 15),
               border: InputBorder.none,
             ),
-            onTapOutside: (event) =>
-                FocusManager.instance.primaryFocus?.unfocus(),
+            onTap: onTap,
+            onChanged: onChanged,
+            onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
           ),
         ),
         const SizedBox(height: 3),
-        Opacity(
-          opacity: errorText == null ? 0 : 1,
-          child: Row(
-            children: [
-              const Icon(
-                Icons.info,
-                color: AppColors.fontWarning,
-                size: 16,
-              ),
-              const SizedBox(width: 5),
-              Text(
-                errorText ?? '',
-                style: TextStyles.body.copyWith(
+        AnimatedOpacity(
+          duration: const Duration(milliseconds: 200),
+          opacity: errorText.isEmpty ? 0 : 1,
+          child: Offstage(
+            offstage: errorText.isEmpty,
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.info,
                   color: AppColors.fontWarning,
+                  size: 16,
                 ),
-              ),
-            ],
+                const SizedBox(width: 5),
+                Text(
+                  errorText,
+                  style: TextStyles.textFieldWarning,
+                ),
+              ],
+            ),
           ),
         ),
       ],

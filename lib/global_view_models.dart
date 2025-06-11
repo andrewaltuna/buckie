@@ -1,7 +1,7 @@
-import 'package:expense_tracker/account/data/di/auth_service_locator.dart';
-import 'package:expense_tracker/account/presentation/view_model/account_view_model.dart';
-import 'package:expense_tracker/categories/presentation/view_model/categories_view_model.dart';
-import 'package:expense_tracker/transactions/presentation/view_model/transactions_view_model.dart';
+import 'package:expense_tracker/feature/account/data/di/auth_service_locator.dart';
+import 'package:expense_tracker/feature/account/presentation/view_model/auth_view_model.dart';
+import 'package:expense_tracker/feature/categories/presentation/view_model/categories_view_model.dart';
+import 'package:expense_tracker/feature/transactions/presentation/view_model/transactions_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,7 +18,7 @@ class GlobalViewModels extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => AccountViewModel(authRepository),
+          create: (_) => AuthViewModel(authRepository),
         ),
         BlocProvider(
           create: (_) => CategoriesViewModel()..add(CategoriesLoaded()),

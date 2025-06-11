@@ -1,0 +1,98 @@
+import 'package:expense_tracker/common/helper/navigation_helper.dart';
+import 'package:expense_tracker/feature/account/presentation/screen/login_screen.dart';
+import 'package:expense_tracker/feature/account/presentation/screen/registration_screen.dart';
+import 'package:expense_tracker/feature/account/presentation/view_model/auth_view_model.dart';
+import 'package:expense_tracker/feature/categories/presentation/screen/categories_screen.dart';
+import 'package:expense_tracker/feature/dashboard/presentation/screen/dashboard_screen.dart';
+import 'package:expense_tracker/feature/settings/presentation/screen/settings_screen.dart';
+import 'package:expense_tracker/feature/transactions/presentation/screen/transactions_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
+class AppNavigation {
+  const AppNavigation._();
+
+  static final navigatorKey = GlobalKey<NavigatorState>();
+
+  static const authRoutes = [
+    LoginScreen.routePath,
+    RegistrationScreen.routePath,
+  ];
+
+  static final router = GoRouter(
+    navigatorKey: navigatorKey,
+    initialLocation: LoginScreen.routeName,
+    redirect: (context, state) {
+      final path = state.fullPath;
+      final isAuthRoute = authRoutes.contains(path);
+
+      print(path);
+      print(isAuthRoute);
+      final authState = context.read<AuthViewModel>().state;
+      final isAuthenticated =
+          authState.status.isLoaded && authState.isAuthenticated;
+
+      // Redirect to dashboard if authenticated and attempting to access auth screens.
+      if (isAuthRoute && isAuthenticated) return DashboardScreen.routeName;
+
+      // Redirect to login not authenticated and attempting to access main screens.
+      if (!isAuthRoute && !isAuthenticated) return LoginScreen.routePath;
+
+      return null;
+    },
+    routes: [
+      GoRoute(
+        name: LoginScreen.routeName,
+        path: LoginScreen.routePath,
+        pageBuilder: (context, state) {
+          return NavigationHelper.of(context).pageWithDefaultTransition(
+            state: state,
+            child: const LoginScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        name: RegistrationScreen.routeName,
+        path: RegistrationScreen.routePath,
+        pageBuilder: (context, state) =>
+            NavigationHelper.of(context).pageWithDefaultTransition(
+          state: state,
+          child: const RegistrationScreen(),
+        ),
+      ),
+      GoRoute(
+        path: DashboardScreen.routeName,
+        pageBuilder: (context, state) =>
+            NavigationHelper.of(context).pageWithDefaultTransition(
+          state: state,
+          child: const DashboardScreen(),
+        ),
+      ),
+      GoRoute(
+        path: CategoriesScreen.routeName,
+        pageBuilder: (context, state) =>
+            NavigationHelper.of(context).pageWithDefaultTransition(
+          state: state,
+          child: const CategoriesScreen(),
+        ),
+      ),
+      GoRoute(
+        path: TransactionsScreen.routeName,
+        pageBuilder: (context, state) =>
+            NavigationHelper.of(context).pageWithDefaultTransition(
+          state: state,
+          child: const TransactionsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: SettingsScreen.routeName,
+        pageBuilder: (context, state) =>
+            NavigationHelper.of(context).pageWithDefaultTransition(
+          state: state,
+          child: const SettingsScreen(),
+        ),
+      ),
+    ],
+  );
+}

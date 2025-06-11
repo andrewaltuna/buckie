@@ -15,6 +15,7 @@ class AppColors {
   static const widgetBackgroundPrimary = Color(0xFF151B25);
   static const widgetBackgroundSecondary = Color(0xFF19212E);
   static const accent = Color(0xFF7BF1A8);
+  static const shadow = Color(0xFF000000);
 
   // Category Colors
   static const categoryMagenta = Color(0xFFFF006E);

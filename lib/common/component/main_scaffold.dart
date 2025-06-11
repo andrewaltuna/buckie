@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 class MainScaffold extends StatelessWidget {
   const MainScaffold({
-    super.key,
     required this.body,
     this.title,
     this.widget,
@@ -13,6 +12,7 @@ class MainScaffold extends StatelessWidget {
     this.showBackButton = false,
     this.showNavBar = true,
     this.floatingActionButton,
+    super.key,
   });
 
   final String? title;
@@ -31,7 +31,10 @@ class MainScaffold extends StatelessWidget {
     return Scaffold(
       appBar: showAppBar
           ? AppBar(
+              elevation: 0,
               leadingWidth: 0,
+              surfaceTintColor: Colors.transparent,
+              shadowColor: AppColors.shadow,
               title: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -63,7 +66,11 @@ class MainScaffold extends StatelessWidget {
       backgroundColor: AppColors.defaultBackground,
       bottomNavigationBar: showNavBar ? const MainNavigationBar() : null,
       extendBody: true,
-      body: body,
+      body: SafeArea(
+        child: Center(
+          child: body,
+        ),
+      ),
     );
   }
 }

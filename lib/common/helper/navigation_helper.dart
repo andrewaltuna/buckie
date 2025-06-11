@@ -9,7 +9,24 @@ class NavigationHelper {
   factory NavigationHelper.of(BuildContext context) =>
       NavigationHelper._(context);
 
-  CustomTransitionPage buildPageWithDefaultTransition<T>({
+  CustomTransitionPage pageWithDefaultTransition<T>({
+    required GoRouterState state,
+    required Widget child,
+  }) {
+    const transitionDuration = Duration(milliseconds: 100);
+
+    return CustomTransitionPage<T>(
+      key: state.pageKey,
+      transitionDuration: transitionDuration,
+      reverseTransitionDuration: transitionDuration,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+          FadeTransition(opacity: animation, child: child),
+      child: child,
+    );
+  }
+
+  // TODO: fix implementation
+  CustomTransitionPage pageWithSlidingTransition<T>({
     required GoRouterState state,
     required Widget child,
   }) {
