@@ -1,8 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:expense_tracker/common/enum/view_model_status.dart';
-import 'package:expense_tracker/feature/budget/data/model/input/create_budget_input.dart';
+import 'package:expense_tracker/feature/budget/data/model/input/set_budget_input.dart';
 import 'package:expense_tracker/feature/budget/data/repository/budget_repository_interface.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'budget_event.dart';
@@ -30,10 +31,11 @@ class BudgetViewModel extends Bloc<BudgetEvent, BudgetState> {
       emit(state.copyWith(status: ViewModelStatus.loading));
 
       final budget = await _repository.getLatestBudget();
+
       emit(
         state.copyWith(
           status: ViewModelStatus.loaded,
-          budget: budget,
+          budget: () => budget,
         ),
       );
     } on Exception catch (error) {
@@ -53,11 +55,11 @@ class BudgetViewModel extends Bloc<BudgetEvent, BudgetState> {
     try {
       emit(state.copyWith(status: ViewModelStatus.loading));
 
-      final budget = await _repository.getBudget(_month);
+      final budget = await _repository.getBudget(event.month ?? _month);
       emit(
         state.copyWith(
           status: ViewModelStatus.loaded,
-          budget: budget,
+          budget: () => budget,
         ),
       );
     } on Exception catch (error) {
@@ -78,7 +80,7 @@ class BudgetViewModel extends Bloc<BudgetEvent, BudgetState> {
       emit(state.copyWith(status: ViewModelStatus.loading));
 
       await _repository.setBudget(
-        CreateBudgetInput(
+        SetBudgetInput(
           month: _month,
           budget: event.budget,
         ),
@@ -87,7 +89,7 @@ class BudgetViewModel extends Bloc<BudgetEvent, BudgetState> {
       emit(
         state.copyWith(
           status: ViewModelStatus.loaded,
-          budget: event.budget,
+          budget: () => event.budget,
         ),
       );
     } on Exception catch (error) {

@@ -2,6 +2,7 @@ import 'package:expense_tracker/common/component/button/rounded_button.dart';
 import 'package:expense_tracker/common/component/text_field/rounded_text_field.dart';
 import 'package:expense_tracker/common/enum/button_state.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
+import 'package:expense_tracker/common/helper/input_formatter.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
@@ -180,9 +181,7 @@ class _Form extends StatelessWidget {
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.next,
                   inputFormatters: [
-                    FilteringTextInputFormatter.allow(
-                      RegExp(r'^\d*\.?\d{0,2}'),
-                    ),
+                    InputFormatter.decimal,
                   ],
                   validator: _validateAmount,
                   onChanged: (value) => _onAmountUpdated(

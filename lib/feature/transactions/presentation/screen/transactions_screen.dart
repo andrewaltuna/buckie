@@ -1,11 +1,16 @@
+import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/component/main_scaffold.dart';
 import 'package:expense_tracker/common/di/service_locator.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
+import 'package:expense_tracker/common/helper/modal_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/feature/budget/data/repository/budget_repository_interface.dart';
+import 'package:expense_tracker/feature/budget/presentation/view_model/budget_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:expense_tracker/feature/transactions/data/repository/transaction_repository_interface.dart';
+import 'package:expense_tracker/feature/transactions/presentation/component/set_budget_modal_content.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/transaction_preview_skeleton.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/transactions_empty_indicator.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/transactions_list_view.dart';
@@ -43,11 +48,21 @@ class TransactionsScreen extends HookWidget {
           if (page.value - index >= 3) {
             return const SizedBox.shrink();
           }
-          return BlocProvider(
-            create: (_) => TransactionsViewModel(
-              sl<TransactionRepositoryInterface>(),
-              month: month,
-            )..add(const TransactionsRequested()),
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => TransactionsViewModel(
+                  sl<TransactionRepositoryInterface>(),
+                  month: month,
+                )..add(const TransactionsRequested()),
+              ),
+              BlocProvider(
+                create: (_) => BudgetViewModel(
+                  sl<BudgetRepositoryInterface>(),
+                  month: month,
+                )..add(const BudgetRequested()),
+              ),
+            ],
             child: _TransactionsPage(month: month),
           );
         },
@@ -67,38 +82,113 @@ class _TransactionsPage extends HookWidget {
   Widget build(BuildContext context) {
     useAutomaticKeepAlive();
 
-    final state = context.watch<TransactionsViewModel>().state;
-
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return BlocBuilder<TransactionsViewModel, TransactionsState>(
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Text(
-                  Formatter.date(month.toDate(), includeDay: false),
-                  style: TextStyles.titleMedium,
-                ),
+              Row(
+                children: [
+                  Text(
+                    Formatter.date(
+                      month.toDate(),
+                      includeDay: false,
+                    ),
+                    style: TextStyles.titleMedium,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _BudgetIndicator(
+                      expenseLabel: state.totalExpenseLabel,
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                '${state.totalExpenseLabel} of ${Formatter.currency(10000)}',
-                style: TextStyles.titleSmall.copyWith(
-                  color: AppColors.fontWarning,
+              const SizedBox(height: 16),
+              Expanded(
+                child: _TransactionsList(
+                  transactionsByDate: state.byDate(),
+                  isLoading: state.status.isLoading,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          Expanded(
-            child: _TransactionsList(
-              transactionsByDate: state.byDate(),
-              isLoading: state.status.isLoading,
+        );
+      },
+    );
+  }
+}
+
+class _BudgetIndicator extends StatelessWidget {
+  const _BudgetIndicator({
+    required this.expenseLabel,
+  });
+
+  final String expenseLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final budget = context.select(
+      (BudgetViewModel viewModel) => viewModel.state.budget,
+    );
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Flexible(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                const Text(
+                  'Used ',
+                  style: TextStyles.titleExtraSmall,
+                ),
+                Text(
+                  expenseLabel,
+                  style: TextStyles.titleSmall.copyWith(
+                    color: AppColors.fontWarning,
+                  ),
+                ),
+                if (budget != null) ...[
+                  const Text(
+                    ' of ',
+                    style: TextStyles.titleExtraSmall,
+                  ),
+                  Text(
+                    Formatter.currency(budget),
+                    style: TextStyles.titleSmall.copyWith(
+                      color: AppColors.accent,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+        const SizedBox(width: 12),
+        CustomInkWell(
+          width: 32,
+          height: 32,
+          borderRadius: 8,
+          color: AppColors.accent,
+          onTap: () => ModalHelper.of(context).showModal(
+            wrapperBuilder: (child) => BlocProvider.value(
+              value: BlocProvider.of<BudgetViewModel>(context),
+              child: child,
+            ),
+            builder: (_) => SetBudgetModalContent(
+              initialValue: budget,
+            ),
+          ),
+          child: const Icon(
+            Icons.settings,
+            color: AppColors.fontButtonPrimary,
+          ),
+        ),
+      ],
     );
   }
 }

@@ -12,7 +12,6 @@ class ModalHelper {
 
   Future<void> showModal({
     required Widget Function(BuildContext) builder,
-    Widget Function(BuildContext)? headerBuilder,
     Widget Function(Widget)? wrapperBuilder,
     ModalSize size = ModalSize.regular,
   }) {
@@ -22,38 +21,63 @@ class ModalHelper {
       context: _context,
       builder: (context) {
         return wrapper(
-          Center(
-            child: Container(
-              margin: const EdgeInsets.all(16),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (headerBuilder != null)
-                      Container(
-                        width: size.width,
-                        padding: const EdgeInsets.all(16),
-                        decoration: const BoxDecoration(
-                          color: AppColors.widgetBackgroundSecondary,
-                        ),
-                        child: headerBuilder.call(context),
-                      ),
-                    Container(
-                      width: size.width,
-                      padding: const EdgeInsets.all(16),
-                      decoration: const BoxDecoration(
-                        color: AppColors.widgetBackgroundTertiary,
-                      ),
-                      child: builder(context),
-                    ),
-                  ],
-                ),
+          Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: Center(
+              child: Container(
+                margin: const EdgeInsets.all(16),
+                width: size.width,
+                child: builder(context),
               ),
             ),
           ),
         );
       },
+    );
+  }
+}
+
+class ModalBase extends StatelessWidget {
+  const ModalBase({
+    required this.body,
+    this.header,
+    super.key,
+  });
+
+  final Widget? header;
+  final Widget body;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (header != null)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  color: AppColors.widgetBackgroundSecondary,
+                ),
+                child: header,
+              ),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(
+                color: AppColors.widgetBackgroundTertiary,
+              ),
+              child: body,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

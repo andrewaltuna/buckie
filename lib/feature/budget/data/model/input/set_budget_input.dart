@@ -1,18 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 
-class CreateBudgetInput extends Equatable {
-  const CreateBudgetInput({
+class SetBudgetInput extends Equatable {
+  const SetBudgetInput({
     required this.month,
     required this.budget,
   });
 
   final TransactionMonth month;
-  final int budget;
+  final double? budget;
 
   Map<String, dynamic> toJson() {
     return {
-      'month': month.toDate(),
+      'month': month.toDate().toString(),
       'budget': budget,
     };
   }

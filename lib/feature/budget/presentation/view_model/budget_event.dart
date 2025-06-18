@@ -4,7 +4,7 @@ sealed class BudgetEvent extends Equatable {
   const BudgetEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class BudgetLatestRequested extends BudgetEvent {
@@ -15,19 +15,19 @@ class BudgetLatestRequested extends BudgetEvent {
 }
 
 class BudgetRequested extends BudgetEvent {
-  const BudgetRequested(this.month);
+  const BudgetRequested([this.month]);
 
-  final TransactionMonth month;
+  final TransactionMonth? month;
 
   @override
-  List<Object> get props => [month];
+  List<Object?> get props => [month];
 }
 
 class BudgetSet extends BudgetEvent {
   const BudgetSet(this.budget);
 
-  final int budget;
+  final double? budget;
 
   @override
-  List<Object> get props => [budget];
+  List<Object?> get props => [budget];
 }
