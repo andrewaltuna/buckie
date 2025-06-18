@@ -1,4 +1,4 @@
-import 'package:expense_tracker/feature/categories/data/model/budget_category.dart';
+import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
 import 'package:expense_tracker/feature/categories/presentation/view_model/categories_view_model.dart';
 import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
@@ -9,14 +9,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BudgetBreakdownDisplay extends StatelessWidget {
   const BudgetBreakdownDisplay({
-    super.key,
     required this.totalBudget,
     required this.categories,
     this.height = 200,
+    super.key,
   });
 
   final double totalBudget;
-  final List<BudgetCategory> categories;
+  final List<TransactionCategory> categories;
   final double height;
 
   @override

@@ -1,12 +1,12 @@
-import 'package:expense_tracker/feature/categories/data/model/budget_category.dart';
+import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/feature/transactions/data/model/transaction.dart';
+import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:flutter/material.dart';
 
 class DashboardDrawerHelper {
   static const percentageMaxHeight = 0.95;
 
-  static const percentageMinHeight = 0.5;
+  static const percentageMinHeight = 0.55;
 
   static const percentageMinHeightWithAllowance = percentageMinHeight - 0.1;
 
@@ -17,7 +17,7 @@ class DashboardDrawerHelper {
     return size > 1 || size < percentageMinHeightWithAllowance;
   }
 
-  static List<BudgetCategory> generatePlaceholderCategories(int count) {
+  static List<TransactionCategory> generatePlaceholderCategories(int count) {
     final categories = [
       'Transport',
       'Food',
@@ -44,7 +44,7 @@ class DashboardDrawerHelper {
       colors.shuffle();
       icons.shuffle();
 
-      return BudgetCategory(
+      return TransactionCategory(
         label: categories.first,
         icon: icons.first,
         color: colors.first,

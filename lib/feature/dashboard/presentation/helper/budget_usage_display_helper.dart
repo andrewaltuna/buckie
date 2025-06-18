@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:expense_tracker/feature/categories/data/model/budget_category.dart';
+import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/budget_breakdown_info_badge.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -16,7 +16,7 @@ class BudgetUsageDisplayHelper {
   static const _pieSectionRemainingRadius = _pieSectionRadius * 0.85;
 
   static double computeTotalAmountSpent(
-    List<BudgetCategory> categories,
+    List<TransactionCategory> categories,
   ) {
     double totalAmountSpent = 0;
     for (final category in categories) {
@@ -27,7 +27,7 @@ class BudgetUsageDisplayHelper {
   }
 
   static String percentageUsedDisplay({
-    required List<BudgetCategory> categories,
+    required List<TransactionCategory> categories,
     required double totalBudget,
   }) {
     final totalAmountSpent = computeTotalAmountSpent(categories);
@@ -42,7 +42,7 @@ class BudgetUsageDisplayHelper {
 
   static List<PieChartSectionData> categoryToPieChartSectionData({
     required double totalBudget,
-    required List<BudgetCategory> categories,
+    required List<TransactionCategory> categories,
     required int selectedIndex,
     required bool showRemaining,
   }) {

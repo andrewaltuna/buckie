@@ -166,7 +166,7 @@ class _LoginCTA extends StatelessWidget {
       children: [
         const Text(
           'Already have an account?',
-          style: TextStyles.body,
+          style: TextStyles.bodyRegular,
         ),
         const SizedBox(width: 5),
         GestureDetector(
@@ -175,7 +175,7 @@ class _LoginCTA extends StatelessWidget {
           },
           child: Text(
             'Login',
-            style: TextStyles.body.copyWith(
+            style: TextStyles.bodyRegular.copyWith(
               fontWeight: FontWeight.bold,
               color: AppColors.accent,
             ),

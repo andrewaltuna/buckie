@@ -9,14 +9,49 @@ class TextStyles {
   static const _fontFamilySecondary = Constants.fontFamilySecondary;
 
   // Font Primary
-  static const title = TextStyle(
+  static const titleMedium = TextStyle(
     fontFamily: _fontFamilyPrimary,
     fontSize: 20,
     fontWeight: FontWeight.bold,
     color: AppColors.fontPrimary,
   );
 
-  static const label = TextStyle(
+  static const titleRegular = TextStyle(
+    fontFamily: _fontFamilyPrimary,
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: AppColors.fontPrimary,
+  );
+
+  static const titleSmall = TextStyle(
+    fontFamily: _fontFamilyPrimary,
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: AppColors.fontPrimary,
+  );
+
+  static const titleExtraSmall = TextStyle(
+    fontFamily: _fontFamilyPrimary,
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+    color: AppColors.fontPrimary,
+  );
+
+  static const labelMedium = TextStyle(
+    fontFamily: _fontFamilyPrimary,
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+    color: AppColors.fontPrimary,
+  );
+
+  static const labelRegular = TextStyle(
+    fontFamily: _fontFamilyPrimary,
+    fontSize: 13,
+    fontWeight: FontWeight.w500,
+    color: AppColors.fontPrimary,
+  );
+
+  static const labelSmall = TextStyle(
     fontFamily: _fontFamilyPrimary,
     fontSize: 12,
     fontWeight: FontWeight.w500,
@@ -25,9 +60,16 @@ class TextStyles {
 
   // Font Secondary
   // General
-  static const body = TextStyle(
+  static const bodyRegular = TextStyle(
     fontFamily: _fontFamilySecondary,
     fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontPrimary,
+  );
+
+  static const bodySmall = TextStyle(
+    fontFamily: _fontFamilySecondary,
+    fontSize: 12,
     fontWeight: FontWeight.w400,
     color: AppColors.fontPrimary,
   );

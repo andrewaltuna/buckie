@@ -1,17 +1,15 @@
-import 'dart:math';
-
-import 'package:expense_tracker/feature/categories/data/model/budget_category.dart';
+import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
 import 'package:expense_tracker/feature/categories/presentation/view_model/categories_view_model.dart';
 import 'package:expense_tracker/common/component/main_scaffold.dart';
-import 'package:expense_tracker/common/component/button/see_more_button.dart';
-import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/budget_breakdown_display.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/category_preview_card.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_section.dart';
+import 'package:expense_tracker/feature/dashboard/presentation/component/transaction_preview_card.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/helper/dashboard_drawer_helper.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/budget_breakdown_view_model.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/dashboard_drawer_view_model.dart';
+import 'package:expense_tracker/feature/transactions/presentation/view_model/transactions_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -19,7 +17,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
-  static const routeName = '/dashboard';
+  static const routeName = 'dashboard';
+  static const routePath = '/';
 
   @override
   Widget build(BuildContext context) {
@@ -105,17 +104,18 @@ class _Content extends HookWidget {
                             onVerticalDragUpdate: (details) =>
                                 _onDrawerDrag(context, details, constraints),
                             onVerticalDragEnd: (_) => _onDrawerDragEnd(context),
+                            behavior: HitTestBehavior.opaque,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 15),
-                              decoration: const BoxDecoration(),
-                              child: Center(
-                                child: Container(
-                                  height: 8,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.fontPrimary,
-                                    borderRadius: BorderRadius.circular(50),
-                                  ),
+                              width: double.infinity,
+                              alignment: Alignment.center,
+                              child: Container(
+                                height: 8,
+                                width: 50,
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 15),
+                                decoration: BoxDecoration(
+                                  color: AppColors.fontPrimary,
+                                  borderRadius: BorderRadius.circular(50),
                                 ),
                               ),
                             ),
@@ -128,11 +128,9 @@ class _Content extends HookWidget {
                                 _CategoriesSection(
                                   categories: categoriesState.categories,
                                 ),
-                                const DashboardSection(
-                                  label: 'Recent Transactions',
-                                  child: Text(''),
-                                ),
-                                const SizedBox(height: Constants.navBarHeight),
+                                const SizedBox(height: 16),
+                                const _RecentTransactionsSection(),
+                                const SizedBox(height: 16),
                               ],
                             ),
                           ),
@@ -146,6 +144,52 @@ class _Content extends HookWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _RecentTransactionsSection extends StatelessWidget {
+  const _RecentTransactionsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final (
+      isLoading,
+      recentTransactions,
+    ) = context.select(
+      (TransactionsViewModel viewModel) => (
+        viewModel.state.status.isLoading,
+        viewModel.state.recentTransactions(),
+      ),
+    );
+
+    return DashboardSection(
+      label: 'Recent Transactions',
+      showMoreButton: true,
+      child: Column(
+        children: [
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (_, index) {
+              final item = recentTransactions[index];
+
+              return TransactionPreviewCard(
+                transaction: item,
+              );
+            },
+            separatorBuilder: (context, index) {
+              // replace with childcount
+              if (index == recentTransactions.length - 1) {
+                return const SizedBox.shrink();
+              }
+
+              return const SizedBox(height: 10);
+            },
+            itemCount: recentTransactions.length,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -172,32 +216,35 @@ class _CategoriesSection extends StatelessWidget {
     required this.categories,
   });
 
-  final List<BudgetCategory> categories;
+  final List<TransactionCategory> categories;
 
   @override
   Widget build(BuildContext context) {
+    final categories = this.categories.take(2).toList();
+
     return DashboardSection(
       label: 'Categories',
+      showMoreButton: true,
       child: Column(
         children: [
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: ((context, index) {
-              return CategoryPreviewCard(category: categories[index]);
-            }),
-            separatorBuilder: ((context, index) {
+            itemBuilder: (_, index) {
+              return CategoryPreviewCard(
+                category: categories[index],
+              );
+            },
+            separatorBuilder: (context, index) {
               // replace with childcount
               if (index == categories.length - 1) {
                 return const SizedBox.shrink();
               }
 
               return const SizedBox(height: 10);
-            }),
-            itemCount: min(categories.length, 2),
+            },
+            itemCount: categories.length,
           ),
-          const SizedBox(height: 12),
-          const SeeMoreButton(),
         ],
       ),
     );

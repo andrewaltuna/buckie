@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:expense_tracker/feature/account/data/exception/auth_exception.dart';
 import 'package:expense_tracker/feature/account/data/model/registration_exception_output.dart';
-import 'package:expense_tracker/feature/account/data/repository/auth_repository.dart';
 import 'package:expense_tracker/common/enum/view_model_status.dart';
+import 'package:expense_tracker/feature/account/data/repository/auth_repository_interface.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -19,13 +22,15 @@ class AuthViewModel extends Bloc<AuthEvent, AuthState> {
     add(const AuthStreamInitialized());
   }
 
-  final AuthRepository _authRepository;
+  final AuthRepositoryInterface _authRepository;
+
+  StreamSubscription<sb.AuthState>? _authStream;
 
   void _onStreamInitialized(
     AuthStreamInitialized _,
     Emitter<AuthState> emit,
   ) {
-    _authRepository.authStream.listen((data) {
+    _authStream = _authRepository.authStream.listen((data) {
       emit(
         state.copyWith(
           status: ViewModelStatus.loaded,
@@ -124,5 +129,12 @@ class AuthViewModel extends Bloc<AuthEvent, AuthState> {
         ),
       );
     }
+  }
+
+  @override
+  Future<void> close() {
+    _authStream?.cancel();
+
+    return super.close();
   }
 }

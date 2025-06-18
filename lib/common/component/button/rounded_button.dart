@@ -8,7 +8,7 @@ class RoundedButton extends StatelessWidget {
     super.key,
     required this.label,
     this.onPressed,
-    this.state = ButtonState.loading,
+    this.state = ButtonState.idle,
   });
 
   static const _loadingIndicatorSize = 15.0;
@@ -36,7 +36,7 @@ class RoundedButton extends StatelessWidget {
               width: _loadingIndicatorSize,
               child: CircularProgressIndicator(
                 strokeWidth: 3,
-                color: AppColors.defaultBackground,
+                color: AppColors.fontButtonPrimary,
               ),
             ),
           _ => const SizedBox.shrink(),

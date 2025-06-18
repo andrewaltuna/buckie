@@ -10,20 +10,24 @@ import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/screen/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends HookWidget {
   const LoginScreen({super.key});
 
   static const routeName = 'login';
   static const routePath = '/login';
 
-  void _accountListener(BuildContext context, AuthState state) {
+  void _accountListener(
+    BuildContext context,
+    AuthState state,
+  ) {
     print(state.isAuthenticated);
     if (state.status.isLoading) return;
 
     if (state.isAuthenticated) {
-      context.go(DashboardScreen.routeName);
+      context.goNamed(DashboardScreen.routeName);
     }
   }
 
@@ -42,8 +46,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
+    final emailController = useTextEditingController();
+    final passwordController = useTextEditingController();
 
     return BlocConsumer<AuthViewModel, AuthState>(
       listener: _accountListener,
@@ -51,32 +55,28 @@ class LoginScreen extends StatelessWidget {
         return MainScaffold(
           showAppBar: false,
           showNavBar: false,
-          body: SafeArea(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 300),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AppImages.logo.copyWith(height: 35),
-                    const SizedBox(height: 50),
-                    _EmailFormField(emailController: emailController),
-                    const SizedBox(height: 8),
-                    _PasswordFormField(passwordController: passwordController),
-                    const SizedBox(height: 50),
-                    _LoginButton(
-                      isLoading: state.status.isLoading,
-                      onPressed: () => _onLoginPressed(
-                        context,
-                        email: emailController.text,
-                        password: passwordController.text,
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    const _SignUpCTA(),
-                  ],
+          body: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 300),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AppImages.logo.copyWith(height: 35),
+                const SizedBox(height: 50),
+                _EmailFormField(emailController: emailController),
+                const SizedBox(height: 8),
+                _PasswordFormField(passwordController: passwordController),
+                const SizedBox(height: 50),
+                _LoginButton(
+                  isLoading: state.status.isLoading,
+                  onPressed: () => _onLoginPressed(
+                    context,
+                    email: emailController.text,
+                    password: passwordController.text,
+                  ),
                 ),
-              ),
+                const SizedBox(height: 15),
+                const _SignUpCTA(),
+              ],
             ),
           ),
         );
@@ -95,7 +95,7 @@ class _SignUpCTA extends StatelessWidget {
       children: [
         const Text(
           "Don't have an account?",
-          style: TextStyles.body,
+          style: TextStyles.bodyRegular,
         ),
         const SizedBox(width: 5),
         GestureDetector(
@@ -104,7 +104,7 @@ class _SignUpCTA extends StatelessWidget {
           },
           child: Text(
             'Sign Up',
-            style: TextStyles.body.copyWith(
+            style: TextStyles.bodyRegular.copyWith(
               fontWeight: FontWeight.bold,
               color: AppColors.accent,
             ),

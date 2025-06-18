@@ -1,7 +1,7 @@
-import 'package:expense_tracker/feature/categories/data/model/budget_category.dart';
+import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/helper/dashboard_drawer_helper.dart';
-import 'package:expense_tracker/feature/transactions/data/model/transaction.dart';
+import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 

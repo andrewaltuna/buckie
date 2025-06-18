@@ -1,4 +1,4 @@
-import 'package:expense_tracker/feature/categories/data/model/budget_category.dart';
+import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
@@ -10,11 +10,11 @@ class CategoryPreviewCard extends StatelessWidget {
     required this.category,
   });
 
-  final BudgetCategory category;
+  final TransactionCategory category;
 
   @override
   Widget build(BuildContext context) {
-    final amount = Formatter.formatNum(category.amountRemaining.abs());
+    final amount = Formatter.currency(category.amountRemaining.abs());
     final amountRemainingLabel =
         '$amount ${category.isWithinBudget ? 'LEFT' : 'OVER'}';
 
@@ -64,7 +64,7 @@ class CategoryPreviewCard extends StatelessWidget {
                     ),
                     Text(
                       amountRemainingLabel,
-                      style: TextStyles.title.copyWith(
+                      style: TextStyles.titleMedium.copyWith(
                         fontSize: 14,
                         color: category.isWithinBudget
                             ? AppColors.fontSubtitle
@@ -83,14 +83,14 @@ class CategoryPreviewCard extends StatelessWidget {
                           value: category.percentageSpent,
                           minHeight: 15,
                           color: category.color,
-                          backgroundColor: Colors.black.withOpacity(0.2),
+                          backgroundColor: AppColors.shadow,
                         ),
                       ),
                     ),
                     const SizedBox(width: 10),
                     Text(
                       category.percentageSpentDisplay,
-                      style: TextStyles.body.copyWith(
+                      style: TextStyles.bodyRegular.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),

@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService implements AuthServiceInterface {
-  final GoTrueClient _supabaseAuth = Supabase.instance.client.auth;
+  const AuthService(this._supabaseClient);
+
+  final SupabaseClient _supabaseClient;
+
+  GoTrueClient get _supabaseAuth => _supabaseClient.auth;
 
   @override
   User? get currentUser => _supabaseAuth.currentUser;

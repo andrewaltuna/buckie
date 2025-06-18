@@ -14,7 +14,7 @@ class Logo extends StatelessWidget {
         const SizedBox(height: 12),
         const Text(
           'Budgeting with a smile',
-          style: TextStyles.body,
+          style: TextStyles.bodyRegular,
         ),
       ],
     );

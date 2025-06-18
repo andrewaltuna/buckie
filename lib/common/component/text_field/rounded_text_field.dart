@@ -1,8 +1,10 @@
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class RoundedTextField extends StatelessWidget {
+class RoundedTextField extends HookWidget {
   const RoundedTextField({
     required this.label,
     this.controller,
@@ -12,6 +14,10 @@ class RoundedTextField extends StatelessWidget {
     this.keyboardType,
     this.obscureText = false,
     this.icon,
+    this.readOnly = false,
+    this.textInputAction,
+    this.inputFormatters,
+    this.validator,
     super.key,
   });
 
@@ -23,9 +29,33 @@ class RoundedTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool obscureText;
   final Widget? icon;
+  final bool readOnly;
+  final TextInputAction? textInputAction;
+  final List<TextInputFormatter>? inputFormatters;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
+    final controller = this.controller ?? useTextEditingController();
+
+    final errorNotifier = useState('');
+
+    final errorText =
+        this.errorText.isNotEmpty ? this.errorText : errorNotifier.value;
+
+    useEffect(
+      () {
+        void listener() {
+          errorNotifier.value = '';
+        }
+
+        controller.addListener(listener);
+
+        return () => controller.removeListener(listener);
+      },
+      [],
+    );
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +69,7 @@ class RoundedTextField extends StatelessWidget {
             ],
             Text(
               label,
-              style: TextStyles.label.copyWith(
+              style: TextStyles.labelRegular.copyWith(
                 color: AppColors.accent,
               ),
             ),
@@ -52,22 +82,34 @@ class RoundedTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: TextFormField(
+            readOnly: readOnly,
             controller: controller,
             keyboardType: keyboardType,
             obscureText: obscureText,
-            style: TextStyles.body,
+            style: TextStyles.bodyRegular,
             cursorWidth: 1,
             cursorColor: AppColors.accent,
+            textInputAction: textInputAction,
             decoration: const InputDecoration(
               contentPadding: EdgeInsets.symmetric(horizontal: 15),
               border: InputBorder.none,
             ),
+            inputFormatters: inputFormatters,
             onTap: onTap,
             onChanged: onChanged,
             onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+            validator: validator != null
+                ? (value) {
+                    errorNotifier.value = validator?.call(value) ?? '';
+
+                    print('validated!');
+
+                    return null;
+                  }
+                : null,
           ),
         ),
-        const SizedBox(height: 3),
+        if (errorText.isNotEmpty) const SizedBox(height: 3),
         AnimatedOpacity(
           duration: const Duration(milliseconds: 200),
           opacity: errorText.isEmpty ? 0 : 1,

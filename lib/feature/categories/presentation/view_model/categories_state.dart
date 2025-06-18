@@ -5,10 +5,10 @@ class CategoriesState extends Equatable {
     this.categories = const [],
   });
 
-  final List<BudgetCategory> categories;
+  final List<TransactionCategory> categories;
 
   CategoriesState copyWith({
-    List<BudgetCategory>? categories,
+    List<TransactionCategory>? categories,
   }) {
     return CategoriesState(
       categories: categories ?? this.categories,
@@ -21,7 +21,7 @@ class CategoriesState extends Equatable {
         .expand((transactions) => transactions)
         .toList()
       ..sort((trx1, trx2) {
-        return trx1.dateCreated.compareTo(trx2.dateCreated);
+        return trx1.date.compareTo(trx2.date);
       });
   }
 
@@ -37,8 +37,8 @@ class CategoriesState extends Equatable {
     });
   }
 
-  String get allBalanceTotalDisplay => Formatter.formatNum(allBalanceTotal);
-  String get allBudgetTotalDisplay => Formatter.formatNum(allBudgetTotal);
+  String get allBalanceTotalDisplay => Formatter.currency(allBalanceTotal);
+  String get allBudgetTotalDisplay => Formatter.currency(allBudgetTotal);
 
   @override
   List<Object> get props => [

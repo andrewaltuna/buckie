@@ -1,3 +1,4 @@
+import 'package:expense_tracker/common/global/authenticated_view_models.dart';
 import 'package:expense_tracker/common/helper/navigation_helper.dart';
 import 'package:expense_tracker/feature/account/presentation/screen/login_screen.dart';
 import 'package:expense_tracker/feature/account/presentation/screen/registration_screen.dart';
@@ -5,6 +6,7 @@ import 'package:expense_tracker/feature/account/presentation/view_model/auth_vie
 import 'package:expense_tracker/feature/categories/presentation/screen/categories_screen.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/screen/dashboard_screen.dart';
 import 'package:expense_tracker/feature/settings/presentation/screen/settings_screen.dart';
+import 'package:expense_tracker/feature/transactions/presentation/screen/create_transaction_screen.dart';
 import 'package:expense_tracker/feature/transactions/presentation/screen/transactions_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,13 +30,12 @@ class AppNavigation {
       final isAuthRoute = authRoutes.contains(path);
 
       print(path);
-      print(isAuthRoute);
       final authState = context.read<AuthViewModel>().state;
       final isAuthenticated =
           authState.status.isLoaded && authState.isAuthenticated;
 
       // Redirect to dashboard if authenticated and attempting to access auth screens.
-      if (isAuthRoute && isAuthenticated) return DashboardScreen.routeName;
+      if (isAuthRoute && isAuthenticated) return DashboardScreen.routePath;
 
       // Redirect to login not authenticated and attempting to access main screens.
       if (!isAuthRoute && !isAuthenticated) return LoginScreen.routePath;
@@ -61,37 +62,57 @@ class AppNavigation {
           child: const RegistrationScreen(),
         ),
       ),
-      GoRoute(
-        path: DashboardScreen.routeName,
-        pageBuilder: (context, state) =>
-            NavigationHelper.of(context).pageWithDefaultTransition(
-          state: state,
-          child: const DashboardScreen(),
+      ShellRoute(
+        builder: (_, __, child) => AuthenticatedViewModels(
+          child: child,
         ),
-      ),
-      GoRoute(
-        path: CategoriesScreen.routeName,
-        pageBuilder: (context, state) =>
-            NavigationHelper.of(context).pageWithDefaultTransition(
-          state: state,
-          child: const CategoriesScreen(),
-        ),
-      ),
-      GoRoute(
-        path: TransactionsScreen.routeName,
-        pageBuilder: (context, state) =>
-            NavigationHelper.of(context).pageWithDefaultTransition(
-          state: state,
-          child: const TransactionsScreen(),
-        ),
-      ),
-      GoRoute(
-        path: SettingsScreen.routeName,
-        pageBuilder: (context, state) =>
-            NavigationHelper.of(context).pageWithDefaultTransition(
-          state: state,
-          child: const SettingsScreen(),
-        ),
+        routes: [
+          GoRoute(
+            name: DashboardScreen.routeName,
+            path: DashboardScreen.routePath,
+            pageBuilder: (context, state) =>
+                NavigationHelper.of(context).pageWithDefaultTransition(
+              state: state,
+              child: const DashboardScreen(),
+            ),
+          ),
+          GoRoute(
+            name: CategoriesScreen.routeName,
+            path: CategoriesScreen.routePath,
+            pageBuilder: (context, state) =>
+                NavigationHelper.of(context).pageWithDefaultTransition(
+              state: state,
+              child: const CategoriesScreen(),
+            ),
+          ),
+          GoRoute(
+            name: TransactionsScreen.routeName,
+            path: TransactionsScreen.routePath,
+            pageBuilder: (context, state) =>
+                NavigationHelper.of(context).pageWithDefaultTransition(
+              state: state,
+              child: const TransactionsScreen(),
+            ),
+          ),
+          GoRoute(
+            name: CreateTransactionScreen.routeName,
+            path: CreateTransactionScreen.routePath,
+            pageBuilder: (context, state) =>
+                NavigationHelper.of(context).pageWithDefaultTransition(
+              state: state,
+              child: const CreateTransactionScreen(),
+            ),
+          ),
+          GoRoute(
+            name: SettingsScreen.routeName,
+            path: SettingsScreen.routePath,
+            pageBuilder: (context, state) =>
+                NavigationHelper.of(context).pageWithDefaultTransition(
+              state: state,
+              child: const SettingsScreen(),
+            ),
+          ),
+        ],
       ),
     ],
   );

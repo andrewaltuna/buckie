@@ -1,32 +1,45 @@
 import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/common/enum/navigation_item_type.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
+import 'package:expense_tracker/feature/transactions/presentation/screen/create_transaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+const _kNavigationItems = [
+  NavigationItemType.dashboard,
+  NavigationItemType.categories,
+  NavigationItemType.create,
+  NavigationItemType.transactions,
+  NavigationItemType.settings,
+];
 
 class MainNavigationBar extends StatelessWidget {
   const MainNavigationBar({super.key});
 
-  static const _navigationItems = [
-    NavigationItemType.dashboard,
-    NavigationItemType.categories,
-    NavigationItemType.create,
-    NavigationItemType.transactions,
-    NavigationItemType.settings,
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(15),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(50),
-        child: Container(
-          height: Constants.navBarHeight,
-          color: AppColors.widgetBackgroundSecondary,
-          child: Row(
-            children: [
-              ..._navigationItems.map((item) {
+    return Container(
+      height: Constants.navBarHeight,
+      padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(50)),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.shadow,
+              offset: Offset(0, 5),
+              blurRadius: 5,
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(50)),
+          child: Container(
+            decoration: const BoxDecoration(
+              color: AppColors.widgetBackgroundSecondary,
+            ),
+            child: Row(
+              children: _kNavigationItems.map((item) {
                 if (item == NavigationItemType.create) {
                   return const Expanded(
                     child: _CreateButton(),
@@ -37,11 +50,12 @@ class MainNavigationBar extends StatelessWidget {
                     .routerDelegate
                     .currentConfiguration
                     .fullPath;
-                final isSelected = item.routeName == path;
+
+                final isSelected = item.routePath == path;
 
                 return Expanded(
                   child: IconButton(
-                    onPressed: () => context.go(item.routeName),
+                    onPressed: () => context.goNamed(item.routeName),
                     icon: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -57,7 +71,7 @@ class MainNavigationBar extends StatelessWidget {
                   ),
                 );
               }).toList(),
-            ],
+            ),
           ),
         ),
       ),
@@ -70,27 +84,19 @@ class _CreateButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Material(
-          color: Colors.transparent,
-          child: Ink(
-            decoration: const ShapeDecoration(
-              shape: CircleBorder(),
-              color: AppColors.accent,
-            ),
-            child: IconButton(
-              onPressed: () => print('hello'),
-              color: AppColors.defaultBackground,
-              icon: const Icon(
-                Icons.add_rounded,
-                size: 35,
-              ),
-            ),
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppColors.accent,
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        onPressed: () => context.pushNamed(CreateTransactionScreen.routeName),
+        color: AppColors.defaultBackground,
+        icon: const Icon(
+          Icons.add_rounded,
+          size: 35,
         ),
-      ],
+      ),
     );
   }
 }

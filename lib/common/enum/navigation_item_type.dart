@@ -32,6 +32,16 @@ enum NavigationItemType {
     };
   }
 
+  String get routePath {
+    return switch (this) {
+      dashboard => DashboardScreen.routePath,
+      categories => CategoriesScreen.routePath,
+      transactions => TransactionsScreen.routePath,
+      settings => SettingsScreen.routePath,
+      _ => '/',
+    };
+  }
+
   IconData get defaultIcon {
     return switch (this) {
       dashboard => Icons.home_outlined,

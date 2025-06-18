@@ -1,4 +1,4 @@
-import 'package:expense_tracker/feature/categories/data/model/budget_category.dart';
+import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/helper/budget_usage_display_helper.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/budget_breakdown_view_model.dart';
@@ -6,7 +6,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-const _sectionSpacing = 2.0;
+const _kSectionSpacing = 2.0;
 
 class BudgetBreakdownChart extends StatelessWidget {
   const BudgetBreakdownChart({
@@ -18,13 +18,13 @@ class BudgetBreakdownChart extends StatelessWidget {
   });
 
   final String? label;
-  final List<BudgetCategory> categories;
+  final List<TransactionCategory> categories;
   final double totalBudget;
   final double centerSpaceRadius;
 
   @override
   Widget build(BuildContext context) {
-    final labelSize = (centerSpaceRadius - _sectionSpacing) * 2;
+    final labelSize = (centerSpaceRadius - _kSectionSpacing) * 2;
 
     return BlocBuilder<BudgetBreakdownViewModel, BudgetBreakdownState>(
       builder: (context, state) {
@@ -41,7 +41,7 @@ class BudgetBreakdownChart extends StatelessWidget {
                         categories: categories,
                         totalBudget: totalBudget,
                       ),
-                  style: TextStyles.title.copyWith(
+                  style: TextStyles.titleMedium.copyWith(
                     fontSize: 16,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -67,7 +67,7 @@ class BudgetBreakdownChart extends StatelessWidget {
                         .changeSelection(touchedSectionIndex ?? -1);
                   },
                 ),
-                sectionsSpace: _sectionSpacing,
+                sectionsSpace: _kSectionSpacing,
                 centerSpaceRadius: centerSpaceRadius,
                 startDegreeOffset: -90,
                 sections:

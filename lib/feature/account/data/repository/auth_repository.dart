@@ -3,9 +3,7 @@ import 'package:expense_tracker/feature/account/data/service/auth_service_interf
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepository implements AuthRepositoryInterface {
-  const AuthRepository({
-    required AuthServiceInterface authService,
-  }) : _authService = authService;
+  const AuthRepository(this._authService);
 
   final AuthServiceInterface _authService;
 

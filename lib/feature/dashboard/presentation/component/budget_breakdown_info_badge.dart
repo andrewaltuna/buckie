@@ -27,14 +27,14 @@ class BudgetBreakdownInfoBadge extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyles.body.copyWith(
+            style: TextStyles.bodyRegular.copyWith(
               fontSize: 16,
               color: Colors.white,
             ),
           ),
           Text(
             info,
-            style: TextStyles.body.copyWith(
+            style: TextStyles.bodyRegular.copyWith(
               fontSize: 16,
               color: Colors.white,
               fontWeight: FontWeight.bold,

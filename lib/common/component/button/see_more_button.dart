@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class SeeMoreButton extends StatelessWidget {
   const SeeMoreButton({
-    super.key,
     this.color = AppColors.fontPrimary,
+    super.key,
   });
 
   final Color color;

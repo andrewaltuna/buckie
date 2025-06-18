@@ -53,7 +53,7 @@ class MainScaffold extends StatelessWidget {
                   if (title != null)
                     Text(
                       title,
-                      style: TextStyles.title.copyWith(
+                      style: TextStyles.titleMedium.copyWith(
                         color: AppColors.accent,
                       ),
                     ),
@@ -67,6 +67,7 @@ class MainScaffold extends StatelessWidget {
       bottomNavigationBar: showNavBar ? const MainNavigationBar() : null,
       extendBody: true,
       body: SafeArea(
+        bottom: !showNavBar,
         child: Center(
           child: body,
         ),

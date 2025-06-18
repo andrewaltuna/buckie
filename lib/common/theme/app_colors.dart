@@ -9,13 +9,23 @@ class AppColors {
   static const fontSubtitle = Color(0xFF8E8E93);
   static const fontWarning = Color(0xFFF45B69);
 
+  // Button
+  static const fontButtonPrimary = defaultBackground;
+  static const fontButtonSecondary = fontPrimary;
+
   /// WIDGET COLORS
   // General
   static const defaultBackground = Color(0xFF11151c);
   static const widgetBackgroundPrimary = Color(0xFF151B25);
   static const widgetBackgroundSecondary = Color(0xFF19212E);
+  static const widgetBackgroundTertiary = Color(0xFF212C3D);
   static const accent = Color(0xFF7BF1A8);
-  static const shadow = Color(0xFF000000);
+  static const shadow = Color(0x33000000);
+
+  // Table Colors
+  static const tableHeaderBackground = widgetBackgroundSecondary;
+  static const tableRow = widgetBackgroundTertiary;
+  static const tableRowAlt = Color(0xFF1D2736);
 
   // Category Colors
   static const categoryMagenta = Color(0xFFFF006E);

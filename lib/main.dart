@@ -1,9 +1,10 @@
 import 'package:expense_tracker/common/constants.dart';
+import 'package:expense_tracker/common/di/service_locator.dart';
 import 'package:expense_tracker/common/navigation/app_router.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/env.dart';
-import 'package:expense_tracker/global_listeners.dart';
-import 'package:expense_tracker/global_view_models.dart';
+import 'package:expense_tracker/common/global/global_listeners.dart';
+import 'package:expense_tracker/common/global/global_view_models.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -14,6 +15,9 @@ void main() async {
     url: AppConfig.supabaseUrl,
     anonKey: AppConfig.supabaseKey,
   );
+
+  // Init GetIt dependencies
+  initializeLocator();
 
   runApp(
     const GlobalViewModels(
