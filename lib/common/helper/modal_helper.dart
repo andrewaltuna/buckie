@@ -13,37 +13,42 @@ class ModalHelper {
   Future<void> showModal({
     required Widget Function(BuildContext) builder,
     Widget Function(BuildContext)? headerBuilder,
+    Widget Function(Widget)? wrapperBuilder,
     ModalSize size = ModalSize.regular,
   }) {
+    final wrapper = wrapperBuilder ?? (child) => child;
+
     return showDialog<void>(
       context: _context,
       builder: (context) {
-        return Center(
-          child: Container(
-            margin: const EdgeInsets.all(16),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (headerBuilder != null)
+        return wrapper(
+          Center(
+            child: Container(
+              margin: const EdgeInsets.all(16),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (headerBuilder != null)
+                      Container(
+                        width: size.width,
+                        padding: const EdgeInsets.all(16),
+                        decoration: const BoxDecoration(
+                          color: AppColors.widgetBackgroundSecondary,
+                        ),
+                        child: headerBuilder.call(context),
+                      ),
                     Container(
                       width: size.width,
                       padding: const EdgeInsets.all(16),
                       decoration: const BoxDecoration(
-                        color: AppColors.widgetBackgroundSecondary,
+                        color: AppColors.widgetBackgroundTertiary,
                       ),
-                      child: headerBuilder.call(context),
+                      child: builder(context),
                     ),
-                  Container(
-                    width: size.width,
-                    padding: const EdgeInsets.all(16),
-                    decoration: const BoxDecoration(
-                      color: AppColors.widgetBackgroundTertiary,
-                    ),
-                    child: builder(context),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

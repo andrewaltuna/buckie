@@ -1,18 +1,14 @@
-import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/component/main_scaffold.dart';
 import 'package:expense_tracker/common/di/service_locator.dart';
-import 'package:expense_tracker/common/extension/date_time.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
-import 'package:expense_tracker/common/helper/modal_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:expense_tracker/feature/transactions/data/repository/transaction_repository_interface.dart';
-import 'package:expense_tracker/feature/transactions/presentation/component/category_display.dart';
-import 'package:expense_tracker/feature/transactions/presentation/component/transaction_group_card.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/transaction_preview_skeleton.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/transactions_empty_indicator.dart';
+import 'package:expense_tracker/feature/transactions/presentation/component/transactions_list_view.dart';
 import 'package:expense_tracker/feature/transactions/presentation/view_model/transactions_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -97,7 +93,7 @@ class _TransactionsPage extends HookWidget {
           const SizedBox(height: 16),
           Expanded(
             child: _TransactionsList(
-              transactions: state.byDate(),
+              transactionsByDate: state.byDate(),
               isLoading: state.status.isLoading,
             ),
           ),
@@ -109,11 +105,11 @@ class _TransactionsPage extends HookWidget {
 
 class _TransactionsList extends StatelessWidget {
   const _TransactionsList({
-    required this.transactions,
+    required this.transactionsByDate,
     required this.isLoading,
   });
 
-  final Map<DateTime, List<Transaction>> transactions;
+  final Map<DateTime, List<Transaction>> transactionsByDate;
   final bool isLoading;
 
   @override
@@ -126,136 +122,14 @@ class _TransactionsList extends StatelessWidget {
       );
     }
 
-    if (transactions.isEmpty) {
+    if (transactionsByDate.isEmpty) {
       return const Center(
         child: TransactionsEmptyIndicator(),
       );
     }
 
-    return ListView(
-      children: transactions.entries.map(
-        (entry) {
-          final date = entry.key;
-
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      Formatter.date(date, includeYear: false),
-                      style: TextStyles.titleExtraSmall,
-                    ),
-                    Text(
-                      date.dayOfWeek(shortened: true).toUpperCase(),
-                      style: TextStyles.titleSmall.copyWith(
-                        color: AppColors.accent,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: TransactionGroupCard(
-                    transactions: entry.value,
-                    onTransactionTapped: (trx) =>
-                        ModalHelper.of(context).showModal(
-                      headerBuilder: (context) {
-                        return Row(
-                          children: [
-                            CategoryDisplay(
-                              height: 36,
-                              width: 36,
-                              category: trx.category,
-                              iconOnly: true,
-                              iconSize: 20,
-                            ),
-                            const SizedBox(width: 12),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  trx.category.label,
-                                  style: TextStyles.titleSmall,
-                                ),
-                                Text(
-                                  Formatter.date(trx.date),
-                                  style: TextStyles.bodySmall.copyWith(
-                                    color: AppColors.fontSubtitle,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Spacer(),
-                            CustomInkWell(
-                              width: 36,
-                              height: 36,
-                              borderRadius: 12,
-                              color: AppColors.accent,
-                              onTap: () => {},
-                              child: const Icon(
-                                Icons.edit,
-                                color: AppColors.fontButtonPrimary,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                      builder: (context) {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Amount',
-                              style: TextStyles.titleExtraSmall.copyWith(
-                                color: AppColors.fontPrimary,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    Formatter.currency(trx.amount),
-                                    style: TextStyles.bodyRegular.copyWith(
-                                      color: AppColors.fontSubtitle,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Remarks',
-                              style: TextStyles.titleExtraSmall.copyWith(
-                                color: AppColors.fontPrimary,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    trx.remarks ?? 'No remarks',
-                                    style: TextStyles.bodyRegular.copyWith(
-                                      color: AppColors.fontSubtitle,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ).toList(),
+    return TransactionsListView(
+      transactionsByDate: transactionsByDate,
     );
   }
 }

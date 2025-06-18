@@ -18,12 +18,14 @@ class AuthenticatedViewModels extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => CategoriesViewModel()..add(CategoriesLoaded()),
+          create: (_) => CategoriesViewModel()..add(const CategoriesLoaded()),
         ),
         BlocProvider(
           create: (_) => TransactionsViewModel(
             sl<TransactionRepositoryInterface>(),
-          )..add(const TransactionsRequested()),
+          )
+            ..add(const TransactionsStreamInitialized())
+            ..add(const TransactionsRequested()),
         ),
       ],
       child: child,

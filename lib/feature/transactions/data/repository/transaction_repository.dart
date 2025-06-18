@@ -1,6 +1,7 @@
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:expense_tracker/feature/transactions/data/model/input/create_transaction_input.dart';
+import 'package:expense_tracker/feature/transactions/data/model/input/update_transaction_input.dart';
 import 'package:expense_tracker/feature/transactions/data/repository/transaction_repository_interface.dart';
 import 'package:expense_tracker/feature/transactions/data/remote/transaction_remote_source_interface.dart';
 
@@ -12,6 +13,11 @@ class TransactionRepository implements TransactionRepositoryInterface {
   @override
   Stream<TransactionMonth> get transactionsStream =>
       _remoteSource.transactionsStream;
+
+  @override
+  void initializeTransactionsStream() {
+    _remoteSource.initializeTransactionsStream();
+  }
 
   @override
   Future<Transaction> createTransaction(CreateTransactionInput input) {
@@ -34,7 +40,7 @@ class TransactionRepository implements TransactionRepositoryInterface {
   }
 
   @override
-  Future<Transaction> updateTransaction(String id, Transaction transaction) {
-    return _remoteSource.updateTransaction(id, transaction);
+  Future<Transaction> updateTransaction(UpdateTransactionInput input) {
+    return _remoteSource.updateTransaction(input);
   }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:expense_tracker/feature/transactions/data/model/input/create_transaction_input.dart';
+import 'package:expense_tracker/feature/transactions/data/model/input/update_transaction_input.dart';
 import 'package:expense_tracker/feature/transactions/data/remote/transaction_remote_source_interface.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -26,7 +27,10 @@ class TransactionRemoteSource implements TransactionRemoteSourceInterface {
         table: _table,
         schema: _schema,
         callback: (payload) {
+          print(payload);
           final isDelete = payload.newRecord['id'] == null;
+
+          if (isDelete) return;
 
           final transaction = Transaction.fromJson(
             isDelete ? payload.oldRecord : payload.newRecord,
@@ -130,15 +134,21 @@ class TransactionRemoteSource implements TransactionRemoteSourceInterface {
   }
 
   @override
-  Future<void> deleteTransaction(String id) {
-    // TODO: implement deleteTransaction
-    throw UnimplementedError();
+  Future<void> deleteTransaction(String id) async {
+    await _supabaseClient.from(_table).delete().eq('id', id);
   }
 
   @override
-  Future<Transaction> updateTransaction(String id, Transaction transaction) {
-    // TODO: implement updateTransaction
-    throw UnimplementedError();
+  Future<Transaction> updateTransaction(
+    UpdateTransactionInput input,
+  ) async {
+    final result = await _supabaseClient
+        .from(_table)
+        .update(input.toJson())
+        .eq('id', input.id)
+        .select(_transactionFullOutput);
+
+    return Transaction.fromJson(result.first);
   }
 }
 

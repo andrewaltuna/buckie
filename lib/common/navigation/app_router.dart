@@ -6,8 +6,10 @@ import 'package:expense_tracker/feature/account/presentation/view_model/auth_vie
 import 'package:expense_tracker/feature/categories/presentation/screen/categories_screen.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/screen/dashboard_screen.dart';
 import 'package:expense_tracker/feature/settings/presentation/screen/settings_screen.dart';
+import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/presentation/screen/create_transaction_screen.dart';
 import 'package:expense_tracker/feature/transactions/presentation/screen/transactions_screen.dart';
+import 'package:expense_tracker/feature/transactions/presentation/screen/update_transaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -101,6 +103,17 @@ class AppNavigation {
                 NavigationHelper.of(context).pageWithDefaultTransition(
               state: state,
               child: const CreateTransactionScreen(),
+            ),
+          ),
+          GoRoute(
+            name: UpdateTransactionScreen.routeName,
+            path: UpdateTransactionScreen.routePath,
+            pageBuilder: (context, state) =>
+                NavigationHelper.of(context).pageWithDefaultTransition(
+              state: state,
+              child: UpdateTransactionScreen(
+                transaction: state.extra! as Transaction,
+              ),
             ),
           ),
           GoRoute(

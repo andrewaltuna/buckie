@@ -3,6 +3,7 @@ import 'package:expense_tracker/common/enum/view_model_status.dart';
 import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
 import 'package:expense_tracker/feature/transactions/data/exception/transaction_exception.dart';
 import 'package:expense_tracker/feature/transactions/data/model/input/create_transaction_input.dart';
+import 'package:expense_tracker/feature/transactions/data/model/input/update_transaction_input.dart';
 import 'package:expense_tracker/feature/transactions/data/repository/transaction_repository_interface.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,8 +12,11 @@ part 'create_transaction_state.dart';
 
 class CreateTransactionViewModel
     extends Bloc<CreateTransactionEvent, CreateTransactionState> {
-  CreateTransactionViewModel(this._repository)
-      : super(const CreateTransactionState()) {
+  CreateTransactionViewModel(
+    this._repository, {
+    String? transactionId,
+  })  : _transactionId = transactionId,
+        super(const CreateTransactionState()) {
     on<CreateTransactionDateUpdated>(_onDateUpdated);
     on<CreateTransactionRemarksUpdated>(_onRemarksUpdated);
     on<CreateTransactionAmountUpdated>(_onAmountUpdated);
@@ -21,6 +25,7 @@ class CreateTransactionViewModel
   }
 
   final TransactionRepositoryInterface _repository;
+  final String? _transactionId;
 
   void _onDateUpdated(
     CreateTransactionDateUpdated event,
@@ -61,14 +66,26 @@ class CreateTransactionViewModel
         throw const TransactionInvalidAmountException();
       }
 
-      await _repository.createTransaction(
-        CreateTransactionInput(
-          amount: state.amount,
-          remarks: state.remarks,
-          date: state.date ?? DateTime.now(),
-          category: state.category,
-        ),
-      );
+      if (_transactionId != null) {
+        await _repository.updateTransaction(
+          UpdateTransactionInput(
+            id: _transactionId!,
+            amount: state.amount,
+            remarks: state.remarks,
+            date: state.date ?? DateTime.now(),
+            category: state.category,
+          ),
+        );
+      } else {
+        await _repository.createTransaction(
+          CreateTransactionInput(
+            amount: state.amount,
+            remarks: state.remarks,
+            date: state.date ?? DateTime.now(),
+            category: state.category,
+          ),
+        );
+      }
 
       emit(
         state.copyWith(

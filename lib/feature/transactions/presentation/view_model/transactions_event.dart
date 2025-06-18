@@ -7,11 +7,15 @@ sealed class TransactionsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class TransactionsRequested extends TransactionsEvent {
+class TransactionsStreamInitialized extends TransactionsEvent {
+  const TransactionsStreamInitialized();
+}
+
+class TransactionsRequested extends TransactionsEvent {
   const TransactionsRequested();
 }
 
-final class TransactionsItemCreated extends TransactionsEvent {
+class TransactionsItemCreated extends TransactionsEvent {
   const TransactionsItemCreated(this.transaction);
 
   final Transaction transaction;
@@ -20,7 +24,7 @@ final class TransactionsItemCreated extends TransactionsEvent {
   List<Object> get props => [transaction];
 }
 
-final class TransactionsItemDeleted extends TransactionsEvent {
+class TransactionsItemDeleted extends TransactionsEvent {
   const TransactionsItemDeleted(this.id);
 
   final String id;
@@ -29,7 +33,7 @@ final class TransactionsItemDeleted extends TransactionsEvent {
   List<Object> get props => [id];
 }
 
-final class TransactionsItemUpdated extends TransactionsEvent {
+class TransactionsItemUpdated extends TransactionsEvent {
   const TransactionsItemUpdated(this.transaction);
 
   final Transaction transaction;

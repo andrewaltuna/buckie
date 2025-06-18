@@ -19,6 +19,7 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
     TransactionMonth? month,
   })  : _transactionMonth = month,
         super(const TransactionsState()) {
+    on<TransactionsStreamInitialized>(_onStreamInitialized);
     on<TransactionsRequested>(_onRequested);
     on<TransactionsItemCreated>(_onItemCreated);
     on<TransactionsItemUpdated>(_onItemUpdated);
@@ -37,6 +38,10 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
   final TransactionMonth? _transactionMonth;
 
   StreamSubscription<TransactionMonth>? _transactionStream;
+
+  Future<void> _onStreamInitialized(_, __) async {
+    _repository.initializeTransactionsStream();
+  }
 
   Future<void> _onRequested(
     TransactionsRequested _,
@@ -102,18 +107,28 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
   void _onItemDeleted(
     TransactionsItemDeleted event,
     Emitter<TransactionsState> emit,
-  ) {
-    final index = state.transactions.indexWhere(
-      (element) => element.id == event.id,
-    );
-    final transactions = [...state.transactions]..removeAt(index);
+  ) async {
+    try {
+      await _repository.deleteTransaction(event.id);
 
-    emit(
-      state.copyWith(
-        status: ViewModelStatus.loaded,
-        transactions: transactions,
-      ),
-    );
+      final transactions = [...state.transactions]..removeWhere(
+          (element) => element.id == event.id,
+        );
+
+      emit(
+        state.copyWith(
+          status: ViewModelStatus.loaded,
+          transactions: transactions,
+        ),
+      );
+    } on Exception catch (error) {
+      emit(
+        state.copyWith(
+          status: ViewModelStatus.error,
+          error: error,
+        ),
+      );
+    }
   }
 
   double _computeTotal(List<Transaction> transactions) {
