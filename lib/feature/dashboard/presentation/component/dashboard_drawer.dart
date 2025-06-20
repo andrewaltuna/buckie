@@ -107,7 +107,7 @@ class _RecentTransactionsSection extends StatelessWidget {
     ) = context.select(
       (TransactionsViewModel viewModel) => (
         viewModel.state.status.isLoading,
-        viewModel.state.recentTransactions(),
+        viewModel.state.recentTransactions,
       ),
     );
 

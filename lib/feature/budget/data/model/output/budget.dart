@@ -11,7 +11,7 @@ class Budget extends Equatable {
   factory Budget.fromJson(Map<String, dynamic> json) {
     return Budget(
       month: TransactionMonth.fromDate(json.parseDateTime('date')),
-      amount: json['budget'] as double?,
+      amount: json.parseDouble('amount'),
     );
   }
 

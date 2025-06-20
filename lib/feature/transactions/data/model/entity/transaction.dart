@@ -50,6 +50,8 @@ class Transaction extends Equatable {
         month: date.month,
       );
 
+  String get monthKey => '${date.year}-${date.month}';
+
   @override
   List<Object?> get props => [
         id,

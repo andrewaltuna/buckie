@@ -8,6 +8,7 @@ import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
+import 'package:expense_tracker/feature/transactions/data/model/output/transaction_stream_output.dart';
 import 'package:expense_tracker/feature/transactions/data/repository/transaction_repository_interface.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -23,7 +24,8 @@ class CategoriesViewModel extends Bloc<CategoriesEvent, CategoriesState> {
     on<CategoriesRequested>(_onLoaded);
 
     _trxSubscription = _transactionRepository.transactionsStream.listen(
-      (month) {
+      (output) {
+        final month = output.transaction.month;
         final stateMonth = state.budget?.month;
 
         if (stateMonth == null) return;
@@ -54,7 +56,7 @@ class CategoriesViewModel extends Bloc<CategoriesEvent, CategoriesState> {
   final TransactionRepositoryInterface _transactionRepository;
   final BudgetRepositoryInterface _budgetRepository;
 
-  StreamSubscription<TransactionMonth?>? _trxSubscription;
+  StreamSubscription<TransactionStreamOutput>? _trxSubscription;
   StreamSubscription<Budget>? _budgetSubscription;
 
   Future<void> _onLoaded(

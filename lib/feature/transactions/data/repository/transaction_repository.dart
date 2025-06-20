@@ -3,58 +3,40 @@ import 'package:expense_tracker/feature/transactions/data/model/entity/transacti
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:expense_tracker/feature/transactions/data/model/input/create_transaction_input.dart';
 import 'package:expense_tracker/feature/transactions/data/model/input/update_transaction_input.dart';
+import 'package:expense_tracker/feature/transactions/data/model/output/transaction_stream_output.dart';
 import 'package:expense_tracker/feature/transactions/data/repository/transaction_repository_interface.dart';
-import 'package:expense_tracker/feature/transactions/data/remote/transaction_remote_source_interface.dart';
-
-const _kUseLocal = true;
 
 class TransactionRepository implements TransactionRepositoryInterface {
-  const TransactionRepository(this._remoteSource, this._localSource);
+  const TransactionRepository(this._localSource);
 
-  final TransactionRemoteSourceInterface _remoteSource;
   final TransactionLocalSourceInterface _localSource;
 
   @override
-  Stream<TransactionMonth?> get transactionsStream =>
+  Stream<TransactionStreamOutput> get transactionsStream =>
       _localSource.transactionsStream;
 
   @override
-  void initializeTransactionsStream() {
-    _kUseLocal ? null : _remoteSource.initializeTransactionsStream();
-  }
-
-  @override
   Future<Transaction> createTransaction(CreateTransactionInput input) {
-    return _kUseLocal
-        ? _localSource.createTransaction(input)
-        : _remoteSource.createTransaction(input);
+    return _localSource.createTransaction(input);
   }
 
   @override
   Future<void> deleteTransaction(String id) {
-    return _kUseLocal
-        ? _localSource.deleteTransaction(id)
-        : _remoteSource.deleteTransaction(id);
+    return _localSource.deleteTransaction(id);
   }
 
   @override
   Future<Transaction> getTransaction(String id) {
-    return _kUseLocal
-        ? _localSource.getTransaction(id)
-        : _remoteSource.getTransaction(id);
+    return _localSource.getTransaction(id);
   }
 
   @override
   Future<List<Transaction>> getTransactions({TransactionMonth? month}) {
-    return _kUseLocal
-        ? _localSource.getTransactions(month: month)
-        : _remoteSource.getTransactions(month: month);
+    return _localSource.getTransactions(month: month);
   }
 
   @override
   Future<Transaction> updateTransaction(UpdateTransactionInput input) {
-    return _kUseLocal
-        ? _localSource.updateTransaction(input)
-        : _remoteSource.updateTransaction(input);
+    return _localSource.updateTransaction(input);
   }
 }

@@ -28,9 +28,7 @@ class AuthenticatedViewModels extends StatelessWidget {
         BlocProvider(
           create: (_) => TransactionsViewModel(
             sl<TransactionRepositoryInterface>(),
-          )
-            ..add(const TransactionsStreamInitialized())
-            ..add(const TransactionsRequested()),
+          )..add(const TransactionsRecentsRequested()),
         ),
       ],
       child: child,

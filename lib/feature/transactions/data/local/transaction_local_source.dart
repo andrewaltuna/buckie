@@ -6,6 +6,7 @@ import 'package:expense_tracker/feature/transactions/data/model/entity/transacti
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:expense_tracker/feature/transactions/data/model/input/create_transaction_input.dart';
 import 'package:expense_tracker/feature/transactions/data/model/input/update_transaction_input.dart';
+import 'package:expense_tracker/feature/transactions/data/model/output/transaction_stream_output.dart';
 import 'package:sqflite/sqflite.dart';
 
 class TransactionLocalSource implements TransactionLocalSourceInterface {
@@ -15,37 +16,24 @@ class TransactionLocalSource implements TransactionLocalSourceInterface {
 
   final Database _db;
 
-  final _streamController = StreamController<TransactionMonth?>.broadcast();
+  final _streamController =
+      StreamController<TransactionStreamOutput>.broadcast();
 
   @override
-  Stream<TransactionMonth?> get transactionsStream => _streamController.stream;
+  Stream<TransactionStreamOutput> get transactionsStream =>
+      _streamController.stream;
 
   @override
-  Future<t.Transaction> createTransaction(CreateTransactionInput input) async {
-    final id = await _db.insert(
-      _table,
-      input.toJson(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-
-    final month = TransactionMonth.fromDate(input.date);
-
-    _streamController.add(month);
-
-    return await getTransaction(id.toString());
-  }
-
-  @override
-  Future<void> deleteTransaction(String id) async {
-    final transaction = await getTransaction(id);
-
-    await _db.delete(
+  Future<t.Transaction> getTransaction(String id) async {
+    final result = await _db.query(
       _table,
       where: 'id = ?',
       whereArgs: [id],
     );
 
-    _streamController.add(transaction.month);
+    if (result.isEmpty) throw Exception('Transaction not found');
+
+    return t.Transaction.fromJson(result.first);
   }
 
   @override
@@ -77,6 +65,38 @@ class TransactionLocalSource implements TransactionLocalSourceInterface {
   }
 
   @override
+  Future<t.Transaction> createTransaction(CreateTransactionInput input) async {
+    final id = await _db.insert(
+      _table,
+      input.toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    final transaction = await getTransaction(id.toString());
+
+    _streamController.add(
+      TransactionStreamOutput.insert(transaction),
+    );
+
+    return transaction;
+  }
+
+  @override
+  Future<void> deleteTransaction(String id) async {
+    final transaction = await getTransaction(id);
+
+    await _db.delete(
+      _table,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    _streamController.add(
+      TransactionStreamOutput.delete(transaction),
+    );
+  }
+
+  @override
   Future<t.Transaction> updateTransaction(UpdateTransactionInput input) async {
     await _db.update(
       _table,
@@ -85,23 +105,12 @@ class TransactionLocalSource implements TransactionLocalSourceInterface {
       whereArgs: [input.id],
     );
 
-    final month = TransactionMonth.fromDate(input.date);
+    final transaction = await getTransaction(input.id);
 
-    _streamController.add(month);
-
-    return await getTransaction(input.id);
-  }
-
-  @override
-  Future<t.Transaction> getTransaction(String id) async {
-    final result = await _db.query(
-      _table,
-      where: 'id = ?',
-      whereArgs: [id],
+    _streamController.add(
+      TransactionStreamOutput.update(transaction),
     );
 
-    if (result.isEmpty) throw Exception('Transaction not found');
-
-    return t.Transaction.fromJson(result.first);
+    return transaction;
   }
 }

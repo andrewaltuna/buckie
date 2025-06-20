@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:expense_tracker/common/enum/view_model_status.dart';
 import 'package:expense_tracker/common/extension/list.dart';
-import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
+import 'package:expense_tracker/feature/transactions/data/model/output/transaction_stream_output.dart';
 import 'package:expense_tracker/feature/transactions/data/repository/transaction_repository_interface.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -18,56 +18,87 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
   TransactionsViewModel(
     this._repository, {
     TransactionMonth? month,
-  })  : _transactionMonth = month,
-        super(const TransactionsState()) {
-    on<TransactionsStreamInitialized>(_onStreamInitialized);
+  }) : super(const TransactionsState()) {
+    on<TransactionsRecentsRequested>(_onRecentsRequested);
     on<TransactionsRequested>(_onRequested);
     on<TransactionsItemCreated>(_onItemCreated);
     on<TransactionsItemUpdated>(_onItemUpdated);
     on<TransactionsItemDeleted>(_onItemDeleted);
 
     _trxSubscription = _repository.transactionsStream.listen(
-      (affectedMonth) {
-        if (_transactionMonth == null || _transactionMonth == affectedMonth) {
-          add(const TransactionsRequested());
+      (output) {
+        final operation = output.operation;
+        final key = output.transaction.monthKey;
+
+        if (!state.transactionsByMonth.containsKey(key)) return;
+
+        if (operation.isInsert) {
+          add(TransactionsItemCreated(output.transaction));
+        } else if (operation.isUpdate) {
+          add(TransactionsItemUpdated(output.transaction));
+        } else if (operation.isDelete) {
+          add(TransactionsItemDeleted(output.transaction));
         }
       },
     );
   }
 
   final TransactionRepositoryInterface _repository;
-  final TransactionMonth? _transactionMonth;
 
-  StreamSubscription<TransactionMonth?>? _trxSubscription;
-
-  void _onStreamInitialized(
-    TransactionsStreamInitialized event,
-    Emitter<TransactionsState> emit,
-  ) {
-    _repository.initializeTransactionsStream();
-  }
+  StreamSubscription<TransactionStreamOutput>? _trxSubscription;
 
   Future<void> _onRequested(
-    TransactionsRequested _,
+    TransactionsRequested event,
     Emitter<TransactionsState> emit,
   ) async {
     try {
-      print('REQUESTING TRANSACTIONS');
+      if (state.transactionsByMonth.containsKey(event.month!.key)) return;
+
       emit(state.copyWith(status: ViewModelStatus.loading));
 
       final transactions = await _repository.getTransactions(
-        month: _transactionMonth,
+        month: event.month,
       );
+
+      TransactionsByMonth? transactionsByMonth;
+
+      if (event.month != null) {
+        transactionsByMonth = Map.of(state.transactionsByMonth)
+          ..[event.month!.key] = transactions;
+      }
 
       emit(
         state.copyWith(
           status: ViewModelStatus.loaded,
-          transactions: transactions,
-          totalExpense: _computeTotal(transactions),
+          transactionsByMonth: transactionsByMonth,
+          selectedMonth: event.month,
         ),
       );
+    } on Exception catch (error) {
+      emit(
+        state.copyWith(
+          status: ViewModelStatus.error,
+          error: error,
+        ),
+      );
+    }
+  }
 
-      print(transactions);
+  Future<void> _onRecentsRequested(
+    TransactionsRecentsRequested event,
+    Emitter<TransactionsState> emit,
+  ) async {
+    try {
+      emit(state.copyWith(status: ViewModelStatus.loading));
+
+      final transactions = await _repository.getTransactions();
+
+      emit(
+        state.copyWith(
+          status: ViewModelStatus.loaded,
+          recentTransactions: transactions,
+        ),
+      );
     } on Exception catch (error) {
       emit(
         state.copyWith(
@@ -82,11 +113,16 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
     TransactionsItemCreated event,
     Emitter<TransactionsState> emit,
   ) async {
-    final transactions = [...state.transactions, event.transaction];
+    final key = event.transaction.monthKey;
+    final transactionsByMonth = Map.of(state.transactionsByMonth);
+    final transactions = List.of(transactionsByMonth[key]!)
+      ..add(event.transaction);
+
+    transactionsByMonth[key] = _sortByDate(transactions);
 
     emit(
       state.copyWith(
-        transactions: transactions,
+        transactionsByMonth: transactionsByMonth,
       ),
     );
   }
@@ -95,18 +131,21 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
     TransactionsItemUpdated event,
     Emitter<TransactionsState> emit,
   ) {
-    final index = state.transactions.indexWhere(
-      (element) => element.id == event.transaction.id,
+    final key = event.transaction.monthKey;
+    final transactionsByMonth = Map.of(state.transactionsByMonth);
+    final transactions = List.of(transactionsByMonth[key]!);
+
+    // Update transaction
+    final index = transactions.indexWhere(
+      (transaction) => transaction.id == event.transaction.id,
     );
-    final transactions = [...state.transactions]..replaceAt(
-        index,
-        event.transaction,
-      );
+    transactions.replaceAt(index, event.transaction);
+
+    transactionsByMonth[key] = _sortByDate(transactions);
 
     emit(
       state.copyWith(
-        status: ViewModelStatus.loaded,
-        transactions: transactions,
+        transactionsByMonth: transactionsByMonth,
       ),
     );
   }
@@ -116,16 +155,21 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
     Emitter<TransactionsState> emit,
   ) async {
     try {
-      await _repository.deleteTransaction(event.id);
+      await _repository.deleteTransaction(event.transaction.id);
 
-      final transactions = [...state.transactions]..removeWhere(
-          (element) => element.id == event.id,
-        );
+      final key = event.transaction.monthKey;
+      final transactionsByMonth = Map.of(state.transactionsByMonth);
+      final transactions = List.of(transactionsByMonth[key]!);
+
+      transactions.removeWhere(
+        (transaction) => transaction.id == event.transaction.id,
+      );
+
+      transactionsByMonth[key] = _sortByDate(transactions);
 
       emit(
         state.copyWith(
-          status: ViewModelStatus.loaded,
-          transactions: transactions,
+          transactionsByMonth: transactionsByMonth,
         ),
       );
     } on Exception catch (error) {
@@ -143,6 +187,10 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
       0.0,
       (previous, element) => previous + element.amount,
     );
+  }
+
+  List<Transaction> _sortByDate(List<Transaction> transactions) {
+    return transactions..sort((a, b) => b.date.compareTo(a.date));
   }
 
   @override

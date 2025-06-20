@@ -36,7 +36,7 @@ void initializeLocator() {
   // Transactions
   sl
     ..registerLazySingleton<TransactionRepositoryInterface>(
-      () => TransactionRepository(sl(), sl()),
+      () => TransactionRepository(sl()),
     )
     ..registerLazySingleton<TransactionLocalSourceInterface>(
       () => TransactionLocalSource(sl()),

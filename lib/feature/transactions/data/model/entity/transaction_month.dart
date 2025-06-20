@@ -34,6 +34,8 @@ class TransactionMonth extends Equatable {
   @override
   String toString() => Formatter.date(toDateTime(), includeDay: false);
 
+  String get key => '$year-$month';
+
   @override
   List<Object?> get props => [year, month];
 }

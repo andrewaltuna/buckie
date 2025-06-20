@@ -2,7 +2,6 @@ import 'package:expense_tracker/common/global/authenticated_view_models.dart';
 import 'package:expense_tracker/common/helper/navigation_helper.dart';
 import 'package:expense_tracker/feature/account/presentation/screen/login_screen.dart';
 import 'package:expense_tracker/feature/account/presentation/screen/registration_screen.dart';
-import 'package:expense_tracker/feature/account/presentation/view_model/auth_view_model.dart';
 import 'package:expense_tracker/feature/categories/presentation/screen/categories_screen.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/screen/dashboard_screen.dart';
 import 'package:expense_tracker/feature/settings/presentation/screen/settings_screen.dart';
@@ -11,7 +10,6 @@ import 'package:expense_tracker/feature/transactions/presentation/screen/create_
 import 'package:expense_tracker/feature/transactions/presentation/screen/transactions_screen.dart';
 import 'package:expense_tracker/feature/transactions/presentation/screen/update_transaction_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AppNavigation {
@@ -26,12 +24,12 @@ class AppNavigation {
 
   static final router = GoRouter(
     navigatorKey: navigatorKey,
-    initialLocation: LoginScreen.routeName,
-    redirect: (context, state) {
+    initialLocation: DashboardScreen.routePath,
+    // TEMP disregard auth
+    /* redirect: (context, state) {
       final path = state.fullPath;
       final isAuthRoute = authRoutes.contains(path);
 
-      print(path);
       final authState = context.read<AuthViewModel>().state;
       final isAuthenticated =
           authState.status.isLoaded && authState.isAuthenticated;
@@ -43,7 +41,7 @@ class AppNavigation {
       if (!isAuthRoute && !isAuthenticated) return LoginScreen.routePath;
 
       return null;
-    },
+    }, */
     routes: [
       GoRoute(
         name: LoginScreen.routeName,

@@ -1,44 +1,41 @@
 part of 'transactions_view_model.dart';
 
+typedef TransactionsByMonth = Map<String, List<Transaction>>;
+
 class TransactionsState extends Equatable {
   const TransactionsState({
     this.status = ViewModelStatus.initial,
-    this.transactions = const [],
-    this.totalExpense = 0.0,
+    this.recentTransactions = const [],
+    this.transactionsByMonth = const {},
+    this.selectedMonth,
     this.error,
   });
 
   final ViewModelStatus status;
-  final List<Transaction> transactions;
-  final double totalExpense;
+  final List<Transaction> recentTransactions;
+  final TransactionsByMonth transactionsByMonth;
+  final TransactionMonth? selectedMonth;
   final Exception? error;
 
   TransactionsState copyWith({
     ViewModelStatus? status,
-    List<Transaction>? transactions,
-    double? totalExpense,
+    List<Transaction>? recentTransactions,
+    TransactionsByMonth? transactionsByMonth,
+    TransactionMonth? selectedMonth,
     Exception? error,
   }) {
     return TransactionsState(
       status: status ?? this.status,
-      transactions: transactions ?? this.transactions,
-      totalExpense: totalExpense ?? this.totalExpense,
+      recentTransactions: recentTransactions ?? this.recentTransactions,
+      transactionsByMonth: transactionsByMonth ?? this.transactionsByMonth,
+      selectedMonth: selectedMonth ?? this.selectedMonth,
       error: error ?? this.error,
     );
   }
 
-  List<Transaction> recentTransactions([int count = 10]) {
-    return transactions.take(count).toList();
-  }
-
-  Map<DateTime, List<Transaction>> byDate() => groupBy(
-        transactions,
-        (transaction) => transaction.date,
-      );
-
   List<Category> toCategories() {
     final categories = groupBy(
-      transactions,
+      recentTransactions,
       (transaction) => transaction.category,
     );
 
@@ -53,13 +50,12 @@ class TransactionsState extends Equatable {
     }).toList();
   }
 
-  String get totalExpenseLabel => Formatter.currency(totalExpense);
-
   @override
   List<Object?> get props => [
         status,
-        transactions,
-        totalExpense,
+        recentTransactions,
+        transactionsByMonth,
+        selectedMonth,
         error,
       ];
 }

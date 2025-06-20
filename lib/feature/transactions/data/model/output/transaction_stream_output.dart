@@ -7,8 +7,7 @@ import 'package:expense_tracker/feature/transactions/data/model/entity/transacti
 class TransactionStreamOutput extends Equatable {
   const TransactionStreamOutput({
     required this.operation,
-    this.deletedId,
-    this.transaction,
+    required this.transaction,
   });
 
   factory TransactionStreamOutput.insert(
@@ -29,25 +28,21 @@ class TransactionStreamOutput extends Equatable {
     );
   }
 
-  factory TransactionStreamOutput.delete(String id) {
+  factory TransactionStreamOutput.delete(
+    Transaction transaction,
+  ) {
     return TransactionStreamOutput(
       operation: StreamOperation.delete,
-      deletedId: id,
+      transaction: transaction,
     );
   }
 
   final StreamOperation operation;
-
-  /// Id of the deleted transaction.
-  final String? deletedId;
-
-  /// Transaction object that was inserted or updated.
-  final Transaction? transaction;
+  final Transaction transaction;
 
   @override
   List<Object?> get props => [
         operation,
-        deletedId,
         transaction,
       ];
 }

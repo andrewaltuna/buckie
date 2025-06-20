@@ -4,15 +4,20 @@ sealed class TransactionsEvent extends Equatable {
   const TransactionsEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
-class TransactionsStreamInitialized extends TransactionsEvent {
-  const TransactionsStreamInitialized();
+class TransactionsRecentsRequested extends TransactionsEvent {
+  const TransactionsRecentsRequested();
 }
 
 class TransactionsRequested extends TransactionsEvent {
-  const TransactionsRequested();
+  const TransactionsRequested([this.month]);
+
+  final TransactionMonth? month;
+
+  @override
+  List<Object?> get props => [month];
 }
 
 class TransactionsItemCreated extends TransactionsEvent {
@@ -25,12 +30,12 @@ class TransactionsItemCreated extends TransactionsEvent {
 }
 
 class TransactionsItemDeleted extends TransactionsEvent {
-  const TransactionsItemDeleted(this.id);
+  const TransactionsItemDeleted(this.transaction);
 
-  final String id;
+  final Transaction transaction;
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [transaction];
 }
 
 class TransactionsItemUpdated extends TransactionsEvent {

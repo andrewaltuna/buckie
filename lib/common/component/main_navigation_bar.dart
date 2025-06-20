@@ -22,68 +22,70 @@ class MainNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final perItemWidth = (context.width - 30) / 5;
 
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        height: Constants.navBarHeight,
-        // TODO: Remove once complete
-        width: (perItemWidth * _kNavigationItems.length) + 50,
-        padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
-        child: DecoratedBox(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(50)),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.shadow,
-                offset: Offset(0, 5),
-                blurRadius: 5,
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(50)),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: AppColors.widgetBackgroundSecondary,
-              ),
-              child: Row(
-                children: _kNavigationItems.map((item) {
-                  if (item == NavigationItemType.create) {
-                    return const Expanded(
-                      child: _CreateButton(),
-                    );
-                  }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          height: Constants.navBarHeight + 15,
+          // TODO: Remove once complete
+          width: (perItemWidth * _kNavigationItems.length) + 50,
+          padding: const EdgeInsets.all(15),
+          child: DecoratedBox(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  // offset: Offset(0, 2),
+                  blurRadius: 8,
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(50)),
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: AppColors.widgetBackgroundSecondary,
+                ),
+                child: Row(
+                  children: _kNavigationItems.map((item) {
+                    if (item == NavigationItemType.create) {
+                      return const Expanded(
+                        child: _CreateButton(),
+                      );
+                    }
 
-                  final path = GoRouter.of(context)
-                      .routerDelegate
-                      .currentConfiguration
-                      .fullPath;
+                    final path = GoRouter.of(context)
+                        .routerDelegate
+                        .currentConfiguration
+                        .fullPath;
 
-                  final isSelected = item.routePath == path;
+                    final isSelected = item.routePath == path;
 
-                  return Expanded(
-                    child: IconButton(
-                      onPressed: () => context.goNamed(item.routeName),
-                      icon: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            isSelected ? item.selectedIcon : item.defaultIcon,
-                            color: isSelected
-                                ? AppColors.accent
-                                : AppColors.fontPrimary,
-                            size: isSelected ? 34 : 30,
-                          ),
-                        ],
+                    return Expanded(
+                      child: IconButton(
+                        onPressed: () => context.goNamed(item.routeName),
+                        icon: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              isSelected ? item.selectedIcon : item.defaultIcon,
+                              color: isSelected
+                                  ? AppColors.accent
+                                  : AppColors.fontPrimary,
+                              size: isSelected ? 34 : 30,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                }).toList(),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

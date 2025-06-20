@@ -56,6 +56,9 @@ class BudgetViewModel extends Bloc<BudgetEvent, BudgetState> {
       emit(state.copyWith(status: ViewModelStatus.loading));
 
       final budget = await _repository.getBudget(event.month ?? _month);
+
+      print('budget $budget');
+
       emit(
         state.copyWith(
           status: ViewModelStatus.loaded,

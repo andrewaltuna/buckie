@@ -9,7 +9,7 @@ import 'package:expense_tracker/feature/budget/data/repository/budget_repository
 import 'package:expense_tracker/feature/budget/presentation/view_model/budget_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
-import 'package:expense_tracker/feature/transactions/data/repository/transaction_repository_interface.dart';
+import 'package:expense_tracker/feature/transactions/data/model/extension/transaction.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/set_budget_modal_content.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/transaction_preview_skeleton.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/transactions_empty_indicator.dart';
@@ -31,7 +31,7 @@ class TransactionsScreen extends HookWidget {
   Widget build(BuildContext context) {
     final controller = usePageController(initialPage: _kInitialPage);
     final page = useState(_kInitialPage);
-    final currentDate = DateTime.now();
+    final currentDate = useMemoized(() => DateTime.now());
 
     return MainScaffold(
       title: 'Transactions',
@@ -40,22 +40,16 @@ class TransactionsScreen extends HookWidget {
         onPageChanged: (value) => page.value = value,
         itemBuilder: (context, index) {
           final offset = index - _kInitialPage;
-          final month = TransactionMonth(
-            month: currentDate.month + offset,
-            year: currentDate.year,
+          final month = TransactionMonth.fromDate(
+            currentDate.copyWith(month: currentDate.month + offset),
           );
 
-          if (page.value - index >= 3) {
-            return const SizedBox.shrink();
-          }
           return MultiBlocProvider(
             providers: [
-              BlocProvider(
-                create: (_) => TransactionsViewModel(
-                  sl<TransactionRepositoryInterface>(),
-                  month: month,
-                )..add(const TransactionsRequested()),
-              ),
+              // BlocProvider.value(
+              //   value: BlocProvider.of<TransactionsViewModel>(context)
+              //     ..add(TransactionsRequested(month)),
+              // ),
               BlocProvider(
                 create: (_) => BudgetViewModel(
                   sl<BudgetRepositoryInterface>(),
@@ -82,8 +76,21 @@ class _TransactionsPage extends HookWidget {
   Widget build(BuildContext context) {
     useAutomaticKeepAlive();
 
+    useEffect(
+      () {
+        context.read<TransactionsViewModel>().add(TransactionsRequested(month));
+
+        return;
+      },
+      [],
+    );
+
     return BlocBuilder<TransactionsViewModel, TransactionsState>(
       builder: (context, state) {
+        final transactions = state.transactionsByMonth[month.key] ?? [];
+        final isLoading =
+            state.status.isLoading && month.key == state.selectedMonth?.key;
+
         return Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           child: Column(
@@ -101,7 +108,9 @@ class _TransactionsPage extends HookWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: _BudgetIndicator(
-                      expenseLabel: state.totalExpenseLabel,
+                      expenseLabel: Formatter.currency(
+                        transactions.sumAmount(),
+                      ),
                     ),
                   ),
                 ],
@@ -109,8 +118,8 @@ class _TransactionsPage extends HookWidget {
               const SizedBox(height: 16),
               Expanded(
                 child: _TransactionsList(
-                  transactionsByDate: state.byDate(),
-                  isLoading: state.status.isLoading,
+                  transactionsByDate: transactions.byDate(),
+                  isLoading: isLoading,
                 ),
               ),
             ],

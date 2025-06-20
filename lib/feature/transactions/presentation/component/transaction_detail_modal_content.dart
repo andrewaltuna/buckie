@@ -54,7 +54,7 @@ class _Header extends StatelessWidget {
   void _onDelete(BuildContext context) {
     context
         .read<TransactionsViewModel>()
-        .add(TransactionsItemDeleted(transaction.id));
+        .add(TransactionsItemDeleted(transaction));
 
     Navigator.of(context).pop();
   }
