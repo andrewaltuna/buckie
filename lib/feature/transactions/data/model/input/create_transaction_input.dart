@@ -1,5 +1,5 @@
 import 'package:expense_tracker/common/extension/enum.dart';
-import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
+import 'package:expense_tracker/feature/categories/data/model/category.dart';
 
 class CreateTransactionInput {
   const CreateTransactionInput({
@@ -12,14 +12,14 @@ class CreateTransactionInput {
   final double amount;
   final String? remarks;
   final DateTime date;
-  final TransactionCategoryType category;
+  final CategoryType category;
 
   Map<String, dynamic> toJson() {
     return {
       'amount': amount,
       'remarks': remarks == '' ? null : remarks,
       'category': category.value,
-      'date': date.toString(),
+      'date': date.toIso8601String(),
     };
   }
 }

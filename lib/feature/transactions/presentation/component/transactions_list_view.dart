@@ -36,6 +36,7 @@ class TransactionsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      physics: const BouncingScrollPhysics(),
       children: transactionsByDate.entries.map(
         (entry) {
           final date = entry.key;

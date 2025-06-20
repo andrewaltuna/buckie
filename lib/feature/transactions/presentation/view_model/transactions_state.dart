@@ -31,15 +31,27 @@ class TransactionsState extends Equatable {
     return transactions.take(count).toList();
   }
 
-  Map<String, List<Transaction>> byMonthAndYear() => groupBy(
-        transactions,
-        (transaction) => transaction.monthAndYear,
-      );
-
   Map<DateTime, List<Transaction>> byDate() => groupBy(
         transactions,
         (transaction) => transaction.date,
       );
+
+  List<Category> toCategories() {
+    final categories = groupBy(
+      transactions,
+      (transaction) => transaction.category,
+    );
+
+    return categories.entries.map((entry) {
+      return Category(
+        type: entry.key,
+        totalExpense: entry.value.fold(
+          0,
+          (previous, transaction) => previous + transaction.amount,
+        ),
+      );
+    }).toList();
+  }
 
   String get totalExpenseLabel => Formatter.currency(totalExpense);
 

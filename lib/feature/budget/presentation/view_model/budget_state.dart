@@ -3,22 +3,22 @@ part of 'budget_view_model.dart';
 class BudgetState extends Equatable {
   const BudgetState({
     this.status = ViewModelStatus.initial,
-    this.budget,
+    this.amount,
     this.error,
   });
 
   final ViewModelStatus status;
-  final double? budget;
+  final double? amount;
   final Exception? error;
 
   BudgetState copyWith({
     ViewModelStatus? status,
-    ValueGetter<double?>? budget,
+    ValueGetter<double?>? amount,
     Exception? error,
   }) {
     return BudgetState(
       status: status ?? this.status,
-      budget: budget != null ? budget() : this.budget,
+      amount: amount != null ? amount() : this.amount,
       error: error ?? this.error,
     );
   }
@@ -26,7 +26,7 @@ class BudgetState extends Equatable {
   @override
   List<Object?> get props => [
         status,
-        budget,
+        amount,
         error,
       ];
 }

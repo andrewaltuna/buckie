@@ -1,7 +1,7 @@
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
-import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
+import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:flutter/material.dart';
 
 class CategoryDisplay extends StatelessWidget {
@@ -16,7 +16,7 @@ class CategoryDisplay extends StatelessWidget {
     super.key,
   });
 
-  final TransactionCategoryType category;
+  final CategoryType category;
   final bool iconOnly;
   final double? height;
   final double? width;

@@ -35,7 +35,7 @@ class BudgetViewModel extends Bloc<BudgetEvent, BudgetState> {
       emit(
         state.copyWith(
           status: ViewModelStatus.loaded,
-          budget: () => budget,
+          amount: () => budget?.amount,
         ),
       );
     } on Exception catch (error) {
@@ -59,7 +59,7 @@ class BudgetViewModel extends Bloc<BudgetEvent, BudgetState> {
       emit(
         state.copyWith(
           status: ViewModelStatus.loaded,
-          budget: () => budget,
+          amount: () => budget?.amount,
         ),
       );
     } on Exception catch (error) {
@@ -82,14 +82,14 @@ class BudgetViewModel extends Bloc<BudgetEvent, BudgetState> {
       await _repository.setBudget(
         SetBudgetInput(
           month: _month,
-          budget: event.budget,
+          amount: event.budget,
         ),
       );
 
       emit(
         state.copyWith(
           status: ViewModelStatus.loaded,
-          budget: () => event.budget,
+          amount: () => event.budget,
         ),
       );
     } on Exception catch (error) {

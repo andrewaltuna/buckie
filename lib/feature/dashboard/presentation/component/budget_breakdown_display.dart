@@ -1,6 +1,6 @@
-import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
+import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/feature/categories/presentation/view_model/categories_view_model.dart';
-import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/budget_breakdown_chart.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/budget_breakdown_view_model.dart';
@@ -16,7 +16,7 @@ class BudgetBreakdownDisplay extends StatelessWidget {
   });
 
   final double totalBudget;
-  final List<TransactionCategory> categories;
+  final List<Category> categories;
   final double height;
 
   @override
@@ -32,7 +32,7 @@ class BudgetBreakdownDisplay extends StatelessWidget {
               child: BudgetBreakdownChart(
                 centerSpaceRadius: 50,
                 categories: categories,
-                totalBudget: totalBudget,
+                budget: totalBudget,
               ),
             ),
           ),
@@ -48,7 +48,11 @@ class _BalanceDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CategoriesViewModel, CategoriesState>(
-      builder: (context, categoriesState) {
+      builder: (context, state) {
+        final budgetAmount = state.budget?.amount;
+        final double balance =
+            budgetAmount != null ? state.grandTotalExpense / budgetAmount : 1;
+
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Container(
@@ -62,13 +66,18 @@ class _BalanceDisplay extends StatelessWidget {
                 children: [
                   _ValueLabel(
                     label: 'BAL',
-                    value: categoriesState.allBalanceTotalDisplay,
+                    value: state.remainingBalanceLabel,
+                    color: Color.lerp(
+                      AppColors.fontPrimary,
+                      AppColors.fontWarning,
+                      balance,
+                    ),
                   ),
                   BlocBuilder<BudgetBreakdownViewModel, BudgetBreakdownState>(
                     builder: (context, budgetBreakdownState) {
                       return _ValueLabel(
                         label: 'TOT',
-                        value: categoriesState.allBudgetTotalDisplay,
+                        value: state.budgetLabel,
                         suffixIcon: IconButton(
                           onPressed: () => context
                               .read<BudgetBreakdownViewModel>()
@@ -100,11 +109,13 @@ class _ValueLabel extends StatelessWidget {
   const _ValueLabel({
     required this.label,
     required this.value,
+    this.color,
     this.suffixIcon,
   });
 
   final String label;
   final String value;
+  final Color? color;
   final Widget? suffixIcon;
 
   @override
@@ -116,20 +127,15 @@ class _ValueLabel extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 14,
+            style: TextStyles.titleExtraSmall.copyWith(
               color: AppColors.accent,
-              fontWeight: FontWeight.w600,
-              fontFamily: Constants.fontFamilySecondary,
             ),
           ),
           const SizedBox(width: 10),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 18,
-              color: AppColors.fontPrimary,
-              fontWeight: FontWeight.bold,
+            style: TextStyles.titleSmall.copyWith(
+              color: color,
             ),
           ),
           if (suffixIcon != null) suffixIcon!,

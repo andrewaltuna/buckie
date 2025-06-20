@@ -1,23 +1,19 @@
-import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
-import 'package:expense_tracker/common/helper/formatter.dart';
+import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:flutter/material.dart';
 
+// TODO: update this to reflect actual values
 class CategoryPreviewCard extends StatelessWidget {
   const CategoryPreviewCard({
     super.key,
     required this.category,
   });
 
-  final TransactionCategory category;
+  final Category category;
 
   @override
   Widget build(BuildContext context) {
-    final amount = Formatter.currency(category.amountRemaining.abs());
-    final amountRemainingLabel =
-        '$amount ${category.isWithinBudget ? 'LEFT' : 'OVER'}';
-
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -36,11 +32,11 @@ class CategoryPreviewCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: category.color,
+              color: category.type.color,
               borderRadius: BorderRadius.circular(15),
             ),
             child: Icon(
-              category.icon,
+              category.type.icon,
               color: Colors.white,
               size: 30,
             ),
@@ -55,7 +51,7 @@ class CategoryPreviewCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      category.label,
+                      category.type.label,
                       style: const TextStyle(
                         color: AppColors.fontPrimary,
                         fontSize: 16,
@@ -63,12 +59,10 @@ class CategoryPreviewCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      amountRemainingLabel,
+                      category.totalExpenseLabel,
                       style: TextStyles.titleMedium.copyWith(
                         fontSize: 14,
-                        color: category.isWithinBudget
-                            ? AppColors.fontSubtitle
-                            : AppColors.fontWarning,
+                        color: AppColors.fontWarning,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -80,16 +74,16 @@ class CategoryPreviewCard extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50),
                         child: LinearProgressIndicator(
-                          value: category.percentageSpent,
+                          value: 10,
                           minHeight: 15,
-                          color: category.color,
+                          color: category.type.color,
                           backgroundColor: AppColors.shadow,
                         ),
                       ),
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      category.percentageSpentDisplay,
+                      '10%',
                       style: TextStyles.bodyRegular.copyWith(
                         fontWeight: FontWeight.bold,
                       ),

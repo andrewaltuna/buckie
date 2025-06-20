@@ -3,10 +3,8 @@ import 'package:expense_tracker/feature/transactions/data/model/entity/transacti
 import 'package:expense_tracker/feature/transactions/data/model/input/create_transaction_input.dart';
 import 'package:expense_tracker/feature/transactions/data/model/input/update_transaction_input.dart';
 
-abstract interface class TransactionRepositoryInterface {
+abstract interface class TransactionLocalSourceInterface {
   Stream<TransactionMonth?> get transactionsStream;
-
-  void initializeTransactionsStream();
 
   Future<List<Transaction>> getTransactions({TransactionMonth? month});
 

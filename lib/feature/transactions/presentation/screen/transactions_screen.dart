@@ -93,7 +93,7 @@ class _TransactionsPage extends HookWidget {
                 children: [
                   Text(
                     Formatter.date(
-                      month.toDate(),
+                      month.toDateTime(),
                       includeDay: false,
                     ),
                     style: TextStyles.titleMedium,
@@ -131,7 +131,7 @@ class _BudgetIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final budget = context.select(
-      (BudgetViewModel viewModel) => viewModel.state.budget,
+      (BudgetViewModel viewModel) => viewModel.state.amount,
     );
 
     return Row(
@@ -142,10 +142,10 @@ class _BudgetIndicator extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                const Text(
-                  'Used ',
-                  style: TextStyles.titleExtraSmall,
-                ),
+                // const Text(
+                //   'Used ',
+                //   style: TextStyles.titleExtraSmall,
+                // ),
                 Text(
                   expenseLabel,
                   style: TextStyles.titleSmall.copyWith(

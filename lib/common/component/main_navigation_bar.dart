@@ -1,16 +1,18 @@
 import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/common/enum/navigation_item_type.dart';
+import 'package:expense_tracker/common/extension/screen_size.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/transactions/presentation/screen/create_transaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+// TODO: Uncomment as features are finished
 const _kNavigationItems = [
   NavigationItemType.dashboard,
-  NavigationItemType.categories,
+  // NavigationItemType.categories,
   NavigationItemType.create,
   NavigationItemType.transactions,
-  NavigationItemType.settings,
+  // NavigationItemType.settings,
 ];
 
 class MainNavigationBar extends StatelessWidget {
@@ -18,59 +20,66 @@ class MainNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: Constants.navBarHeight,
-      padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
-      child: DecoratedBox(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(50)),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.shadow,
-              offset: Offset(0, 5),
-              blurRadius: 5,
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(50)),
-          child: Container(
-            decoration: const BoxDecoration(
-              color: AppColors.widgetBackgroundSecondary,
-            ),
-            child: Row(
-              children: _kNavigationItems.map((item) {
-                if (item == NavigationItemType.create) {
-                  return const Expanded(
-                    child: _CreateButton(),
-                  );
-                }
+    final perItemWidth = (context.width - 30) / 5;
 
-                final path = GoRouter.of(context)
-                    .routerDelegate
-                    .currentConfiguration
-                    .fullPath;
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        height: Constants.navBarHeight,
+        // TODO: Remove once complete
+        width: (perItemWidth * _kNavigationItems.length) + 50,
+        padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+        child: DecoratedBox(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(50)),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.shadow,
+                offset: Offset(0, 5),
+                blurRadius: 5,
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(50)),
+            child: Container(
+              decoration: const BoxDecoration(
+                color: AppColors.widgetBackgroundSecondary,
+              ),
+              child: Row(
+                children: _kNavigationItems.map((item) {
+                  if (item == NavigationItemType.create) {
+                    return const Expanded(
+                      child: _CreateButton(),
+                    );
+                  }
 
-                final isSelected = item.routePath == path;
+                  final path = GoRouter.of(context)
+                      .routerDelegate
+                      .currentConfiguration
+                      .fullPath;
 
-                return Expanded(
-                  child: IconButton(
-                    onPressed: () => context.goNamed(item.routeName),
-                    icon: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          isSelected ? item.selectedIcon : item.defaultIcon,
-                          color: isSelected
-                              ? AppColors.accent
-                              : AppColors.fontPrimary,
-                          size: isSelected ? 34 : 30,
-                        ),
-                      ],
+                  final isSelected = item.routePath == path;
+
+                  return Expanded(
+                    child: IconButton(
+                      onPressed: () => context.goNamed(item.routeName),
+                      icon: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            isSelected ? item.selectedIcon : item.defaultIcon,
+                            color: isSelected
+                                ? AppColors.accent
+                                : AppColors.fontPrimary,
+                            size: isSelected ? 34 : 30,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              }).toList(),
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ),

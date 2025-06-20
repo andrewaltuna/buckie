@@ -2,46 +2,57 @@ part of 'categories_view_model.dart';
 
 class CategoriesState extends Equatable {
   const CategoriesState({
+    this.status = ViewModelStatus.initial,
     this.categories = const [],
+    this.budget,
+    this.error,
   });
 
-  final List<TransactionCategory> categories;
+  final ViewModelStatus status;
+  final List<Category> categories;
+  final Budget? budget;
+  final Exception? error;
 
   CategoriesState copyWith({
-    List<TransactionCategory>? categories,
+    ViewModelStatus? status,
+    List<Category>? categories,
+    Budget? budget,
+    Exception? error,
   }) {
     return CategoriesState(
+      status: status ?? this.status,
       categories: categories ?? this.categories,
+      budget: budget ?? this.budget,
+      error: error ?? this.error,
     );
   }
 
-  List<Transaction> get transactions {
-    return categories
-        .map((category) => category.transactions)
-        .expand((transactions) => transactions)
-        .toList()
-      ..sort((trx1, trx2) {
-        return trx1.date.compareTo(trx2.date);
-      });
-  }
+  double get budgetAmount => budget?.amount ?? 0;
 
-  double get allBalanceTotal {
-    return categories.fold(0, (previousValue, category) {
-      return previousValue + category.balance;
-    });
-  }
+  double get grandTotalExpense => categories.fold(
+        0,
+        (sum, category) {
+          return sum + category.totalExpense;
+        },
+      );
 
-  double get allBudgetTotal {
-    return categories.fold(0, (previousValue, category) {
-      return previousValue + category.budget;
-    });
-  }
+  double? get remainingBalance =>
+      budget != null ? budgetAmount - grandTotalExpense : null;
 
-  String get allBalanceTotalDisplay => Formatter.currency(allBalanceTotal);
-  String get allBudgetTotalDisplay => Formatter.currency(allBudgetTotal);
+  String get remainingBalanceLabel => remainingBalance != null
+      ? Formatter.currency(
+          budgetAmount - grandTotalExpense,
+        )
+      : 'N/A';
+
+  String get budgetLabel =>
+      budget != null ? Formatter.currency(budgetAmount) : 'N/A';
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
+        status,
         categories,
+        budget,
+        error,
       ];
 }

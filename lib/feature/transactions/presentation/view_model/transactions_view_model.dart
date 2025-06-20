@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:expense_tracker/common/enum/view_model_status.dart';
 import 'package:expense_tracker/common/extension/list.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
+import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:expense_tracker/feature/transactions/data/repository/transaction_repository_interface.dart';
@@ -25,7 +26,7 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
     on<TransactionsItemUpdated>(_onItemUpdated);
     on<TransactionsItemDeleted>(_onItemDeleted);
 
-    _transactionStream = _repository.transactionsStream.listen(
+    _trxSubscription = _repository.transactionsStream.listen(
       (affectedMonth) {
         if (_transactionMonth == null || _transactionMonth == affectedMonth) {
           add(const TransactionsRequested());
@@ -37,9 +38,12 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
   final TransactionRepositoryInterface _repository;
   final TransactionMonth? _transactionMonth;
 
-  StreamSubscription<TransactionMonth>? _transactionStream;
+  StreamSubscription<TransactionMonth?>? _trxSubscription;
 
-  Future<void> _onStreamInitialized(_, __) async {
+  void _onStreamInitialized(
+    TransactionsStreamInitialized event,
+    Emitter<TransactionsState> emit,
+  ) {
     _repository.initializeTransactionsStream();
   }
 
@@ -48,6 +52,7 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
     Emitter<TransactionsState> emit,
   ) async {
     try {
+      print('REQUESTING TRANSACTIONS');
       emit(state.copyWith(status: ViewModelStatus.loading));
 
       final transactions = await _repository.getTransactions(
@@ -61,6 +66,8 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
           totalExpense: _computeTotal(transactions),
         ),
       );
+
+      print(transactions);
     } on Exception catch (error) {
       emit(
         state.copyWith(
@@ -140,7 +147,7 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
 
   @override
   Future<void> close() {
-    _transactionStream?.cancel();
+    _trxSubscription?.cancel();
 
     return super.close();
   }

@@ -27,7 +27,7 @@ class BudgetRemoteSource implements BudgetRemoteSourceInterface {
     final result = await _supabaseClient
         .from(_table)
         .select(_budgetFullOutput)
-        .eq('month', month.toDate());
+        .eq('month', month.toDateTime());
 
     return result.firstOrNull?.tryParseDouble('budget');
   }
@@ -35,10 +35,10 @@ class BudgetRemoteSource implements BudgetRemoteSourceInterface {
   @override
   Future<void> setBudget(SetBudgetInput input) async {
     try {
-      if (input.budget == null) {
+      if (input.amount == null) {
         await _supabaseClient.from(_table).delete().eq(
               'month',
-              input.month.toDate(),
+              input.month.toDateTime(),
             );
       } else {
         await _supabaseClient.from(_table).upsert(

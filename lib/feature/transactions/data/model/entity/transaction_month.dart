@@ -7,13 +7,32 @@ class TransactionMonth extends Equatable {
     required this.month,
   });
 
+  factory TransactionMonth.fromDate(DateTime date) {
+    return TransactionMonth(
+      year: date.year,
+      month: date.month,
+    );
+  }
+
   final int year;
   final int month;
 
-  DateTime toDate() => DateTime(year, month);
+  TransactionMonth copyWith({
+    int? year,
+    int? month,
+  }) {
+    return TransactionMonth(
+      year: year ?? this.year,
+      month: month ?? this.month,
+    );
+  }
+
+  DateTime toDateTime() => DateTime(year, month);
+
+  String toIso8601String() => toDateTime().toIso8601String();
 
   @override
-  String toString() => Formatter.date(toDate(), includeDay: false);
+  String toString() => Formatter.date(toDateTime(), includeDay: false);
 
   @override
   List<Object?> get props => [year, month];

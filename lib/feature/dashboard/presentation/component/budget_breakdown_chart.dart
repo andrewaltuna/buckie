@@ -1,4 +1,4 @@
-import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
+import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/helper/budget_usage_display_helper.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/budget_breakdown_view_model.dart';
@@ -12,14 +12,14 @@ class BudgetBreakdownChart extends StatelessWidget {
   const BudgetBreakdownChart({
     super.key,
     required this.categories,
-    required this.totalBudget,
+    required this.budget,
     this.label,
     this.centerSpaceRadius = 50,
   });
 
   final String? label;
-  final List<TransactionCategory> categories;
-  final double totalBudget;
+  final List<Category> categories;
+  final double budget;
   final double centerSpaceRadius;
 
   @override
@@ -39,7 +39,7 @@ class BudgetBreakdownChart extends StatelessWidget {
                   label ??
                       BudgetUsageDisplayHelper.percentageUsedDisplay(
                         categories: categories,
-                        totalBudget: totalBudget,
+                        totalBudget: budget,
                       ),
                   style: TextStyles.titleMedium.copyWith(
                     fontSize: 16,
@@ -74,8 +74,8 @@ class BudgetBreakdownChart extends StatelessWidget {
                     BudgetUsageDisplayHelper.categoryToPieChartSectionData(
                   categories: categories,
                   selectedIndex: state.selectedIndex,
-                  totalBudget: totalBudget,
                   showRemaining: state.showRemaining,
+                  budget: budget,
                 ),
               ),
             ),

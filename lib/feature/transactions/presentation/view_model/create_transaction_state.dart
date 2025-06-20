@@ -5,7 +5,7 @@ class CreateTransactionState extends Equatable {
     this.status = ViewModelStatus.initial,
     this.date,
     this.amount = 0,
-    this.category = TransactionCategoryType.other,
+    this.category = CategoryType.other,
     this.remarks,
     this.error,
   });
@@ -14,7 +14,7 @@ class CreateTransactionState extends Equatable {
   final DateTime? date;
   final String? remarks;
   final double amount;
-  final TransactionCategoryType category;
+  final CategoryType category;
   final Exception? error;
 
   CreateTransactionState copyWith({
@@ -22,7 +22,7 @@ class CreateTransactionState extends Equatable {
     DateTime? date,
     String? remarks,
     double? amount,
-    TransactionCategoryType? category,
+    CategoryType? category,
     Exception? error,
   }) {
     return CreateTransactionState(

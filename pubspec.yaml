@@ -45,6 +45,7 @@ dependencies:
   supabase_flutter: ^2.9.1
   get_it: ^8.0.3
   shimmer: ^3.0.0
+  sqflite: ^2.4.1
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,5 @@
 import 'package:expense_tracker/common/extension/enum.dart';
-import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
+import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/feature/transactions/data/model/input/create_transaction_input.dart';
 
 class UpdateTransactionInput extends CreateTransactionInput {
@@ -18,7 +18,7 @@ class UpdateTransactionInput extends CreateTransactionInput {
     double? amount,
     String? remarks,
     DateTime? date,
-    TransactionCategoryType? category,
+    CategoryType? category,
   }) {
     return UpdateTransactionInput(
       id: id ?? this.id,
@@ -36,7 +36,7 @@ class UpdateTransactionInput extends CreateTransactionInput {
       'amount': amount,
       'remarks': remarks == '' ? null : remarks,
       'category': category.value,
-      'date': date.toString(),
+      'date': date.toIso8601String(),
     };
   }
 }

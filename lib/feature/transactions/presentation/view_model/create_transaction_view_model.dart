@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:expense_tracker/common/enum/view_model_status.dart';
-import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
+import 'package:expense_tracker/common/extension/date_time.dart';
+import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/feature/transactions/data/exception/transaction_exception.dart';
 import 'package:expense_tracker/feature/transactions/data/model/input/create_transaction_input.dart';
 import 'package:expense_tracker/feature/transactions/data/model/input/update_transaction_input.dart';
@@ -66,13 +67,15 @@ class CreateTransactionViewModel
         throw const TransactionInvalidAmountException();
       }
 
+      final date = (state.date ?? DateTime.now()).dateOnly;
+
       if (_transactionId != null) {
         await _repository.updateTransaction(
           UpdateTransactionInput(
             id: _transactionId!,
             amount: state.amount,
             remarks: state.remarks,
-            date: state.date ?? DateTime.now(),
+            date: date,
             category: state.category,
           ),
         );
@@ -81,7 +84,7 @@ class CreateTransactionViewModel
           CreateTransactionInput(
             amount: state.amount,
             remarks: state.remarks,
-            date: state.date ?? DateTime.now(),
+            date: date,
             category: state.category,
           ),
         );

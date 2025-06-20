@@ -15,7 +15,7 @@ class TransactionRemoteSource implements TransactionRemoteSourceInterface {
   static const _schema = 'public';
   static const _table = 'transactions';
 
-  final _controller = StreamController<TransactionMonth>.broadcast();
+  final _controller = StreamController<TransactionMonth?>.broadcast();
 
   @override
   void initializeTransactionsStream() {
@@ -27,16 +27,13 @@ class TransactionRemoteSource implements TransactionRemoteSourceInterface {
         table: _table,
         schema: _schema,
         callback: (payload) {
-          print(payload);
-          final isDelete = payload.newRecord['id'] == null;
+          final isDelete = payload.newRecord.isEmpty;
 
-          if (isDelete) return;
+          if (isDelete) return _controller.add(null);
 
-          final transaction = Transaction.fromJson(
-            isDelete ? payload.oldRecord : payload.newRecord,
-          );
+          final transaction = Transaction.fromJson(payload.newRecord);
 
-          _controller.add(transaction.transactionMonth);
+          _controller.add(transaction.month);
         },
       )
       ..subscribe();
@@ -80,7 +77,7 @@ class TransactionRemoteSource implements TransactionRemoteSourceInterface {
   }
 
   @override
-  Stream<TransactionMonth> get transactionsStream => _controller.stream;
+  Stream<TransactionMonth?> get transactionsStream => _controller.stream;
 
   @override
   Future<Transaction> getTransaction(String id) {
@@ -95,7 +92,7 @@ class TransactionRemoteSource implements TransactionRemoteSourceInterface {
     final List<Map<String, dynamic>> result;
 
     if (month != null) {
-      final start = month.toDate();
+      final start = month.toDateTime();
       final end = start.copyWith(
         month: start.month + 1,
       );

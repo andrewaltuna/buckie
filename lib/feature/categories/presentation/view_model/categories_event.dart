@@ -7,6 +7,11 @@ sealed class CategoriesEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class CategoriesLoaded extends CategoriesEvent {
-  const CategoriesLoaded();
+class CategoriesRequested extends CategoriesEvent {
+  const CategoriesRequested(this.month);
+
+  final TransactionMonth month;
+
+  @override
+  List<Object> get props => [month];
 }

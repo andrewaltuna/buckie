@@ -1,7 +1,7 @@
 import 'package:expense_tracker/common/extension/screen_size.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
-import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
+import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/category_display.dart';
 import 'package:flutter/material.dart';
 
@@ -14,8 +14,8 @@ class CategorySelector extends StatelessWidget {
     super.key,
   });
 
-  final TransactionCategoryType category;
-  final void Function(TransactionCategoryType)? onChanged;
+  final CategoryType category;
+  final void Function(CategoryType)? onChanged;
 
   void _onTap(BuildContext context) {
     showModalBottomSheet(
@@ -55,7 +55,7 @@ class _Selector extends StatelessWidget {
     required this.onChanged,
   });
 
-  final void Function(TransactionCategoryType)? onChanged;
+  final void Function(CategoryType)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,7 @@ class _Selector extends StatelessWidget {
                 crossAxisSpacing: 8,
               ),
               itemBuilder: (context, index) {
-                final category = TransactionCategoryType.values[index];
+                final category = CategoryType.values[index];
 
                 return InkWell(
                   onTap: () {
@@ -117,7 +117,7 @@ class _Selector extends StatelessWidget {
                   ),
                 );
               },
-              itemCount: TransactionCategoryType.values.length,
+              itemCount: CategoryType.values.length,
             ),
             const SizedBox(height: 16),
           ],

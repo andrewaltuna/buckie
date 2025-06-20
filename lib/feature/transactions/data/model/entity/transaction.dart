@@ -1,10 +1,7 @@
-import 'dart:math';
-
-import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:expense_tracker/common/extension/enum.dart';
 import 'package:expense_tracker/common/extension/json.dart';
-import 'package:expense_tracker/feature/categories/data/model/transaction_category.dart';
+import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 
 class Transaction extends Equatable {
@@ -16,55 +13,28 @@ class Transaction extends Equatable {
     required this.category,
   });
 
+  factory Transaction.fromJson(Map<String, dynamic> json) {
+    return Transaction(
+      id: json['id'].toString(),
+      amount: json.parseDouble('amount'),
+      remarks: json.tryParseString('remarks'),
+      date: json.parseDateTime('date'),
+      category: CategoryType.values.fromValue(json['category']),
+    );
+  }
+
   final String id;
   final double amount;
   final String? remarks;
   final DateTime date;
-  final TransactionCategoryType category;
-
-  factory Transaction.fromJson(Map<String, dynamic> json) {
-    return Transaction(
-      id: json.parseString('id'),
-      amount: json.parseDouble('amount'),
-      remarks: json.tryParseString('remarks'),
-      date: json.parseDateTime('date'),
-      category: TransactionCategoryType.values.fromValue(json['category']),
-    );
-  }
-
-  static List<Transaction> generatePlaceholderTransactions(int count) {
-    final labels = [
-      'Grab',
-      'McDonalds',
-      'Starbucks',
-      'Rent',
-      'WIFI',
-      'Utilities',
-      'Internet',
-    ];
-
-    return List.generate(count, (index) {
-      labels.shuffle();
-      final cats = [...TransactionCategoryType.values]..shuffle();
-      return Transaction(
-        id: '',
-        amount: Random().nextDouble() * 100,
-        remarks: 'Example remarks',
-        date: DateTime.now().subtract(
-          Duration(days: Random().nextInt(30)),
-        ),
-        category: cats.first,
-      );
-    })
-      ..sortBy((element) => element.date);
-  }
+  final CategoryType category;
 
   Transaction copyWith({
     String? id,
     double? amount,
     String? remarks,
     DateTime? date,
-    TransactionCategoryType? category,
+    CategoryType? category,
   }) {
     return Transaction(
       id: id ?? this.id,
@@ -75,9 +45,7 @@ class Transaction extends Equatable {
     );
   }
 
-  String get monthAndYear => '${date.month}-${date.year}';
-
-  TransactionMonth get transactionMonth => TransactionMonth(
+  TransactionMonth get month => TransactionMonth(
         year: date.year,
         month: date.month,
       );

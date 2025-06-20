@@ -4,7 +4,7 @@ import 'package:expense_tracker/feature/transactions/data/model/input/create_tra
 import 'package:expense_tracker/feature/transactions/data/model/input/update_transaction_input.dart';
 
 abstract interface class TransactionRemoteSourceInterface {
-  Stream<TransactionMonth> get transactionsStream;
+  Stream<TransactionMonth?> get transactionsStream;
 
   void initializeTransactionsStream();
 

@@ -4,19 +4,19 @@ import 'package:expense_tracker/feature/transactions/data/model/entity/transacti
 class SetBudgetInput extends Equatable {
   const SetBudgetInput({
     required this.month,
-    required this.budget,
+    required this.amount,
   });
 
   final TransactionMonth month;
-  final double? budget;
+  final double? amount;
 
   Map<String, dynamic> toJson() {
     return {
-      'month': month.toDate().toString(),
-      'budget': budget,
+      'date': month.toIso8601String(),
+      'amount': amount,
     };
   }
 
   @override
-  List<Object?> get props => [month, budget];
+  List<Object?> get props => [month, amount];
 }
