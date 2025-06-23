@@ -1,3 +1,4 @@
+import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/category_icon.dart';
@@ -7,18 +8,18 @@ class DashboardDrawerCardBase extends StatelessWidget {
   const DashboardDrawerCardBase({
     required this.category,
     required this.child,
+    this.onTap,
     super.key,
   });
 
   final CategoryType category;
+  final VoidCallback? onTap;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.widgetBackgroundSecondary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
@@ -27,17 +28,23 @@ class DashboardDrawerCardBase extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          CategoryIcon(
-            category: category,
-            size: 40,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: child,
-          ),
-        ],
+      child: CustomInkWell(
+        onTap: onTap,
+        color: AppColors.widgetBackgroundSecondary,
+        borderRadius: 16,
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            CategoryIcon(
+              category: category,
+              size: 40,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: child,
+            ),
+          ],
+        ),
       ),
     );
   }

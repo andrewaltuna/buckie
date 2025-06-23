@@ -102,38 +102,6 @@ class DashboardDrawer extends StatelessWidget {
   }
 }
 
-class _RecentTransactionsSection extends StatelessWidget {
-  const _RecentTransactionsSection();
-
-  @override
-  Widget build(BuildContext context) {
-    final (
-      isLoading,
-      recentTransactions,
-    ) = context.select(
-      (TransactionsViewModel viewModel) => (
-        viewModel.state.status.isLoading,
-        viewModel.state.recentTransactions,
-      ),
-    );
-
-    return DashboardSection(
-      label: 'Recent Transactions',
-      showMoreButton: true,
-      child: ListView.separated(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        padding: EdgeInsets.zero,
-        itemCount: recentTransactions.length,
-        itemBuilder: (_, index) => TransactionPreviewCard(
-          transaction: recentTransactions[index],
-        ),
-        separatorBuilder: (_, __) => const SizedBox(height: 12),
-      ),
-    );
-  }
-}
-
 class _CategoriesSection extends StatelessWidget {
   const _CategoriesSection({
     required this.categories,
@@ -158,6 +126,32 @@ class _CategoriesSection extends StatelessWidget {
         itemBuilder: (_, index) => CategoryPreviewCard(
           category: categories[index],
           totalExpense: expense,
+        ),
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
+      ),
+    );
+  }
+}
+
+class _RecentTransactionsSection extends StatelessWidget {
+  const _RecentTransactionsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final recentTransactions = context.select(
+      (TransactionsViewModel viewModel) => viewModel.state.recentTransactions,
+    );
+
+    return DashboardSection(
+      label: 'Recent Transactions',
+      showMoreButton: true,
+      child: ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        padding: EdgeInsets.zero,
+        itemCount: recentTransactions.length,
+        itemBuilder: (_, index) => TransactionPreviewCard(
+          transaction: recentTransactions[index],
         ),
         separatorBuilder: (_, __) => const SizedBox(height: 12),
       ),

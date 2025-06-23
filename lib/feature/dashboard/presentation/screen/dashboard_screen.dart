@@ -35,13 +35,20 @@ class _Content extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final trxState = context.watch<TransactionsViewModel>().state;
     final month = context.watch<DashboardViewModel>().state;
     final monthKey = month?.key ?? '';
     final budgetsState = context.watch<BudgetsViewModel>().state;
     final budget = budgetsState.budgetOf(monthKey) ?? 0;
-    final categories = trxState.toCategories(month?.key ?? '');
-    final expense = trxState.transactionsOf(monthKey)?.sumAmount() ?? 0;
+
+    final (
+      categories,
+      expense,
+    ) = context.select(
+      (TransactionsViewModel viewModel) => (
+        viewModel.state.toCategories(monthKey),
+        viewModel.state.transactionsOf(monthKey)?.sumAmount() ?? 0,
+      ),
+    );
 
     return LayoutBuilder(
       builder: (context, constraints) {

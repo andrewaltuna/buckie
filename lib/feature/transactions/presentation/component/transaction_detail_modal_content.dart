@@ -14,16 +14,19 @@ import 'package:go_router/go_router.dart';
 class TransactionDetailModalContent extends StatelessWidget {
   const TransactionDetailModalContent({
     required this.transaction,
+    this.allowEditting = true,
     super.key,
   });
 
   final Transaction transaction;
+  final bool allowEditting;
 
   @override
   Widget build(BuildContext context) {
     return ModalBase(
       header: _Header(
         transaction: transaction,
+        allowEditting: allowEditting,
       ),
       body: _Body(
         transaction: transaction,
@@ -35,9 +38,11 @@ class TransactionDetailModalContent extends StatelessWidget {
 class _Header extends StatelessWidget {
   const _Header({
     required this.transaction,
+    required this.allowEditting,
   });
 
   final Transaction transaction;
+  final bool allowEditting;
 
   void _onUpdate(BuildContext context) {
     Navigator.of(context).pop();
@@ -64,7 +69,7 @@ class _Header extends StatelessWidget {
     return Row(
       children: [
         CategoryIcon(
-          size: 36,
+          size: 40,
           category: transaction.category,
         ),
         const SizedBox(width: 12),
@@ -84,29 +89,31 @@ class _Header extends StatelessWidget {
           ],
         ),
         const Spacer(),
-        CustomInkWell(
-          width: 36,
-          height: 36,
-          borderRadius: 12,
-          color: AppColors.accent,
-          onTap: () => _onUpdate(context),
-          child: const Icon(
-            Icons.edit,
-            color: AppColors.fontButtonPrimary,
+        if (allowEditting) ...[
+          CustomInkWell(
+            width: 36,
+            height: 36,
+            borderRadius: 12,
+            color: AppColors.accent,
+            onTap: () => _onUpdate(context),
+            child: const Icon(
+              Icons.edit,
+              color: AppColors.fontButtonPrimary,
+            ),
           ),
-        ),
-        const SizedBox(width: 8),
-        CustomInkWell(
-          width: 36,
-          height: 36,
-          borderRadius: 12,
-          color: AppColors.fontWarning,
-          onTap: () => _onDelete(context),
-          child: const Icon(
-            Icons.delete,
-            color: AppColors.fontButtonPrimary,
+          const SizedBox(width: 8),
+          CustomInkWell(
+            width: 36,
+            height: 36,
+            borderRadius: 12,
+            color: AppColors.fontWarning,
+            onTap: () => _onDelete(context),
+            child: const Icon(
+              Icons.delete,
+              color: AppColors.fontButtonPrimary,
+            ),
           ),
-        ),
+        ],
       ],
     );
   }

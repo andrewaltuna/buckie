@@ -35,7 +35,7 @@ class BudgetBreakdownChart extends StatelessWidget {
             expense: expense,
             budget: budget,
           ),
-          style: TextStyles.titleSmall.copyWith(
+          style: TextStyles.titleMedium.copyWith(
             color: budget > 0
                 ? Color.lerp(
                     AppColors.fontPrimary,
