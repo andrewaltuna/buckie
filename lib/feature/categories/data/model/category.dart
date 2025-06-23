@@ -1,22 +1,25 @@
 import 'package:equatable/equatable.dart';
-import 'package:expense_tracker/common/helper/formatter.dart';
+import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:flutter/material.dart';
 
 class Category extends Equatable {
   const Category({
     required this.type,
-    required this.totalExpense,
+    required this.transactions,
   });
 
   final CategoryType type;
-  final double totalExpense;
+  final List<Transaction> transactions;
 
-  String get totalExpenseLabel => Formatter.currency(totalExpense);
+  double get expense => transactions.fold(
+        0,
+        (previous, transaction) => previous + transaction.amount,
+      );
 
   @override
   List<Object?> get props => [
         type,
-        totalExpense,
+        expense,
       ];
 }
 

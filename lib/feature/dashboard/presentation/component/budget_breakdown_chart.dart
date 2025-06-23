@@ -1,3 +1,4 @@
+import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/helper/budget_usage_display_helper.dart';
@@ -6,80 +7,112 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-const _kSectionSpacing = 2.0;
+const _kSectionGap = 2.0;
 
 class BudgetBreakdownChart extends StatelessWidget {
   const BudgetBreakdownChart({
-    super.key,
-    required this.categories,
     required this.budget,
-    this.label,
+    required this.expense,
+    required this.categories,
     this.centerSpaceRadius = 50,
+    this.baseSectionRadius = 65,
+    super.key,
   });
 
-  final String? label;
-  final List<Category> categories;
   final double budget;
+  final double expense;
+  final List<Category> categories;
   final double centerSpaceRadius;
+  final double baseSectionRadius;
 
   @override
   Widget build(BuildContext context) {
-    final labelSize = (centerSpaceRadius - _kSectionSpacing) * 2;
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Text(
+          BudgetUsageDisplayHelper.percentageUsedDisplay(
+            expense: expense,
+            budget: budget,
+          ),
+          style: TextStyles.titleSmall.copyWith(
+            color: budget > 0
+                ? Color.lerp(
+                    AppColors.fontPrimary,
+                    AppColors.fontWarning,
+                    (expense / budget).clamp(0, 1),
+                  )
+                : null,
+          ),
+        ),
+        _PieChart(
+          budget: budget,
+          expense: expense,
+          categories: categories,
+          centerSpaceRadius: centerSpaceRadius,
+          baseSectionRadius: baseSectionRadius,
+        ),
+      ],
+    );
+  }
+}
 
+class _PieChart extends StatelessWidget {
+  const _PieChart({
+    required this.budget,
+    required this.expense,
+    required this.categories,
+    required this.centerSpaceRadius,
+    required this.baseSectionRadius,
+  });
+
+  final double budget;
+  final double expense;
+  final List<Category> categories;
+  final double centerSpaceRadius;
+  final double baseSectionRadius;
+
+  void _onChangeSelection(
+    BuildContext context,
+    PieTouchResponse? response,
+  ) {
+    final touchedSectionIndex = response?.touchedSection?.touchedSectionIndex;
+
+    // If 'remaining' pie is tapped, do nothing
+    if (touchedSectionIndex == categories.length) return;
+
+    context
+        .read<BudgetBreakdownViewModel>()
+        .changeSelection(touchedSectionIndex ?? -1);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return BlocBuilder<BudgetBreakdownViewModel, BudgetBreakdownState>(
       builder: (context, state) {
-        return Stack(
-          alignment: Alignment.center,
-          children: [
-            SizedBox(
-              height: labelSize,
-              width: labelSize,
-              child: Center(
-                child: Text(
-                  label ??
-                      BudgetUsageDisplayHelper.percentageUsedDisplay(
-                        categories: categories,
-                        totalBudget: budget,
-                      ),
-                  style: TextStyles.titleMedium.copyWith(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+        return PieChart(
+          curve: Curves.easeInOutCubic,
+          duration: const Duration(milliseconds: 400),
+          PieChartData(
+            sectionsSpace: _kSectionGap,
+            centerSpaceRadius: centerSpaceRadius,
+            startDegreeOffset: -90,
+            pieTouchData: PieTouchData(
+              enabled: true,
+              touchCallback: (_, response) => _onChangeSelection(
+                context,
+                response,
               ),
             ),
-            PieChart(
-              swapAnimationCurve: Curves.easeOut,
-              swapAnimationDuration: const Duration(milliseconds: 300),
-              PieChartData(
-                pieTouchData: PieTouchData(
-                  enabled: true,
-                  touchCallback: (event, response) {
-                    final touchedSectionIndex =
-                        response?.touchedSection?.touchedSectionIndex;
-
-                    // If 'remaining' pie is tapped, do nothing
-                    if (touchedSectionIndex == categories.length) return;
-
-                    context
-                        .read<BudgetBreakdownViewModel>()
-                        .changeSelection(touchedSectionIndex ?? -1);
-                  },
-                ),
-                sectionsSpace: _kSectionSpacing,
-                centerSpaceRadius: centerSpaceRadius,
-                startDegreeOffset: -90,
-                sections:
-                    BudgetUsageDisplayHelper.categoryToPieChartSectionData(
-                  categories: categories,
-                  selectedIndex: state.selectedIndex,
-                  showRemaining: state.showRemaining,
-                  budget: budget,
-                ),
-              ),
+            sections: BudgetUsageDisplayHelper.categoryToPieData(
+              budget: budget,
+              expense: expense,
+              categories: categories,
+              selectedIndex: state.selectedIndex,
+              showRemaining: state.showRemaining,
+              baseSectionRadius: baseSectionRadius,
             ),
-          ],
+          ),
         );
       },
     );

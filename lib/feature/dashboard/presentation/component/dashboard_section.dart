@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 
 class DashboardSection extends StatelessWidget {
   const DashboardSection({
-    super.key,
     required this.label,
     required this.child,
     this.showMoreButton = false,
+    super.key,
   });
 
   final String label;

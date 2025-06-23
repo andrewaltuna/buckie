@@ -4,8 +4,6 @@ import 'package:expense_tracker/common/di/service_locator.dart';
 import 'package:expense_tracker/common/navigation/app_router.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/env.dart';
-import 'package:expense_tracker/common/global/global_listeners.dart';
-import 'package:expense_tracker/common/global/global_view_models.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -23,12 +21,17 @@ void main() async {
   initializeLocator();
 
   runApp(
-    const GlobalViewModels(
-      child: GlobalListeners(
-        child: App(),
-      ),
-    ),
+    const App(),
   );
+
+  // TODO: Uncomment when auth-related features are up
+  // runApp(
+  //   const GlobalViewModels(
+  //     child: GlobalListeners(
+  //       child: App(),
+  //     ),
+  //   ),
+  // );
 }
 
 class App extends StatelessWidget {

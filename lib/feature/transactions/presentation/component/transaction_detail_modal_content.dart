@@ -4,7 +4,7 @@ import 'package:expense_tracker/common/helper/modal_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
-import 'package:expense_tracker/feature/transactions/presentation/component/category_display.dart';
+import 'package:expense_tracker/feature/transactions/presentation/component/category_icon.dart';
 import 'package:expense_tracker/feature/transactions/presentation/screen/update_transaction_screen.dart';
 import 'package:expense_tracker/feature/transactions/presentation/view_model/transactions_view_model.dart';
 import 'package:flutter/material.dart';
@@ -63,12 +63,9 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        CategoryDisplay(
-          height: 36,
-          width: 36,
+        CategoryIcon(
+          size: 36,
           category: transaction.category,
-          iconOnly: true,
-          iconSize: 20,
         ),
         const SizedBox(width: 12),
         Column(

@@ -1,38 +1,53 @@
+import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/feature/budget/presentation/view_model/budgets_view_model.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
-import 'package:expense_tracker/feature/categories/presentation/view_model/categories_view_model.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/budget_breakdown_chart.dart';
+import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_month_selector.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/budget_breakdown_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+const _kCenterRadiusScale = 0.12;
+const _kBaseSectionRadiusScale = 0.18;
+
 class BudgetBreakdownDisplay extends StatelessWidget {
   const BudgetBreakdownDisplay({
-    required this.totalBudget,
+    required this.budget,
+    required this.expense,
     required this.categories,
     this.height = 200,
     super.key,
   });
 
-  final double totalBudget;
+  final double budget;
+  final double expense;
   final List<Category> categories;
   final double height;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       height: height,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          const SizedBox(height: 15),
-          const _BalanceDisplay(),
+          const SizedBox(height: 16),
+          const DashboardMonthSelector(),
+          const SizedBox(height: 16),
+          _BreakdownInfo(
+            budget: budget,
+            expense: expense,
+          ),
           Expanded(
             child: Center(
               child: BudgetBreakdownChart(
-                centerSpaceRadius: 50,
                 categories: categories,
-                budget: totalBudget,
+                budget: budget,
+                expense: expense,
+                centerSpaceRadius: height * _kCenterRadiusScale,
+                baseSectionRadius: height * _kBaseSectionRadiusScale,
               ),
             ),
           ),
@@ -42,63 +57,68 @@ class BudgetBreakdownDisplay extends StatelessWidget {
   }
 }
 
-class _BalanceDisplay extends StatelessWidget {
-  const _BalanceDisplay();
+class _BreakdownInfo extends StatelessWidget {
+  const _BreakdownInfo({
+    required this.budget,
+    required this.expense,
+  });
+
+  final double budget;
+  final double expense;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CategoriesViewModel, CategoriesState>(
+    return BlocBuilder<BudgetsViewModel, BudgetsState>(
       builder: (context, state) {
-        final budgetAmount = state.budget?.amount;
-        final double balance =
-            budgetAmount != null ? state.grandTotalExpense / budgetAmount : 1;
+        final balance = budget - expense;
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: AppColors.widgetBackgroundSecondary,
-            ),
-            child: IntrinsicHeight(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _ValueLabel(
-                    label: 'BAL',
-                    value: state.remainingBalanceLabel,
-                    color: Color.lerp(
-                      AppColors.fontPrimary,
-                      AppColors.fontWarning,
-                      balance,
-                    ),
-                  ),
-                  BlocBuilder<BudgetBreakdownViewModel, BudgetBreakdownState>(
-                    builder: (context, budgetBreakdownState) {
-                      return _ValueLabel(
-                        label: 'TOT',
-                        value: state.budgetLabel,
-                        suffixIcon: IconButton(
-                          onPressed: () => context
-                              .read<BudgetBreakdownViewModel>()
-                              .toggleShowRemaining(),
-                          iconSize: 22,
-                          icon: Icon(
-                            budgetBreakdownState.showRemaining
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: Colors.white,
-                          ),
-                          padding: EdgeInsets.zero,
-                          visualDensity: VisualDensity.compact,
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
+        return Container(
+          height: 42,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: AppColors.widgetBackgroundSecondary,
           ),
+          child: budget > 0
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _ValueLabel(
+                      label: 'BAL',
+                      value: Formatter.currency(balance),
+                      color: Color.lerp(
+                        AppColors.fontPrimary,
+                        AppColors.fontWarning,
+                        (expense / budget).clamp(0, 1),
+                      ),
+                    ),
+                    BlocBuilder<BudgetBreakdownViewModel, BudgetBreakdownState>(
+                      builder: (context, budgetBreakdownState) {
+                        return _ValueLabel(
+                          label: 'CAP',
+                          value: Formatter.currency(budget),
+                          suffixIcon: IconButton(
+                            onPressed: () => context
+                                .read<BudgetBreakdownViewModel>()
+                                .toggleShowRemaining(),
+                            iconSize: 22,
+                            icon: Icon(
+                              budgetBreakdownState.showRemaining
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.white,
+                            ),
+                            padding: EdgeInsets.zero,
+                            visualDensity: VisualDensity.compact,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                )
+              : _ValueLabel(
+                  label: 'EXP',
+                  value: Formatter.currency(expense),
+                ),
         );
       },
     );

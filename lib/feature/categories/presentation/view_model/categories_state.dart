@@ -32,7 +32,7 @@ class CategoriesState extends Equatable {
   double get grandTotalExpense => categories.fold(
         0,
         (sum, category) {
-          return sum + category.totalExpense;
+          return sum + category.expense;
         },
       );
 

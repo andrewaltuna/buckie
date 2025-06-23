@@ -1,31 +1,27 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:expense_tracker/common/enum/view_model_status.dart';
 import 'package:expense_tracker/feature/budget/data/model/input/set_budget_input.dart';
 import 'package:expense_tracker/feature/budget/data/repository/budget_repository_interface.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'budget_event.dart';
-part 'budget_state.dart';
+part 'budgets_event.dart';
+part 'budgets_state.dart';
 
-class BudgetViewModel extends Bloc<BudgetEvent, BudgetState> {
-  BudgetViewModel(
-    this._repository, {
-    required TransactionMonth month,
-  })  : _month = month,
-        super(const BudgetState()) {
-    on<BudgetRequested>(_onRequested);
-    on<BudgetLatestRequested>(_onLatestRequested);
-    on<BudgetSet>(_onSet);
+class BudgetsViewModel extends Bloc<BudgetsEvent, BudgetsState> {
+  BudgetsViewModel(this._repository) : super(const BudgetsState()) {
+    on<BudgetsRequested>(_onRequested);
+    on<BudgetsLatestRequested>(_onLatestRequested);
+    on<BudgetsSet>(_onSet);
   }
 
   final BudgetRepositoryInterface _repository;
-  final TransactionMonth _month;
 
   Future<void> _onLatestRequested(
-    BudgetLatestRequested event,
-    Emitter<BudgetState> emit,
+    BudgetsLatestRequested event,
+    Emitter<BudgetsState> emit,
   ) async {
     try {
       emit(state.copyWith(status: ViewModelStatus.loading));
@@ -35,7 +31,7 @@ class BudgetViewModel extends Bloc<BudgetEvent, BudgetState> {
       emit(
         state.copyWith(
           status: ViewModelStatus.loaded,
-          amount: () => budget?.amount,
+          latestBudget: budget?.amount,
         ),
       );
     } on Exception catch (error) {
@@ -49,20 +45,21 @@ class BudgetViewModel extends Bloc<BudgetEvent, BudgetState> {
   }
 
   Future<void> _onRequested(
-    BudgetRequested event,
-    Emitter<BudgetState> emit,
+    BudgetsRequested event,
+    Emitter<BudgetsState> emit,
   ) async {
     try {
       emit(state.copyWith(status: ViewModelStatus.loading));
 
-      final budget = await _repository.getBudget(event.month ?? _month);
+      final budget = await _repository.getBudget(event.month);
 
-      print('budget $budget');
+      final budgetsByMonth = Map.of(state.budgetsByMonth)
+        ..[event.month.key] = budget?.amount;
 
       emit(
         state.copyWith(
           status: ViewModelStatus.loaded,
-          amount: () => budget?.amount,
+          budgetsByMonth: budgetsByMonth,
         ),
       );
     } on Exception catch (error) {
@@ -76,23 +73,33 @@ class BudgetViewModel extends Bloc<BudgetEvent, BudgetState> {
   }
 
   Future<void> _onSet(
-    BudgetSet event,
-    Emitter<BudgetState> emit,
+    BudgetsSet event,
+    Emitter<BudgetsState> emit,
   ) async {
     try {
       emit(state.copyWith(status: ViewModelStatus.loading));
 
       await _repository.setBudget(
         SetBudgetInput(
-          month: _month,
-          amount: event.budget,
+          month: event.month,
+          amount: event.amount,
         ),
       );
+
+      final budgetsByMonth = Map.of(state.budgetsByMonth);
+
+      if (event.amount > 0) {
+        // Add/update budget
+        budgetsByMonth[event.month.key] = event.amount;
+      } else {
+        // Delete budget
+        budgetsByMonth[event.month.key] = null;
+      }
 
       emit(
         state.copyWith(
           status: ViewModelStatus.loaded,
-          amount: () => event.budget,
+          budgetsByMonth: budgetsByMonth,
         ),
       );
     } on Exception catch (error) {

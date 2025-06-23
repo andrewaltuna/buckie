@@ -1,7 +1,5 @@
 part of 'transactions_view_model.dart';
 
-typedef TransactionsByMonth = Map<String, List<Transaction>>;
-
 class TransactionsState extends Equatable {
   const TransactionsState({
     this.status = ViewModelStatus.initial,
@@ -33,21 +31,44 @@ class TransactionsState extends Equatable {
     );
   }
 
-  List<Category> toCategories() {
-    final categories = groupBy(
-      recentTransactions,
+  List<Category> toCategories(String monthKey) {
+    final transactions = transactionsOf(monthKey);
+
+    if (transactions == null) return [];
+
+    final trxByCategory = groupBy(
+      transactions,
       (transaction) => transaction.category,
     );
 
-    return categories.entries.map((entry) {
-      return Category(
-        type: entry.key,
-        totalExpense: entry.value.fold(
-          0,
-          (previous, transaction) => previous + transaction.amount,
-        ),
+    final categories = trxByCategory.entries
+        .map(
+          (entry) => Category(
+            type: entry.key,
+            transactions: entry.value,
+          ),
+        )
+        .toList();
+
+    return categories
+      ..sort(
+        (a, b) => b.expense.compareTo(a.expense),
       );
-    }).toList();
+  }
+
+  double? totalExpensesOf(String monthKey) {
+    final transactions = transactionsByMonth[monthKey];
+
+    if (transactions == null) return null;
+
+    return transactions.fold<double>(
+      0.0,
+      (sum, transaction) => sum + transaction.amount,
+    );
+  }
+
+  List<Transaction>? transactionsOf(String monthKey) {
+    return transactionsByMonth[monthKey];
   }
 
   @override

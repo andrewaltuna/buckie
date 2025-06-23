@@ -21,4 +21,11 @@ class Formatter {
 
     return DateFormat('MMM $day$separator$year').format(date);
   }
+
+  static String percentage(
+    double value, {
+    int decimalDigits = 2,
+  }) {
+    return NumberFormat.percentPattern().format(value);
+  }
 }

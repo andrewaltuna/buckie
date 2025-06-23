@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/budget_breakdown_info_badge.dart';
@@ -8,93 +9,77 @@ import 'package:flutter/material.dart';
 class BudgetUsageDisplayHelper {
   const BudgetUsageDisplayHelper._();
 
-  /// Workaround for zero values not animating in the pie chart
-  static const _pieSectionZeroValue = 0.0001;
-
-  static const _pieSectionRadius = 60.0;
-  static const _pieSectionSelectedRadius = _pieSectionRadius * 1.15;
-  static const _pieSectionRemainingRadius = _pieSectionRadius * 0.85;
-
-  static double computeTotalAmountSpent(
-    List<Category> categories,
-  ) {
-    double totalAmountSpent = 0;
-    for (final category in categories) {
-      totalAmountSpent += category.totalExpense;
-    }
-
-    return totalAmountSpent;
-  }
+  static const _selectedRadiusScale = 1.15;
+  static const _remainingRadiusScale = 0.85;
 
   static String percentageUsedDisplay({
-    required List<Category> categories,
-    required double totalBudget,
-  }) {
-    final totalAmountSpent = computeTotalAmountSpent(categories);
-    final percentage = (totalAmountSpent / totalBudget) * 100;
-
-    return '${percentage.toStringAsFixed(2)}%';
-  }
-
-  static String toPercentageDisplay(double value) {
-    return '${(value * 100).toStringAsFixed(2)}%';
-  }
-
-  static List<PieChartSectionData> categoryToPieChartSectionData({
+    required double expense,
     required double budget,
+  }) {
+    if (budget <= 0) return 'N/A';
+
+    final percentage = expense / budget;
+
+    return Formatter.percentage(percentage);
+  }
+
+  static List<PieChartSectionData> categoryToPieData({
+    required double budget,
+    required double expense,
     required List<Category> categories,
     required int selectedIndex,
     required bool showRemaining,
+    required double baseSectionRadius,
   }) {
-    final totalAmountSpent = computeTotalAmountSpent(categories);
-
-    final pieChartData = categories.mapIndexed((index, category) {
-      final key = UniqueKey();
-      final hasSelection = selectedIndex != -1;
+    final pieData = categories.mapIndexed((index, category) {
       final isSelected = index == selectedIndex;
-      final percentageText = toPercentageDisplay(
-        category.totalExpense / (showRemaining ? budget : totalAmountSpent),
-      );
+      final percentage = category.expense / (showRemaining ? budget : expense);
 
-      final badge = switch (isSelected) {
-        true => BudgetBreakdownInfoBadge(
-            key: key,
-            label: category.type.label,
-            info: '${category.totalExpense} ($percentageText)',
-          ),
-        false => hasSelection
-            ? null
-            : Icon(
-                key: key,
-                category.type.icon,
-                color: Colors.white,
-              ),
-      };
+      final expenseLabel = Formatter.currency(category.expense);
+      final percentageLabel = Formatter.percentage(percentage);
 
       return PieChartSectionData(
         showTitle: false,
-        value: category.totalExpense,
-        badgeWidget: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          child: badge,
-        ),
+        value: category.expense,
         color: category.type.color,
-        radius: isSelected ? _pieSectionSelectedRadius : _pieSectionRadius,
+        radius: isSelected
+            ? baseSectionRadius * _selectedRadiusScale
+            : baseSectionRadius,
+        badgeWidget: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: SizedBox(
+            key: UniqueKey(),
+            child: switch (selectedIndex != -1) {
+              true => isSelected
+                  ? BudgetBreakdownInfoBadge(
+                      label: category.type.label,
+                      info: '$expenseLabel ($percentageLabel)',
+                    )
+                  : null,
+              false => Icon(
+                  category.type.icon,
+                  color: AppColors.fontPrimary,
+                ),
+            },
+          ),
+        ),
       );
     }).toList();
 
-    pieChartData.add(
+    final remainingBalance = budget - expense;
+
+    pieData.add(
       PieChartSectionData(
         title: 'Remaining',
         showTitle: false,
-        value: showRemaining && totalAmountSpent < budget
-            ? budget - totalAmountSpent
-            : _pieSectionZeroValue,
+        value: showRemaining && remainingBalance >= 0
+            ? remainingBalance
+            : 0.01, // Workaround to show animation on show/hide
         color: AppColors.widgetBackgroundSecondary,
-        radius: _pieSectionRemainingRadius,
+        radius: baseSectionRadius * _remainingRadiusScale,
       ),
     );
 
-    return pieChartData;
+    return pieData;
   }
 }

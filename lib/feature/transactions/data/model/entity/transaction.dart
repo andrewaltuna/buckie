@@ -4,6 +4,9 @@ import 'package:expense_tracker/common/extension/json.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 
+typedef TransactionsByMonth = Map<String, List<Transaction>>;
+typedef TransactionsByDate = Map<String, List<Transaction>>;
+
 class Transaction extends Equatable {
   const Transaction({
     required this.id,
@@ -51,6 +54,7 @@ class Transaction extends Equatable {
       );
 
   String get monthKey => '${date.year}-${date.month}';
+  String get dateKey => '${date.year}-${date.month}-${date.day}';
 
   @override
   List<Object?> get props => [

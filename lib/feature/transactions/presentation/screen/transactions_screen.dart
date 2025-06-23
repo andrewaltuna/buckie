@@ -1,12 +1,10 @@
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/component/main_scaffold.dart';
-import 'package:expense_tracker/common/di/service_locator.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/helper/modal_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
-import 'package:expense_tracker/feature/budget/data/repository/budget_repository_interface.dart';
-import 'package:expense_tracker/feature/budget/presentation/view_model/budget_view_model.dart';
+import 'package:expense_tracker/feature/budget/presentation/view_model/budgets_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:expense_tracker/feature/transactions/data/model/extension/transaction.dart';
@@ -44,21 +42,7 @@ class TransactionsScreen extends HookWidget {
             currentDate.copyWith(month: currentDate.month + offset),
           );
 
-          return MultiBlocProvider(
-            providers: [
-              // BlocProvider.value(
-              //   value: BlocProvider.of<TransactionsViewModel>(context)
-              //     ..add(TransactionsRequested(month)),
-              // ),
-              BlocProvider(
-                create: (_) => BudgetViewModel(
-                  sl<BudgetRepositoryInterface>(),
-                  month: month,
-                )..add(const BudgetRequested()),
-              ),
-            ],
-            child: _TransactionsPage(month: month),
-          );
+          return _TransactionsPage(month: month);
         },
       ),
     );
@@ -87,9 +71,8 @@ class _TransactionsPage extends HookWidget {
 
     return BlocBuilder<TransactionsViewModel, TransactionsState>(
       builder: (context, state) {
-        final transactions = state.transactionsByMonth[month.key] ?? [];
-        final isLoading =
-            state.status.isLoading && month.key == state.selectedMonth?.key;
+        final transactions = state.transactionsOf(month.key);
+        final isLoading = state.status.isLoading && transactions == null;
 
         return Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
@@ -109,8 +92,9 @@ class _TransactionsPage extends HookWidget {
                   Expanded(
                     child: _BudgetIndicator(
                       expenseLabel: Formatter.currency(
-                        transactions.sumAmount(),
+                        transactions?.sumAmount() ?? 0,
                       ),
+                      month: month,
                     ),
                   ),
                 ],
@@ -118,7 +102,7 @@ class _TransactionsPage extends HookWidget {
               const SizedBox(height: 16),
               Expanded(
                 child: _TransactionsList(
-                  transactionsByDate: transactions.byDate(),
+                  transactionsByDate: transactions?.byDate() ?? const {},
                   isLoading: isLoading,
                 ),
               ),
@@ -133,14 +117,16 @@ class _TransactionsPage extends HookWidget {
 class _BudgetIndicator extends StatelessWidget {
   const _BudgetIndicator({
     required this.expenseLabel,
+    required this.month,
   });
 
   final String expenseLabel;
+  final TransactionMonth month;
 
   @override
   Widget build(BuildContext context) {
     final budget = context.select(
-      (BudgetViewModel viewModel) => viewModel.state.amount,
+      (BudgetsViewModel viewModel) => viewModel.state.budgetOf(month.key),
     );
 
     return Row(
@@ -151,17 +137,13 @@ class _BudgetIndicator extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                // const Text(
-                //   'Used ',
-                //   style: TextStyles.titleExtraSmall,
-                // ),
                 Text(
                   expenseLabel,
                   style: TextStyles.titleSmall.copyWith(
                     color: AppColors.fontWarning,
                   ),
                 ),
-                if (budget != null) ...[
+                if (budget != null && budget > 0) ...[
                   const Text(
                     ' of ',
                     style: TextStyles.titleExtraSmall,
@@ -185,11 +167,12 @@ class _BudgetIndicator extends StatelessWidget {
           color: AppColors.accent,
           onTap: () => ModalHelper.of(context).showModal(
             wrapperBuilder: (child) => BlocProvider.value(
-              value: BlocProvider.of<BudgetViewModel>(context),
+              value: BlocProvider.of<BudgetsViewModel>(context),
               child: child,
             ),
             builder: (_) => SetBudgetModalContent(
               initialValue: budget,
+              month: month,
             ),
           ),
           child: const Icon(

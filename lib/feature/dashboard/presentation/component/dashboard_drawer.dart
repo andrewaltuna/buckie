@@ -13,11 +13,13 @@ class DashboardDrawer extends StatelessWidget {
   const DashboardDrawer({
     required this.constraints,
     required this.categories,
+    required this.expense,
     super.key,
   });
 
   final BoxConstraints constraints;
   final List<Category> categories;
+  final double expense;
 
   void _onDrawerDrag(
     BuildContext context,
@@ -47,7 +49,6 @@ class DashboardDrawer extends StatelessWidget {
       duration:
           state.isDragging ? Duration.zero : const Duration(milliseconds: 100),
       height: constraints.maxHeight * state.scale,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(20),
@@ -58,8 +59,11 @@ class DashboardDrawer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           GestureDetector(
-            onVerticalDragUpdate: (details) =>
-                _onDrawerDrag(context, details, constraints),
+            onVerticalDragUpdate: (details) => _onDrawerDrag(
+              context,
+              details,
+              constraints,
+            ),
             onVerticalDragEnd: (_) => _onDrawerDragEnd(context),
             behavior: HitTestBehavior.opaque,
             child: Container(
@@ -78,11 +82,13 @@ class DashboardDrawer extends StatelessWidget {
           ),
           Expanded(
             child: ListView(
-              physics: const ClampingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               shrinkWrap: true,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
                 _CategoriesSection(
                   categories: categories,
+                  expense: expense,
                 ),
                 const SizedBox(height: 16),
                 const _RecentTransactionsSection(),
@@ -114,29 +120,15 @@ class _RecentTransactionsSection extends StatelessWidget {
     return DashboardSection(
       label: 'Recent Transactions',
       showMoreButton: true,
-      child: Column(
-        children: [
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (_, index) {
-              final item = recentTransactions[index];
-
-              return TransactionPreviewCard(
-                transaction: item,
-              );
-            },
-            separatorBuilder: (context, index) {
-              // replace with childcount
-              if (index == recentTransactions.length - 1) {
-                return const SizedBox.shrink();
-              }
-
-              return const SizedBox(height: 10);
-            },
-            itemCount: recentTransactions.length,
-          ),
-        ],
+      child: ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        padding: EdgeInsets.zero,
+        itemCount: recentTransactions.length,
+        itemBuilder: (_, index) => TransactionPreviewCard(
+          transaction: recentTransactions[index],
+        ),
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
       ),
     );
   }
@@ -145,9 +137,11 @@ class _RecentTransactionsSection extends StatelessWidget {
 class _CategoriesSection extends StatelessWidget {
   const _CategoriesSection({
     required this.categories,
+    required this.expense,
   });
 
   final List<Category> categories;
+  final double expense;
 
   @override
   Widget build(BuildContext context) {
@@ -156,27 +150,16 @@ class _CategoriesSection extends StatelessWidget {
     return DashboardSection(
       label: 'Categories',
       showMoreButton: true,
-      child: Column(
-        children: [
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (_, index) {
-              return CategoryPreviewCard(
-                category: categories[index],
-              );
-            },
-            separatorBuilder: (context, index) {
-              // replace with childcount
-              if (index == categories.length - 1) {
-                return const SizedBox.shrink();
-              }
-
-              return const SizedBox(height: 10);
-            },
-            itemCount: categories.length,
-          ),
-        ],
+      child: ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        padding: EdgeInsets.zero,
+        itemCount: categories.length,
+        itemBuilder: (_, index) => CategoryPreviewCard(
+          category: categories[index],
+          totalExpense: expense,
+        ),
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
       ),
     );
   }

@@ -1,8 +1,8 @@
+import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/extension/screen_size.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
-import 'package:expense_tracker/feature/transactions/presentation/component/category_display.dart';
 import 'package:flutter/material.dart';
 
 const _kBorderRadius = 12.0;
@@ -39,11 +39,30 @@ class CategorySelector extends StatelessWidget {
         // Visually center category label
         final trailingSpace = constraints.maxWidth * 0.06;
 
-        return CategoryDisplay(
-          height: 48,
-          category: category,
-          trailingSpace: trailingSpace,
+        return CustomInkWell(
           onTap: () => _onTap(context),
+          color: category.color,
+          borderRadius: 12,
+          child: Container(
+            height: 48,
+            padding: const EdgeInsets.all(8),
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  category.icon,
+                  color: AppColors.fontPrimary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  category.label,
+                  style: TextStyles.titleSmall,
+                ),
+                SizedBox(width: trailingSpace),
+              ],
+            ),
+          ),
         );
       },
     );

@@ -25,16 +25,13 @@ class CategoriesViewModel extends Bloc<CategoriesEvent, CategoriesState> {
 
     _trxSubscription = _transactionRepository.transactionsStream.listen(
       (output) {
-        final month = output.transaction.month;
-        final stateMonth = state.budget?.month;
+        final month = state.budget?.month;
 
-        if (stateMonth == null) return;
-
-        if (stateMonth != month) return;
+        if (month != output.transaction.month) return;
 
         // Refresh if month is null (signifies deleted trx)
         // or if month matches updated month
-        add(CategoriesRequested(stateMonth));
+        add(CategoriesRequested(month!));
       },
     );
 
@@ -104,23 +101,22 @@ class CategoriesViewModel extends Bloc<CategoriesEvent, CategoriesState> {
 List<Category> _transactionsToCategories(
   List<Transaction> transactions,
 ) {
-  final trxByCatgegory = groupBy(
+  final trxByCategory = groupBy(
     transactions,
     (transaction) => transaction.category,
   );
 
-  final categories = trxByCatgegory.entries.map((entry) {
+  final categories = trxByCategory.entries.map((entry) {
     return Category(
       type: entry.key,
-      totalExpense: entry.value.fold(
-        0,
-        (previous, transaction) => previous + transaction.amount,
-      ),
+      transactions: entry.value,
     );
   }).toList();
 
+  print(categories);
+
   return categories
     ..sort(
-      (a, b) => b.totalExpense.compareTo(a.totalExpense),
+      (a, b) => b.expense.compareTo(a.expense),
     );
 }

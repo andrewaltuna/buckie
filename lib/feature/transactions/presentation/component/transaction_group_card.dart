@@ -5,7 +5,7 @@ import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/extension/transaction.dart';
-import 'package:expense_tracker/feature/transactions/presentation/component/category_display.dart';
+import 'package:expense_tracker/feature/transactions/presentation/component/category_icon.dart';
 import 'package:flutter/material.dart';
 
 /// Displays a set of transactions grouped by date
@@ -88,9 +88,8 @@ class _TransactionRow extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: Row(
           children: [
-            CategoryDisplay(
-              iconSize: 20,
-              iconOnly: true,
+            CategoryIcon(
+              size: 36,
               category: transaction.category,
             ),
             const SizedBox(width: 8),
