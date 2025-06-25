@@ -125,6 +125,8 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
         transactionsByMonth: transactionsByMonth,
       ),
     );
+
+    add(const TransactionsRecentsRequested());
   }
 
   void _onItemUpdated(
@@ -148,6 +150,8 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
         transactionsByMonth: transactionsByMonth,
       ),
     );
+
+    add(const TransactionsRecentsRequested());
   }
 
   void _onItemDeleted(
@@ -172,6 +176,8 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
           transactionsByMonth: transactionsByMonth,
         ),
       );
+
+      add(const TransactionsRecentsRequested());
     } on Exception catch (error) {
       emit(
         state.copyWith(

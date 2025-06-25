@@ -8,11 +8,15 @@ class DashboardSection extends StatelessWidget {
     required this.label,
     required this.child,
     this.showMoreButton = false,
+    this.onShowMore,
+    this.expanded = false,
     super.key,
   });
 
   final String label;
   final bool showMoreButton;
+  final bool expanded;
+  final void Function(bool)? onShowMore;
   final Widget child;
 
   @override
@@ -31,10 +35,15 @@ class DashboardSection extends StatelessWidget {
                 ),
               ),
             ),
-            if (showMoreButton) const SeeMoreButton(color: AppColors.accent),
+            if (showMoreButton)
+              SeeMoreButton(
+                expanded: expanded,
+                color: AppColors.accent,
+                onTap: onShowMore,
+              ),
           ],
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 12),
         child,
       ],
     );

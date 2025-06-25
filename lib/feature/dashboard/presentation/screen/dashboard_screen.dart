@@ -37,14 +37,18 @@ class _Content extends HookWidget {
   Widget build(BuildContext context) {
     final month = context.watch<DashboardViewModel>().state;
     final monthKey = month?.key ?? '';
-    final budgetsState = context.watch<BudgetsViewModel>().state;
-    final budget = budgetsState.budgetOf(monthKey) ?? 0;
+
+    final budget = context.select(
+      (BudgetsViewModel vm) => vm.state.budgetOf(monthKey) ?? 0,
+    );
 
     final (
+      recentTransactions,
       categories,
       expense,
     ) = context.select(
       (TransactionsViewModel viewModel) => (
+        viewModel.state.recentTransactions,
         viewModel.state.toCategories(monthKey),
         viewModel.state.transactionsOf(monthKey)?.sumAmount() ?? 0,
       ),
@@ -76,6 +80,7 @@ class _Content extends HookWidget {
                 child: DashboardDrawer(
                   constraints: constraints,
                   categories: categories,
+                  transactions: recentTransactions,
                   expense: expense,
                 ),
               ),
