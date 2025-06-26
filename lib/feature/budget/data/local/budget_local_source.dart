@@ -36,7 +36,7 @@ class BudgetLocalSource implements BudgetLocalSourceInterface {
   Future<Budget?> getLatestBudget() async {
     final result = await _db.query(
       _table,
-      orderBy: 'year DESC, month DESC',
+      orderBy: 'modified_at DESC',
       limit: 1,
     );
 
@@ -51,9 +51,10 @@ class BudgetLocalSource implements BudgetLocalSourceInterface {
   Future<void> setBudget(SetBudgetInput input) async {
     final date = input.month.toIso8601String();
     final budget = input.amount;
+
     final existing = await getBudget(input.month);
 
-    if (budget == null) {
+    if (budget == null || budget <= 0) {
       await _db.delete(
         _table,
         where: 'date = ?',
@@ -74,13 +75,6 @@ class BudgetLocalSource implements BudgetLocalSourceInterface {
     }
 
     _streamController.add(
-      Budget(
-        month: input.month,
-        amount: budget,
-      ),
-    );
-
-    print(
       Budget(
         month: input.month,
         amount: budget,

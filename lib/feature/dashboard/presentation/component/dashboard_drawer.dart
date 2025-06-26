@@ -1,4 +1,3 @@
-import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/common/extension/context.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
@@ -55,12 +54,12 @@ class DashboardDrawer extends StatelessWidget {
                 ),
               ],
             )
-          : const Center(
+          : Center(
               child: Padding(
                 padding: EdgeInsets.only(
-                  bottom: Constants.navBarHeight,
+                  bottom: context.padding.bottom,
                 ),
-                child: TransactionsEmptyIndicator(),
+                child: const TransactionsEmptyIndicator(),
               ),
             ),
     );
@@ -150,28 +149,31 @@ class _CategoriesSection extends HookWidget {
     required this.expense,
   });
 
+  static const _previewCount = 2;
+
   final List<Category> categories;
   final double expense;
 
   @override
   Widget build(BuildContext context) {
     final expandedNotifier = useState(false);
-    final categories = expandedNotifier.value
-        ? this.categories
-        : this.categories.take(2).toList();
+    final previewCategories = expandedNotifier.value
+        ? categories
+        : categories.take(_previewCount).toList();
+    final canExpand = categories.length > _previewCount;
 
     return DashboardSection(
       label: 'Categories',
-      showMoreButton: true,
+      showMoreButton: canExpand,
       expanded: expandedNotifier.value,
       onShowMore: (value) => expandedNotifier.value = value,
       child: ListView.separated(
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         padding: EdgeInsets.zero,
-        itemCount: categories.length,
+        itemCount: previewCategories.length,
         itemBuilder: (_, index) => CategoryPreviewCard(
-          category: categories[index],
+          category: previewCategories[index],
           totalExpense: expense,
         ),
         separatorBuilder: (_, __) => const SizedBox(height: 12),

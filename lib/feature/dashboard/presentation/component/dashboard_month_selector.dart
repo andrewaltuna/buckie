@@ -18,6 +18,12 @@ class DashboardMonthSelector extends StatelessWidget {
     context.read<DashboardViewModel>().adjustMonth(forward);
   }
 
+  void _onSelectToday(BuildContext context) {
+    final currentMonth = TransactionMonth.fromDate(DateTime.now());
+
+    context.read<DashboardViewModel>().selectMonth(currentMonth);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DashboardViewModel, TransactionMonth?>(
@@ -27,40 +33,53 @@ class DashboardMonthSelector extends StatelessWidget {
         return AbsorbPointer(
           absorbing: !hasMonth,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _ChevronButton(
                 forward: false,
                 onTap: (forward) => _onTap(context, forward),
               ),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                transitionBuilder: (child, animation) {
-                  return Opacity(
-                    opacity: 1 - animation.value,
-                    child: ScaleTransition(
-                      scale: Tween<double>(
-                        begin: 0.8,
-                        end: 1,
-                      ).animate(animation),
-                      child: child,
-                    ),
-                  );
-                },
-                child: hasMonth
-                    ? Text(
-                        key: ValueKey(month.toString()),
-                        Formatter.date(
-                          month.toDateTime(),
-                          includeDay: false,
-                        ),
-                        style: TextStyles.titleRegular,
-                      )
-                    : const SkeletonDisplay(
-                        height: 18,
-                        width: 48,
+              const Spacer(),
+              SizedBox(
+                width: 100,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 100),
+                  transitionBuilder: (child, animation) {
+                    return Opacity(
+                      opacity: 1 - animation.value,
+                      child: ScaleTransition(
+                        scale: Tween(
+                          begin: 0.95,
+                          end: 1.0,
+                        ).animate(animation),
+                        child: child,
                       ),
+                    );
+                  },
+                  child: hasMonth
+                      ? Text(
+                          key: ValueKey(month.toString()),
+                          Formatter.date(
+                            month.toDateTime(),
+                            includeDay: false,
+                          ),
+                          style: TextStyles.titleRegular,
+                        )
+                      : const SkeletonDisplay(
+                          height: 18,
+                          width: 48,
+                        ),
+                ),
               ),
+              CustomInkWell(
+                onTap: () => _onSelectToday(context),
+                padding: const EdgeInsets.all(4),
+                borderRadius: 50,
+                child: const Icon(
+                  Icons.today,
+                  color: AppColors.accent,
+                ),
+              ),
+              const Spacer(),
               _ChevronButton(
                 forward: true,
                 onTap: (forward) => _onTap(context, forward),

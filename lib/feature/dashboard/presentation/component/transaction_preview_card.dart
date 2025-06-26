@@ -38,7 +38,7 @@ class TransactionPreviewCard extends StatelessWidget {
                 Text(
                   transaction.remarks ?? 'No remarks',
                   style: TextStyles.bodyRegular.copyWith(
-                    color: AppColors.fontSubtitle,
+                    color: AppColors.fontSecondary,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -58,7 +58,7 @@ class TransactionPreviewCard extends StatelessWidget {
               Text(
                 Formatter.date(transaction.date),
                 style: TextStyles.bodyRegular.copyWith(
-                  color: AppColors.fontSubtitle,
+                  color: AppColors.fontSecondary,
                 ),
               ),
             ],

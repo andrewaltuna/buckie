@@ -48,6 +48,7 @@ class AppDatabase {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           date TEXT NOT NULL,
           amount REAL NOT NULL,
+          modified_at TEXT NOT NULL,
           UNIQUE(date)
         )
       ''',

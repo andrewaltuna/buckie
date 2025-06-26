@@ -3,7 +3,7 @@ part of 'dashboard_drawer_view_model.dart';
 class DashboardDrawerState extends Equatable {
   const DashboardDrawerState({
     this.isDragging = false,
-    this.scale = DashboardDrawerHelper.percentageMinHeight,
+    this.scale = DashboardDrawerHelper.percentMinHeight,
     this.overlayOpacity = 0,
   });
 

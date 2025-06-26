@@ -1,12 +1,12 @@
 import 'package:expense_tracker/feature/budget/presentation/view_model/budgets_view_model.dart';
 import 'package:expense_tracker/common/component/main_scaffold.dart';
-import 'package:expense_tracker/feature/dashboard/presentation/component/budget_breakdown_display.dart';
+import 'package:expense_tracker/feature/dashboard/presentation/component/budget_breakdown_view.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_drawer.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/helper/dashboard_drawer_helper.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/budget_breakdown_view_model.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/dashboard_drawer_view_model.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/dashboard_view_model.dart';
-import 'package:expense_tracker/feature/transactions/data/model/extension/transaction.dart';
+import 'package:expense_tracker/feature/transactions/data/model/extension/transaction_extension.dart';
 import 'package:expense_tracker/feature/transactions/presentation/view_model/transactions_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +24,7 @@ class DashboardScreen extends StatelessWidget {
       create: (_) => DashboardDrawerViewModel(),
       child: const MainScaffold(
         title: 'Overview',
+        resizeToAvoidBottomInset: false,
         body: _Content(),
       ),
     );
@@ -57,7 +58,7 @@ class _Content extends HookWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final budgetDisplayHeight = constraints.maxHeight *
-            (1 - DashboardDrawerHelper.percentageMinHeight);
+            (1 - DashboardDrawerHelper.percentMinHeight);
 
         return SizedBox.expand(
           child: Stack(
@@ -65,7 +66,8 @@ class _Content extends HookWidget {
             children: [
               BlocProvider(
                 create: (_) => BudgetBreakdownViewModel(),
-                child: BudgetBreakdownDisplay(
+                child: BudgetBreakdownView(
+                  month: month,
                   height: budgetDisplayHeight,
                   budget: budget,
                   expense: expense,

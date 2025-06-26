@@ -14,6 +14,7 @@ class SetBudgetInput extends Equatable {
     return {
       'date': month.toIso8601String(),
       'amount': amount,
+      'modified_at': DateTime.now().toIso8601String(),
     };
   }
 

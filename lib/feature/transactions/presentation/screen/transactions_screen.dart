@@ -1,14 +1,13 @@
-import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/component/main_scaffold.dart';
+import 'package:expense_tracker/common/extension/context.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
-import 'package:expense_tracker/common/helper/modal_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:expense_tracker/feature/budget/presentation/view_model/budgets_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
-import 'package:expense_tracker/feature/transactions/data/model/extension/transaction.dart';
-import 'package:expense_tracker/feature/transactions/presentation/component/set_budget_modal_content.dart';
+import 'package:expense_tracker/feature/transactions/data/model/extension/transaction_extension.dart';
+import 'package:expense_tracker/feature/transactions/presentation/component/set_budget_button.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/transaction_preview_skeleton.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/transactions_empty_indicator.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/transactions_list_view.dart';
@@ -33,6 +32,7 @@ class TransactionsScreen extends HookWidget {
 
     return MainScaffold(
       title: 'Transactions',
+      resizeToAvoidBottomInset: false,
       body: PageView.builder(
         controller: controller,
         onPageChanged: (value) => page.value = value,
@@ -160,25 +160,9 @@ class _BudgetIndicator extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 12),
-        CustomInkWell(
-          width: 32,
-          height: 32,
-          borderRadius: 8,
-          color: AppColors.accent,
-          onTap: () => ModalHelper.of(context).showModal(
-            wrapperBuilder: (child) => BlocProvider.value(
-              value: BlocProvider.of<BudgetsViewModel>(context),
-              child: child,
-            ),
-            builder: (_) => SetBudgetModalContent(
-              initialValue: budget,
-              month: month,
-            ),
-          ),
-          child: const Icon(
-            Icons.settings,
-            color: AppColors.fontButtonPrimary,
-          ),
+        SetBudgetButton(
+          month: month,
+          budget: budget,
         ),
       ],
     );
@@ -205,8 +189,11 @@ class _TransactionsList extends StatelessWidget {
     }
 
     if (transactionsByDate.isEmpty) {
-      return const Center(
-        child: TransactionsEmptyIndicator(),
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.only(bottom: context.padding.bottom),
+          child: const TransactionsEmptyIndicator(),
+        ),
       );
     }
 

@@ -10,7 +10,6 @@ import 'package:expense_tracker/feature/transactions/data/model/entity/transacti
 import 'package:expense_tracker/feature/transactions/presentation/component/category_selector.dart';
 import 'package:expense_tracker/feature/transactions/presentation/view_model/create_transaction_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -80,7 +79,7 @@ class CreateTransactionForm extends HookWidget {
   }
 }
 
-class _Form extends StatelessWidget {
+class _Form extends HookWidget {
   const _Form({
     required this.formKey,
     required this.dateController,
@@ -147,6 +146,7 @@ class _Form extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final focusNode = useFocusNode()..requestFocus();
     final category = context.select(
       (CreateTransactionViewModel viewModel) => viewModel.state.category,
     );
@@ -156,37 +156,30 @@ class _Form extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Category',
-            style: TextStyles.labelRegular.copyWith(
-              color: AppColors.accent,
-            ),
-          ),
-          const SizedBox(height: 4),
-          CategorySelector(
-            category: category,
-            onChanged: (category) => _onCategoryChanged(
-              context,
-              category,
-            ),
-          ),
-          const SizedBox(height: 16),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: RoundedTextField(
                   controller: amountController,
+                  focusNode: focusNode,
                   label: 'Amount',
-                  keyboardType: TextInputType.number,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   textInputAction: TextInputAction.next,
                   inputFormatters: [
                     InputFormatter.decimal,
                   ],
                   validator: _validateAmount,
+                  allowClear: true,
                   onChanged: (value) => _onAmountUpdated(
                     context,
                     value,
+                  ),
+                  onClear: () => _onAmountUpdated(
+                    context,
+                    '',
                   ),
                 ),
               ),
@@ -209,9 +202,32 @@ class _Form extends StatelessWidget {
             controller: remarksController,
             label: 'Remarks',
             textInputAction: TextInputAction.done,
+            allowClear: true,
             onChanged: (value) => _onRemarksUpdated(
               context,
               value,
+            ),
+            onClear: () => _onRemarksUpdated(
+              context,
+              '',
+            ),
+          ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.only(left: 4),
+            child: Text(
+              'Category',
+              style: TextStyles.labelRegular.copyWith(
+                color: AppColors.accent,
+              ),
+            ),
+          ),
+          const SizedBox(height: 4),
+          CategorySelector(
+            category: category,
+            onChanged: (category) => _onCategoryChanged(
+              context,
+              category,
             ),
           ),
         ],

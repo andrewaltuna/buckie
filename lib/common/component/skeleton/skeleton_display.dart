@@ -23,9 +23,9 @@ class SkeletonDisplay extends StatelessWidget {
       child: Shimmer(
         gradient: LinearGradient(
           colors: [
-            color ?? AppColors.fontSubtitle.withOpacity(0.1),
+            color ?? AppColors.fontSecondary.withOpacity(0.1),
             AppColors.fontPrimary.withOpacity(0.2),
-            color ?? AppColors.fontSubtitle.withOpacity(0.1),
+            color ?? AppColors.fontSecondary.withOpacity(0.1),
           ],
           stops: const [0.3, 0.5, 0.7],
         ),

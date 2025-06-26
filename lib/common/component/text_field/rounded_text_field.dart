@@ -8,6 +8,7 @@ class RoundedTextField extends HookWidget {
   const RoundedTextField({
     required this.label,
     this.controller,
+    this.focusNode,
     this.errorText = '',
     this.onChanged,
     this.onTap,
@@ -18,11 +19,14 @@ class RoundedTextField extends HookWidget {
     this.textInputAction,
     this.inputFormatters,
     this.validator,
+    this.allowClear = false,
+    this.onClear,
     super.key,
   });
 
   final String label;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
   final String errorText;
   final void Function(String value)? onChanged;
   final VoidCallback? onTap;
@@ -33,20 +37,26 @@ class RoundedTextField extends HookWidget {
   final TextInputAction? textInputAction;
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
+  final bool allowClear;
+  final VoidCallback? onClear;
 
   @override
   Widget build(BuildContext context) {
     final controller = this.controller ?? useTextEditingController();
 
     final errorNotifier = useState('');
+    final clearNotifier = useState(false);
 
     final errorText =
         this.errorText.isNotEmpty ? this.errorText : errorNotifier.value;
 
     useEffect(
       () {
+        clearNotifier.value = controller.text.isNotEmpty;
+
         void listener() {
           errorNotifier.value = '';
+          clearNotifier.value = controller.text.isNotEmpty;
         }
 
         controller.addListener(listener);
@@ -84,15 +94,39 @@ class RoundedTextField extends HookWidget {
           child: TextFormField(
             readOnly: readOnly,
             controller: controller,
+            focusNode: focusNode,
             keyboardType: keyboardType,
             obscureText: obscureText,
             style: TextStyles.bodyRegular,
             cursorWidth: 1,
             cursorColor: AppColors.accent,
             textInputAction: textInputAction,
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(horizontal: 15),
+            textAlignVertical: TextAlignVertical.center,
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
               border: InputBorder.none,
+              suffixIcon: allowClear && clearNotifier.value
+                  ? GestureDetector(
+                      onTap: () {
+                        controller.clear();
+                        onClear?.call();
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.only(right: 12),
+                        child: Icon(
+                          Icons.close,
+                          size: 16,
+                          color: AppColors.accent,
+                        ),
+                      ),
+                    )
+                  : null,
+              suffixIconConstraints: const BoxConstraints(
+                maxHeight: 16,
+                maxWidth: 28,
+              ),
             ),
             inputFormatters: inputFormatters,
             onTap: onTap,

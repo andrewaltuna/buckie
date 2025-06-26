@@ -60,6 +60,13 @@ class TextStyles {
 
   // Font Secondary
   // General
+  static const bodyMedium = TextStyle(
+    fontFamily: _fontFamilySecondary,
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    color: AppColors.fontPrimary,
+  );
+
   static const bodyRegular = TextStyle(
     fontFamily: _fontFamilySecondary,
     fontSize: 14,

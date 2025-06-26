@@ -37,40 +37,94 @@ class SetBudgetModalContent extends HookWidget {
     Navigator.of(context).pop();
   }
 
+  void _onUsePreviousBudget(
+    BuildContext context,
+    TextEditingController controller,
+  ) {
+    final viewModel = context.read<BudgetsViewModel>();
+    final latestBudget = viewModel.state.latestBudget;
+
+    if (latestBudget != null) {
+      controller.text = latestBudget.toString();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final initialValue = this.initialValue != null && this.initialValue! > 0
+        ? this.initialValue
+        : null;
+    final focusNode = useFocusNode()..requestFocus();
     final controller = useTextEditingController(
       text: initialValue?.toString(),
     );
 
     return ModalBase(
       header: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
-            'Set Budget',
+            'Budget',
             style: TextStyles.titleRegular,
           ),
-          CustomInkWell(
-            width: 36,
-            height: 36,
-            borderRadius: 12,
-            color: AppColors.accent,
+          const Spacer(),
+          _IconButton(
+            icon: Icons.undo,
+            primary: false,
+            onTap: () => _onUsePreviousBudget(context, controller),
+          ),
+          const SizedBox(width: 8),
+          _IconButton(
+            icon: Icons.check,
             onTap: () => _onSubmit(context, controller),
-            child: const Icon(
-              Icons.check,
-              color: AppColors.fontButtonPrimary,
-            ),
           ),
         ],
       ),
-      body: RoundedTextField(
-        controller: controller,
-        label: 'Amount',
-        keyboardType: TextInputType.number,
-        inputFormatters: [
-          InputFormatter.decimal,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          RoundedTextField(
+            controller: controller,
+            focusNode: focusNode,
+            label: 'Amount',
+            allowClear: true,
+            keyboardType: const TextInputType.numberWithOptions(
+              decimal: true,
+            ),
+            inputFormatters: [
+              InputFormatter.decimal,
+            ],
+          ),
+          const SizedBox(height: 4),
         ],
+      ),
+    );
+  }
+}
+
+class _IconButton extends StatelessWidget {
+  const _IconButton({
+    required this.icon,
+    required this.onTap,
+    this.primary = true,
+  });
+
+  final VoidCallback? onTap;
+  final IconData icon;
+  final bool primary;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomInkWell(
+      width: 36,
+      height: 36,
+      borderRadius: 12,
+      color: primary ? AppColors.accent : AppColors.widgetBackgroundPrimary,
+      onTap: onTap,
+      child: Icon(
+        icon,
+        color: primary
+            ? AppColors.fontButtonPrimary
+            : AppColors.fontButtonSecondary,
       ),
     );
   }

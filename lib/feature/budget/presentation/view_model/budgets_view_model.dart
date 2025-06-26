@@ -100,9 +100,11 @@ class BudgetsViewModel extends Bloc<BudgetsEvent, BudgetsState> {
         state.copyWith(
           status: ViewModelStatus.loaded,
           budgetsByMonth: budgetsByMonth,
+          latestBudget: event.amount > 0 ? event.amount : null,
         ),
       );
     } on Exception catch (error) {
+      print(error);
       emit(
         state.copyWith(
           status: ViewModelStatus.error,

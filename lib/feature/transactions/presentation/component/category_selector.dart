@@ -26,7 +26,7 @@ class CategorySelector extends StatelessWidget {
         ),
       ),
       backgroundColor: AppColors.widgetBackgroundPrimary,
-      builder: (_) => _Selector(
+      builder: (_) => _SelectionMenu(
         onChanged: onChanged,
       ),
     );
@@ -69,8 +69,8 @@ class CategorySelector extends StatelessWidget {
   }
 }
 
-class _Selector extends StatelessWidget {
-  const _Selector({
+class _SelectionMenu extends StatelessWidget {
+  const _SelectionMenu({
     required this.onChanged,
   });
 
@@ -88,7 +88,7 @@ class _Selector extends StatelessWidget {
           children: [
             const SizedBox(height: 16),
             const Text(
-              'Select a category',
+              'Select Category',
               style: TextStyles.titleMedium,
             ),
             const SizedBox(height: 16),

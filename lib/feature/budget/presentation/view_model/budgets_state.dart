@@ -29,7 +29,7 @@ class BudgetsState extends Equatable {
     );
   }
 
-  double? budgetOf(String monthKey) => budgetsByMonth[monthKey] ?? 0;
+  double? budgetOf(String monthKey) => budgetsByMonth[monthKey];
 
   @override
   List<Object?> get props => [

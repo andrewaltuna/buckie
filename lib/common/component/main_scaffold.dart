@@ -11,6 +11,7 @@ class MainScaffold extends StatelessWidget {
     this.showAppBar = true,
     this.showBackButton = false,
     this.showNavBar = true,
+    this.resizeToAvoidBottomInset = true,
     this.floatingActionButton,
     super.key,
   });
@@ -21,6 +22,7 @@ class MainScaffold extends StatelessWidget {
   final bool showAppBar;
   final bool showBackButton;
   final bool showNavBar;
+  final bool resizeToAvoidBottomInset;
   final Widget? floatingActionButton;
 
   @override
@@ -34,7 +36,6 @@ class MainScaffold extends StatelessWidget {
               elevation: 0,
               leadingWidth: 0,
               surfaceTintColor: Colors.transparent,
-              shadowColor: AppColors.shadow,
               title: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -66,6 +67,7 @@ class MainScaffold extends StatelessWidget {
       backgroundColor: AppColors.defaultBackground,
       bottomNavigationBar: showNavBar ? const MainNavigationBar() : null,
       extendBody: true,
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       body: SafeArea(
         bottom: !showNavBar,
         child: Center(

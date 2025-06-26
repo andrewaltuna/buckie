@@ -83,7 +83,7 @@ class _Header extends StatelessWidget {
             Text(
               Formatter.date(transaction.date),
               style: TextStyles.bodySmall.copyWith(
-                color: AppColors.fontSubtitle,
+                color: AppColors.fontSecondary,
               ),
             ),
           ],
@@ -144,7 +144,7 @@ class _Body extends StatelessWidget {
               child: Text(
                 Formatter.currency(transaction.amount),
                 style: TextStyles.bodyRegular.copyWith(
-                  color: AppColors.fontSubtitle,
+                  color: AppColors.fontSecondary,
                 ),
               ),
             ),
@@ -163,7 +163,7 @@ class _Body extends StatelessWidget {
               child: Text(
                 transaction.remarks ?? 'No remarks',
                 style: TextStyles.bodyRegular.copyWith(
-                  color: AppColors.fontSubtitle,
+                  color: AppColors.fontSecondary,
                 ),
               ),
             ),

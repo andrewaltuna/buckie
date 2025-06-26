@@ -30,6 +30,13 @@ class BudgetBreakdownChart extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
+        _PieChart(
+          budget: budget,
+          expense: expense,
+          categories: categories,
+          centerSpaceRadius: centerSpaceRadius,
+          baseSectionRadius: baseSectionRadius,
+        ),
         Text(
           BudgetUsageDisplayHelper.percentageUsedDisplay(
             expense: expense,
@@ -42,15 +49,8 @@ class BudgetBreakdownChart extends StatelessWidget {
                     AppColors.fontWarning,
                     (expense / budget).clamp(0, 1),
                   )
-                : null,
+                : AppColors.fontSecondary,
           ),
-        ),
-        _PieChart(
-          budget: budget,
-          expense: expense,
-          categories: categories,
-          centerSpaceRadius: centerSpaceRadius,
-          baseSectionRadius: baseSectionRadius,
         ),
       ],
     );

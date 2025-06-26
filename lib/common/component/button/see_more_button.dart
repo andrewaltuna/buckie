@@ -21,10 +21,15 @@ class SeeMoreButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(
-            expanded ? 'Show less' : 'Show more',
-            style: TextStyles.titleExtraSmall.copyWith(
-              color: color,
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 100),
+            child: Text(
+              key: ValueKey(expanded),
+              expanded ? 'Less' : 'More',
+              textAlign: TextAlign.end,
+              style: TextStyles.titleExtraSmall.copyWith(
+                color: color,
+              ),
             ),
           ),
           AnimatedRotation(

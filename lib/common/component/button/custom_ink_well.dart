@@ -1,3 +1,4 @@
+import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomInkWell extends StatelessWidget {
@@ -22,6 +23,8 @@ class CustomInkWell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final splashColor = AppColors.fontPrimary.withValues(alpha: 0.05);
+
     return ClipRRect(
       borderRadius: BorderRadius.all(
         Radius.circular(borderRadius ?? 0),
@@ -30,6 +33,10 @@ class CustomInkWell extends StatelessWidget {
         color: color ?? Colors.transparent,
         child: InkWell(
           onTap: onTap,
+          splashColor: splashColor,
+          overlayColor: WidgetStateColor.resolveWith(
+            (_) => splashColor,
+          ),
           child: Container(
             width: width,
             height: height,

@@ -25,6 +25,7 @@ class Category extends Equatable {
 
 enum CategoryType {
   clothing('Clothing'),
+  date('Date'),
   education('Education'),
   entertainment('Entertainment'),
   food('Food'),
@@ -42,6 +43,7 @@ enum CategoryType {
 
   IconData get icon => switch (this) {
         CategoryType.clothing => Icons.checkroom,
+        CategoryType.date => Icons.favorite,
         CategoryType.education => Icons.school,
         CategoryType.entertainment => Icons.movie,
         CategoryType.food => Icons.restaurant,
@@ -55,6 +57,7 @@ enum CategoryType {
       };
 
   Color get color => switch (this) {
+        CategoryType.date => const Color(0xFFE63946), // Coral Red
         CategoryType.clothing => const Color(0xFFB667F1), // Vibrant Purple
         CategoryType.education => const Color(0xFF4CC9F0), // Light Blue
         CategoryType.entertainment => const Color(0xFFF72585), // Hot Pink

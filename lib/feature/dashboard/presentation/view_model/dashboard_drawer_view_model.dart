@@ -22,9 +22,9 @@ class DashboardDrawerViewModel extends Cubit<DashboardDrawerState> {
   }
 
   void onDragEnd() {
-    final scale = state.scale > DashboardDrawerHelper.percentageHeightMidpoint
-        ? DashboardDrawerHelper.percentageMaxHeight
-        : DashboardDrawerHelper.percentageMinHeight;
+    final scale = state.scale > DashboardDrawerHelper.percentHeightMidpoint
+        ? DashboardDrawerHelper.percentMaxHeight
+        : DashboardDrawerHelper.percentMinHeight;
 
     emit(
       state.copyWith(
@@ -37,7 +37,7 @@ class DashboardDrawerViewModel extends Cubit<DashboardDrawerState> {
 
   double _calculateOpacity(double scale) {
     final remainingSpace = 1 - scale;
-    const sizeClamp = 1 - DashboardDrawerHelper.percentageMinHeight;
+    const sizeClamp = 1 - DashboardDrawerHelper.percentMinHeight;
 
     return 1 - (min(remainingSpace, sizeClamp) / sizeClamp);
   }

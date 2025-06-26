@@ -4,7 +4,7 @@ import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/text_styles.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
-import 'package:expense_tracker/feature/transactions/data/model/extension/transaction.dart';
+import 'package:expense_tracker/feature/transactions/data/model/extension/transaction_extension.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/category_icon.dart';
 import 'package:flutter/material.dart';
 
@@ -110,7 +110,7 @@ class _TransactionRow extends StatelessWidget {
                         Text(
                           transaction.remarks ?? 'No remarks',
                           style: TextStyles.bodySmall.copyWith(
-                            color: AppColors.fontSubtitle,
+                            color: AppColors.fontSecondary,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),

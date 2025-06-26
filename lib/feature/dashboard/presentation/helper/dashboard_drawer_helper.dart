@@ -1,14 +1,12 @@
 class DashboardDrawerHelper {
-  static const percentageMaxHeight = 0.95;
+  static const percentMaxHeight = 0.95;
 
-  static const percentageMinHeight = 0.50;
+  static const percentMinHeight = 0.50;
 
-  static const percentageMinHeightWithAllowance = percentageMinHeight - 0.1;
-
-  static const percentageHeightMidpoint =
-      (percentageMaxHeight + percentageMinHeight) / 2;
+  static const percentHeightMidpoint =
+      (percentMaxHeight + percentMinHeight) / 2;
 
   static bool exceedsConstraints(double size) {
-    return size > 1 || size < percentageMinHeightWithAllowance;
+    return size > 1 || size < (percentMinHeight - 0.1);
   }
 }
