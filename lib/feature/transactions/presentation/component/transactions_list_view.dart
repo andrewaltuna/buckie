@@ -24,43 +24,45 @@ class TransactionsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      physics: const BouncingScrollPhysics(),
-      children: transactionsByDate.entries.map(
-        (entry) {
-          final date = entry.key;
+    final entries = transactionsByDate.entries;
 
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      Formatter.date(date, includeYear: false),
-                      style: TextStyles.titleExtraSmall,
-                    ),
-                    Text(
-                      date.dayOfWeek(shortened: true).toUpperCase(),
-                      style: TextStyles.titleSmall.copyWith(
-                        color: AppColors.accent,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: TransactionGroupCard(
-                    transactions: entry.value,
-                    onTransactionTapped: (trx) => _onTap(context, trx),
+    return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      itemCount: entries.length,
+      itemBuilder: (context, index) {
+        final entry = entries.elementAt(index);
+        final date = entry.key;
+
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    Formatter.date(date, includeYear: false),
+                    style: TextStyles.titleExtraSmall,
                   ),
+                  Text(
+                    date.dayOfWeek(shortened: true).toUpperCase(),
+                    style: TextStyles.titleSmall.copyWith(
+                      color: AppColors.accent,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: TransactionGroupCard(
+                  transactions: entry.value,
+                  onTransactionTapped: (trx) => _onTap(context, trx),
                 ),
-              ],
-            ),
-          );
-        },
-      ).toList(),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

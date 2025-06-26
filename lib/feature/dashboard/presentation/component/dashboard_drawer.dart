@@ -1,4 +1,5 @@
 import 'package:expense_tracker/common/constants.dart';
+import 'package:expense_tracker/common/extension/context.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/category_preview_card.dart';
@@ -49,7 +50,9 @@ class DashboardDrawer extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                 ],
-                const SizedBox(height: Constants.navBarHeight),
+                SizedBox(
+                  height: context.padding.bottom,
+                ),
               ],
             )
           : const Center(

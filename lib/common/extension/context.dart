@@ -5,4 +5,6 @@ extension ContextHelper on BuildContext {
 
   double get height => _mediaQuery.size.height;
   double get width => _mediaQuery.size.width;
+
+  EdgeInsets get padding => _mediaQuery.padding;
 }
