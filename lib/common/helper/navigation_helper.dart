@@ -2,14 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class NavigationHelper {
-  const NavigationHelper._(this._context);
+  const NavigationHelper._();
 
-  final BuildContext _context;
-
-  factory NavigationHelper.of(BuildContext context) =>
-      NavigationHelper._(context);
-
-  CustomTransitionPage pageWithDefaultTransition<T>({
+  static CustomTransitionPage pageWithDefaultTransition<T>({
     required GoRouterState state,
     required Widget child,
   }) {
@@ -26,7 +21,7 @@ class NavigationHelper {
   }
 
   // TODO: fix implementation
-  CustomTransitionPage pageWithSlidingTransition<T>({
+  static CustomTransitionPage pageWithSlidingTransition<T>({
     required GoRouterState state,
     required Widget child,
   }) {

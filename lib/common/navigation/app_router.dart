@@ -47,7 +47,7 @@ class AppNavigation {
         name: LoginScreen.routeName,
         path: LoginScreen.routePath,
         pageBuilder: (context, state) {
-          return NavigationHelper.of(context).pageWithDefaultTransition(
+          return NavigationHelper.pageWithDefaultTransition(
             state: state,
             child: const LoginScreen(),
           );
@@ -57,7 +57,7 @@ class AppNavigation {
         name: RegistrationScreen.routeName,
         path: RegistrationScreen.routePath,
         pageBuilder: (context, state) =>
-            NavigationHelper.of(context).pageWithDefaultTransition(
+            NavigationHelper.pageWithDefaultTransition(
           state: state,
           child: const RegistrationScreen(),
         ),
@@ -71,7 +71,7 @@ class AppNavigation {
             name: DashboardScreen.routeName,
             path: DashboardScreen.routePath,
             pageBuilder: (context, state) =>
-                NavigationHelper.of(context).pageWithDefaultTransition(
+                NavigationHelper.pageWithDefaultTransition(
               state: state,
               child: const DashboardScreen(),
             ),
@@ -80,7 +80,7 @@ class AppNavigation {
             name: CategoriesScreen.routeName,
             path: CategoriesScreen.routePath,
             pageBuilder: (context, state) =>
-                NavigationHelper.of(context).pageWithDefaultTransition(
+                NavigationHelper.pageWithDefaultTransition(
               state: state,
               child: const CategoriesScreen(),
             ),
@@ -89,7 +89,7 @@ class AppNavigation {
             name: TransactionsScreen.routeName,
             path: TransactionsScreen.routePath,
             pageBuilder: (context, state) =>
-                NavigationHelper.of(context).pageWithDefaultTransition(
+                NavigationHelper.pageWithDefaultTransition(
               state: state,
               child: const TransactionsScreen(),
             ),
@@ -98,7 +98,7 @@ class AppNavigation {
             name: CreateTransactionScreen.routeName,
             path: CreateTransactionScreen.routePath,
             pageBuilder: (context, state) =>
-                NavigationHelper.of(context).pageWithDefaultTransition(
+                NavigationHelper.pageWithDefaultTransition(
               state: state,
               child: const CreateTransactionScreen(),
             ),
@@ -107,7 +107,7 @@ class AppNavigation {
             name: UpdateTransactionScreen.routeName,
             path: UpdateTransactionScreen.routePath,
             pageBuilder: (context, state) =>
-                NavigationHelper.of(context).pageWithDefaultTransition(
+                NavigationHelper.pageWithDefaultTransition(
               state: state,
               child: UpdateTransactionScreen(
                 transaction: state.extra! as Transaction,
@@ -118,7 +118,7 @@ class AppNavigation {
             name: SettingsScreen.routeName,
             path: SettingsScreen.routePath,
             pageBuilder: (context, state) =>
-                NavigationHelper.of(context).pageWithDefaultTransition(
+                NavigationHelper.pageWithDefaultTransition(
               state: state,
               child: const SettingsScreen(),
             ),
