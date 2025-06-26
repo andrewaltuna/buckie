@@ -146,9 +146,18 @@ class _Form extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final focusNode = useFocusNode()..requestFocus();
+    final focusNode = useFocusNode();
     final category = context.select(
       (CreateTransactionViewModel viewModel) => viewModel.state.category,
+    );
+
+    useEffect(
+      () {
+        focusNode.requestFocus();
+
+        return;
+      },
+      [],
     );
 
     return Form(

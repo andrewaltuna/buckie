@@ -54,9 +54,18 @@ class SetBudgetModalContent extends HookWidget {
     final initialValue = this.initialValue != null && this.initialValue! > 0
         ? this.initialValue
         : null;
-    final focusNode = useFocusNode()..requestFocus();
+    final focusNode = useFocusNode();
     final controller = useTextEditingController(
       text: initialValue?.toString(),
+    );
+
+    useEffect(
+      () {
+        focusNode.requestFocus();
+
+        return;
+      },
+      [],
     );
 
     return ModalBase(
