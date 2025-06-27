@@ -9,6 +9,13 @@ class TextStyles {
   static const _fontFamilySecondary = Constants.fontFamilySecondary;
 
   // Font Primary
+  static const titleLarge = TextStyle(
+    fontFamily: _fontFamilyPrimary,
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: AppColors.fontPrimary,
+  );
+
   static const titleMedium = TextStyle(
     fontFamily: _fontFamilyPrimary,
     fontSize: 20,
@@ -90,7 +97,7 @@ class TextStyles {
   );
 
   // Button
-  static const btnPrimary = TextStyle(
+  static const buttonRegular = TextStyle(
     fontFamily: _fontFamilySecondary,
     fontSize: 14,
     fontWeight: FontWeight.w600,

@@ -12,14 +12,18 @@ class Formatter {
 
   static String date(
     DateTime date, {
+    bool includeMonth = true,
     bool includeDay = true,
     bool includeYear = true,
   }) {
-    final day = includeDay ? 'dd' : '';
-    final separator = includeDay && includeYear ? ', ' : '';
+    final monthSeparator = includeDay || includeYear ? ' ' : '';
+    final daySeparator = includeDay && includeYear ? ', ' : '';
+
+    final month = includeMonth ? 'MMM$monthSeparator' : '';
+    final day = includeDay ? 'dd$daySeparator' : '';
     final year = includeYear ? 'yyyy' : '';
 
-    return DateFormat('MMM $day$separator$year').format(date);
+    return DateFormat('$month$day$year').format(date);
   }
 
   static String percentage(

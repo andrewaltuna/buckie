@@ -29,7 +29,7 @@ class RoundedButton extends StatelessWidget {
         child: switch (state) {
           ButtonState.idle => Text(
               label,
-              style: TextStyles.btnPrimary,
+              style: TextStyles.buttonRegular,
             ),
           ButtonState.loading => const SizedBox(
               height: _loadingIndicatorSize,

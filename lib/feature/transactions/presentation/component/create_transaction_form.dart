@@ -148,7 +148,7 @@ class _Form extends HookWidget {
   Widget build(BuildContext context) {
     final focusNode = useFocusNode();
     final category = context.select(
-      (CreateTransactionViewModel viewModel) => viewModel.state.category,
+      (CreateTransactionViewModel vm) => vm.state.category,
     );
 
     useEffect(

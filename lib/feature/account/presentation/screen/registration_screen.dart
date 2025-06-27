@@ -92,7 +92,7 @@ class _Body extends StatelessWidget {
     final formViewModel = context.read<RegistrationFormViewModel>();
 
     final authStatus = context.select(
-      (AuthViewModel viewModel) => viewModel.state.status,
+      (AuthViewModel vm) => vm.state.status,
     );
 
     final isFormValid = formState.isErrorFree &&

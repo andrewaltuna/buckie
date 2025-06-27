@@ -38,19 +38,27 @@ class TransactionsListView extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                children: [
-                  Text(
-                    Formatter.date(date, includeYear: false),
-                    style: TextStyles.titleExtraSmall,
-                  ),
-                  Text(
-                    date.dayOfWeek(shortened: true).toUpperCase(),
-                    style: TextStyles.titleSmall.copyWith(
-                      color: AppColors.accent,
+              Container(
+                width: 45,
+                margin: const EdgeInsets.only(top: 8),
+                child: Column(
+                  children: [
+                    Text(
+                      date.dayOfWeek(shortened: true).toUpperCase(),
+                      style: TextStyles.titleSmall.copyWith(
+                        color: AppColors.accent,
+                      ),
                     ),
-                  ),
-                ],
+                    Text(
+                      Formatter.date(
+                        date,
+                        includeMonth: false,
+                        includeYear: false,
+                      ),
+                      style: TextStyles.titleLarge,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(

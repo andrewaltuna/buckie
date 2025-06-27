@@ -14,14 +14,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 class DashboardDrawer extends StatelessWidget {
   const DashboardDrawer({
-    required this.constraints,
+    required this.maxHeight,
     required this.categories,
     required this.transactions,
     required this.expense,
     super.key,
   });
 
-  final BoxConstraints constraints;
+  final double maxHeight;
   final List<Category> categories;
   final List<Transaction> transactions;
   final double expense;
@@ -29,7 +29,7 @@ class DashboardDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _DraggableDrawer(
-      constraints: constraints,
+      maxHeight: maxHeight,
       child: transactions.isNotEmpty || categories.isNotEmpty
           ? ListView(
               physics: const BouncingScrollPhysics(),
@@ -68,22 +68,21 @@ class DashboardDrawer extends StatelessWidget {
 
 class _DraggableDrawer extends StatelessWidget {
   const _DraggableDrawer({
-    required this.constraints,
+    required this.maxHeight,
     required this.child,
   });
 
-  final BoxConstraints constraints;
+  final double maxHeight;
   final Widget child;
 
   void _onDrawerDrag(
     BuildContext context,
     DragUpdateDetails details,
-    BoxConstraints constraints,
   ) {
     final scale = context.read<DashboardDrawerViewModel>().state.scale;
-    final currentHeight = scale * constraints.maxHeight;
+    final currentHeight = scale * maxHeight;
 
-    final size = (currentHeight + -details.delta.dy) / constraints.maxHeight;
+    final size = (currentHeight + -details.delta.dy) / maxHeight;
 
     if (DashboardDrawerHelper.exceedsConstraints(size)) return;
 
@@ -102,7 +101,7 @@ class _DraggableDrawer extends StatelessWidget {
       curve: Curves.easeIn,
       duration:
           state.isDragging ? Duration.zero : const Duration(milliseconds: 100),
-      height: constraints.maxHeight * state.scale,
+      height: maxHeight * state.scale,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(20),
@@ -116,7 +115,6 @@ class _DraggableDrawer extends StatelessWidget {
             onVerticalDragUpdate: (details) => _onDrawerDrag(
               context,
               details,
-              constraints,
             ),
             onVerticalDragEnd: (_) => _onDrawerDragEnd(context),
             behavior: HitTestBehavior.opaque,

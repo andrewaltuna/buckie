@@ -9,67 +9,121 @@ class BudgetingTooltip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SuperTooltip(
-      content: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Budgeting',
-              style: TextStyles.titleSmall.copyWith(
-                color: AppColors.accent,
-              ),
-            ),
-            const SizedBox(height: 8),
-            RichText(
-              text: const TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Set your monthly budget by tapping the ',
-                  ),
-                  WidgetSpan(
-                    child: Icon(
-                      Icons.settings,
-                      color: AppColors.fontPrimary,
-                      size: 18,
-                    ),
-                  ),
-                  TextSpan(
-                    text: ' icon in order to see your remaining balance.',
-                  ),
-                ],
-                style: TextStyles.bodyMedium,
-              ),
-            ),
-            const SizedBox(height: 8),
-            RichText(
-              text: const TextSpan(
-                children: [
-                  TextSpan(
-                    text:
-                        'Optionally, once a budget is set, the pie-chart below can be toggled to include your remaining balance for the month using the ',
-                  ),
-                  WidgetSpan(
-                    child: Icon(
-                      Icons.visibility,
-                      color: AppColors.fontPrimary,
-                      size: 18,
-                    ),
-                  ),
-                  TextSpan(text: ' icon.'),
-                ],
-                style: TextStyles.bodyMedium,
-              ),
-            ),
-          ],
-        ),
-      ),
       backgroundColor: AppColors.defaultBackground,
+      content: const Padding(
+        padding: EdgeInsets.all(12),
+        child: _Tooltip(),
+      ),
       child: const Icon(
         Icons.info_outlined,
         color: AppColors.accent,
-        size: 24,
+        size: 20,
+      ),
+    );
+  }
+}
+
+class _Tooltip extends StatelessWidget {
+  const _Tooltip();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Budgeting',
+          style: TextStyles.titleSmall.copyWith(
+            color: AppColors.accent,
+          ),
+        ),
+        const SizedBox(height: 8),
+        RichText(
+          text: const TextSpan(
+            children: [
+              TextSpan(
+                text: 'Set your monthly budget by tapping the ',
+              ),
+              WidgetSpan(
+                child: Icon(
+                  Icons.settings,
+                  color: AppColors.fontPrimary,
+                  size: 18,
+                ),
+              ),
+              TextSpan(
+                text: ' icon in order to see your remaining balance.',
+              ),
+            ],
+            style: TextStyles.bodyMedium,
+          ),
+        ),
+        const SizedBox(height: 8),
+        RichText(
+          text: const TextSpan(
+            children: [
+              TextSpan(
+                text:
+                    'Optionally, once a budget is set, the pie-chart below can be toggled to include your remaining balance for the month using the ',
+              ),
+              WidgetSpan(
+                child: Icon(
+                  Icons.visibility,
+                  color: AppColors.fontPrimary,
+                  size: 18,
+                ),
+              ),
+              TextSpan(text: ' icon.'),
+            ],
+            style: TextStyles.bodyMedium,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Symbols',
+          style: TextStyles.titleSmall.copyWith(
+            color: AppColors.accent,
+          ),
+        ),
+        const _SymbolItem(
+          symbol: 'EXP',
+          description: 'Total expenses',
+        ),
+        const _SymbolItem(
+          symbol: 'BAL',
+          description: 'Remaining balance',
+        ),
+        const _SymbolItem(
+          symbol: 'BUD',
+          description: 'Budget allocation',
+        ),
+      ],
+    );
+  }
+}
+
+class _SymbolItem extends StatelessWidget {
+  const _SymbolItem({
+    required this.symbol,
+    required this.description,
+  });
+
+  final String symbol;
+  final String description;
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: symbol,
+            style: TextStyles.titleExtraSmall,
+          ),
+          TextSpan(text: ' — $description'),
+        ],
+        style: TextStyles.bodyMedium,
       ),
     );
   }

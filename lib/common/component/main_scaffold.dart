@@ -7,7 +7,7 @@ class MainScaffold extends StatelessWidget {
   const MainScaffold({
     required this.body,
     this.title,
-    this.widget,
+    this.titleWidget,
     this.showAppBar = true,
     this.showBackButton = false,
     this.showNavBar = true,
@@ -17,7 +17,7 @@ class MainScaffold extends StatelessWidget {
   });
 
   final String? title;
-  final Widget? widget;
+  final Widget? titleWidget;
   final Widget body;
   final bool showAppBar;
   final bool showBackButton;
@@ -27,9 +27,6 @@ class MainScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = this.title;
-    final widget = this.widget;
-
     return Scaffold(
       appBar: showAppBar
           ? AppBar(
@@ -50,13 +47,21 @@ class MainScaffold extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (widget != null) widget,
                   if (title != null)
-                    Text(
-                      title,
-                      style: TextStyles.titleMedium.copyWith(
-                        color: AppColors.accent,
-                      ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          title!,
+                          style: TextStyles.titleMedium.copyWith(
+                            color: AppColors.accent,
+                          ),
+                        ),
+                        if (titleWidget != null) ...[
+                          const SizedBox(width: 8),
+                          titleWidget!,
+                        ],
+                      ],
                     ),
                 ],
               ),

@@ -5,7 +5,6 @@ import 'package:expense_tracker/feature/budget/presentation/view_model/budgets_v
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/budget_breakdown_chart.dart';
-import 'package:expense_tracker/feature/dashboard/presentation/component/budgeting_tooltip.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_month_selector.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/budget_breakdown_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
@@ -41,7 +40,7 @@ class BudgetBreakdownView extends StatelessWidget {
         children: [
           const SizedBox(height: 16),
           const DashboardMonthSelector(),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           _BreakdownInfo(
             month: month,
             budget: budget,
@@ -81,16 +80,10 @@ class _BreakdownInfo extends StatelessWidget {
       builder: (context, state) {
         final balance = budget - expense;
 
-        return Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: AppColors.widgetBackgroundSecondary,
-          ),
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Row(
             children: [
-              const SizedBox(width: 4),
-              const BudgetingTooltip(),
               if (budget > 0)
                 Expanded(
                   child: Row(
@@ -109,7 +102,7 @@ class _BreakdownInfo extends StatelessWidget {
                           BudgetBreakdownState>(
                         builder: (context, budgetBreakdownState) {
                           return _ValueLabel(
-                            label: 'CAP',
+                            label: 'BUD',
                             value: Formatter.currency(budget),
                             suffixIcon: CustomInkWell(
                               borderRadius: 50,

@@ -79,25 +79,11 @@ class _TransactionsPage extends HookWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Text(
-                    Formatter.date(
-                      month.toDateTime(),
-                      includeDay: false,
-                    ),
-                    style: TextStyles.titleMedium,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _BudgetIndicator(
-                      expenseLabel: Formatter.currency(
-                        transactions?.sumAmount() ?? 0,
-                      ),
-                      month: month,
-                    ),
-                  ),
-                ],
+              _Header(
+                month: month,
+                expenseLabel: Formatter.currency(
+                  transactions?.sumAmount() ?? 0,
+                ),
               ),
               const SizedBox(height: 16),
               Expanded(
@@ -114,8 +100,8 @@ class _TransactionsPage extends HookWidget {
   }
 }
 
-class _BudgetIndicator extends StatelessWidget {
-  const _BudgetIndicator({
+class _Header extends StatelessWidget {
+  const _Header({
     required this.expenseLabel,
     required this.month,
   });
@@ -126,43 +112,68 @@ class _BudgetIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final budget = context.select(
-      (BudgetsViewModel viewModel) => viewModel.state.budgetOf(month.key),
+      (BudgetsViewModel vm) => vm.state.budgetOf(month.key),
     );
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Flexible(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                Text(
-                  expenseLabel,
-                  style: TextStyles.titleSmall.copyWith(
-                    color: AppColors.fontWarning,
-                  ),
-                ),
-                if (budget != null && budget > 0) ...[
-                  const Text(
-                    ' of ',
-                    style: TextStyles.titleExtraSmall,
-                  ),
-                  Text(
-                    Formatter.currency(budget),
-                    style: TextStyles.titleSmall.copyWith(
-                      color: AppColors.accent,
-                    ),
-                  ),
-                ],
-              ],
-            ),
+        Text(
+          Formatter.date(
+            month.toDateTime(),
+            includeDay: false,
           ),
+          style: TextStyles.titleMedium,
         ),
         const SizedBox(width: 12),
-        SetBudgetButton(
-          month: month,
-          budget: budget,
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.widgetBackgroundSecondary,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          expenseLabel,
+                          style: TextStyles.titleSmall.copyWith(
+                            color: AppColors.fontWarning,
+                          ),
+                        ),
+                        if (budget != null && budget > 0) ...[
+                          const Text(
+                            ' of ',
+                            style: TextStyles.titleExtraSmall,
+                          ),
+                          Text(
+                            Formatter.currency(budget),
+                            style: TextStyles.titleSmall.copyWith(
+                              color: AppColors.accent,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              SetBudgetButton(
+                budget: budget,
+                month: month,
+              ),
+            ],
+          ),
         ),
       ],
     );

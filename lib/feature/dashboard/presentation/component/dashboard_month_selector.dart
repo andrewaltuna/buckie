@@ -32,59 +32,66 @@ class DashboardMonthSelector extends StatelessWidget {
 
         return AbsorbPointer(
           absorbing: !hasMonth,
-          child: Row(
-            children: [
-              _ChevronButton(
-                forward: false,
-                onTap: (forward) => _onTap(context, forward),
-              ),
-              const Spacer(),
-              SizedBox(
-                width: 100,
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 100),
-                  transitionBuilder: (child, animation) {
-                    return Opacity(
-                      opacity: 1 - animation.value,
-                      child: ScaleTransition(
-                        scale: Tween(
-                          begin: 0.95,
-                          end: 1.0,
-                        ).animate(animation),
-                        child: child,
-                      ),
-                    );
-                  },
-                  child: hasMonth
-                      ? Text(
-                          key: ValueKey(month.toString()),
-                          Formatter.date(
-                            month.toDateTime(),
-                            includeDay: false,
-                          ),
-                          style: TextStyles.titleRegular,
-                        )
-                      : const SkeletonDisplay(
-                          height: 18,
-                          width: 48,
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: const BoxDecoration(
+              color: AppColors.widgetBackgroundSecondary,
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+            ),
+            child: Row(
+              children: [
+                _ChevronButton(
+                  forward: false,
+                  onTap: (forward) => _onTap(context, forward),
+                ),
+                const Spacer(),
+                SizedBox(
+                  width: 100,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 100),
+                    transitionBuilder: (child, animation) {
+                      return Opacity(
+                        opacity: 1 - animation.value,
+                        child: ScaleTransition(
+                          scale: Tween(
+                            begin: 0.95,
+                            end: 1.0,
+                          ).animate(animation),
+                          child: child,
                         ),
+                      );
+                    },
+                    child: hasMonth
+                        ? Text(
+                            key: ValueKey(month.toString()),
+                            Formatter.date(
+                              month.toDateTime(),
+                              includeDay: false,
+                            ),
+                            style: TextStyles.titleRegular,
+                          )
+                        : const SkeletonDisplay(
+                            height: 18,
+                            width: 48,
+                          ),
+                  ),
                 ),
-              ),
-              CustomInkWell(
-                onTap: () => _onSelectToday(context),
-                padding: const EdgeInsets.all(4),
-                borderRadius: 50,
-                child: const Icon(
-                  Icons.today,
-                  color: AppColors.accent,
+                CustomInkWell(
+                  onTap: () => _onSelectToday(context),
+                  padding: const EdgeInsets.all(4),
+                  borderRadius: 50,
+                  child: const Icon(
+                    Icons.today,
+                    color: AppColors.accent,
+                  ),
                 ),
-              ),
-              const Spacer(),
-              _ChevronButton(
-                forward: true,
-                onTap: (forward) => _onTap(context, forward),
-              ),
-            ],
+                const Spacer(),
+                _ChevronButton(
+                  forward: true,
+                  onTap: (forward) => _onTap(context, forward),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -110,6 +117,7 @@ class _ChevronButton extends StatelessWidget {
       child: Icon(
         forward ? Icons.chevron_right : Icons.chevron_left,
         color: AppColors.fontButtonPrimary,
+        size: 32,
       ),
     );
   }

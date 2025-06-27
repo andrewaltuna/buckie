@@ -11,11 +11,13 @@ class SetBudgetButton extends StatelessWidget {
   const SetBudgetButton({
     required this.month,
     this.budget,
+    this.hasLabel = false,
     super.key,
   });
 
   final TransactionMonth? month;
   final double? budget;
+  final bool hasLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class SetBudgetButton extends StatelessWidget {
       width: 32,
       height: 32,
       borderRadius: 8,
+      // padding: const EdgeInsets.only(left: 6, right: 12),
       color: AppColors.accent,
       onTap: () => month != null
           ? ModalHelper.of(context).showModal(
@@ -35,7 +38,7 @@ class SetBudgetButton extends StatelessWidget {
                 month: month!,
               ),
             )
-          : print('fuck'),
+          : null,
       child: const Icon(
         Icons.settings,
         color: AppColors.fontButtonPrimary,
