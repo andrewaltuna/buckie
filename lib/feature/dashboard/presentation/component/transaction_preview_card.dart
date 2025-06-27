@@ -35,13 +35,14 @@ class TransactionPreviewCard extends StatelessWidget {
                   transaction.category.label,
                   style: TextStyles.titleExtraSmall,
                 ),
-                Text(
-                  transaction.remarks ?? 'No remarks',
-                  style: TextStyles.bodyRegular.copyWith(
-                    color: AppColors.fontSecondary,
+                if (transaction.remarks != null)
+                  Text(
+                    transaction.remarks ?? 'No remarks',
+                    style: TextStyles.bodyRegular.copyWith(
+                      color: AppColors.fontSecondary,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
               ],
             ),
           ),

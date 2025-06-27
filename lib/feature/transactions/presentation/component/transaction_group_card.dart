@@ -89,7 +89,7 @@ class _TransactionRow extends StatelessWidget {
         child: Row(
           children: [
             CategoryIcon(
-              size: 36,
+              size: 40,
               category: transaction.category,
             ),
             const SizedBox(width: 8),
@@ -107,13 +107,14 @@ class _TransactionRow extends StatelessWidget {
                             color: AppColors.fontPrimary,
                           ),
                         ),
-                        Text(
-                          transaction.remarks ?? 'No remarks',
-                          style: TextStyles.bodySmall.copyWith(
-                            color: AppColors.fontSecondary,
+                        if (transaction.remarks != null)
+                          Text(
+                            transaction.remarks ?? 'No remarks',
+                            style: TextStyles.bodyRegular.copyWith(
+                              color: AppColors.fontSecondary,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
                       ],
                     ),
                   ),
