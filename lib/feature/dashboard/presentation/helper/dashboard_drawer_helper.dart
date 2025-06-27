@@ -1,7 +1,7 @@
 class DashboardDrawerHelper {
   static const percentMaxHeight = 0.95;
 
-  static const percentMinHeight = 0.40;
+  static const percentMinHeight = 0.45;
 
   static const percentHeightMidpoint =
       (percentMaxHeight + percentMinHeight) / 2;

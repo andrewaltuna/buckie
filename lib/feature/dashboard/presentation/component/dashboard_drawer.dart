@@ -41,13 +41,12 @@ class DashboardDrawer extends StatelessWidget {
                     categories: categories,
                     expense: expense,
                   ),
-                  const SizedBox(height: 16),
                 ],
                 if (transactions.isNotEmpty) ...[
+                  if (categories.isNotEmpty) const SizedBox(height: 24),
                   _RecentTransactionsSection(
                     transactions: transactions,
                   ),
-                  const SizedBox(height: 16),
                 ],
                 SizedBox(
                   height: context.padding.bottom,

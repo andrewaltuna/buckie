@@ -48,7 +48,7 @@ class CategoryPreviewCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50),
                   child: LinearProgressIndicator(
                     value: allocation,
-                    minHeight: 15,
+                    minHeight: 12,
                     color: category.type.color,
                     backgroundColor: AppColors.shadow,
                   ),

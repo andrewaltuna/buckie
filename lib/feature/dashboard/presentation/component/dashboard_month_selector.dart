@@ -33,7 +33,7 @@ class DashboardMonthSelector extends StatelessWidget {
         return AbsorbPointer(
           absorbing: !hasMonth,
           child: Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(8),
             decoration: const BoxDecoration(
               color: AppColors.widgetBackgroundSecondary,
               borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -81,7 +81,7 @@ class DashboardMonthSelector extends StatelessWidget {
                   padding: const EdgeInsets.all(4),
                   borderRadius: 50,
                   child: const Icon(
-                    Icons.today,
+                    Icons.calendar_month,
                     color: AppColors.accent,
                   ),
                 ),

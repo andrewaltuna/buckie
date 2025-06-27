@@ -132,11 +132,9 @@ class _Body extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Amount',
-          style: TextStyles.titleExtraSmall.copyWith(
-            color: AppColors.fontPrimary,
-          ),
+          style: TextStyles.titleSmall,
         ),
         Row(
           children: [
@@ -151,11 +149,9 @@ class _Body extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        Text(
+        const Text(
           'Remarks',
-          style: TextStyles.titleExtraSmall.copyWith(
-            color: AppColors.fontPrimary,
-          ),
+          style: TextStyles.titleSmall,
         ),
         Row(
           children: [

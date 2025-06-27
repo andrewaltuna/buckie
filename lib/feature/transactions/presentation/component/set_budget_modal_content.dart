@@ -72,7 +72,7 @@ class SetBudgetModalContent extends HookWidget {
       header: Row(
         children: [
           const Text(
-            'Budget',
+            'Configure Budget',
             style: TextStyles.titleRegular,
           ),
           const Spacer(),

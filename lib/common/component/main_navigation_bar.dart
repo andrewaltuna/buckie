@@ -38,6 +38,7 @@ class MainNavigationBar extends StatelessWidget {
                   BoxShadow(
                     color: AppColors.shadow,
                     blurRadius: 8,
+                    spreadRadius: 4,
                   ),
                 ],
               ),
