@@ -48,12 +48,12 @@ class TransactionLocalSource implements TransactionLocalSourceInterface {
         _table,
         where: 'date >= ? AND date < ?',
         whereArgs: [startDate, endDate],
-        orderBy: 'date DESC',
+        orderBy: 'date DESC, created_at DESC',
       );
     } else {
       result = await _db.query(
         _table,
-        orderBy: 'date DESC',
+        orderBy: 'date DESC, created_at DESC',
         limit: 10,
       );
     }

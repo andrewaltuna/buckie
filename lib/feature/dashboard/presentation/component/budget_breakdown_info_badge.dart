@@ -15,11 +15,11 @@ class BudgetBreakdownInfoBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: 15,
+        horizontal: 16,
         vertical: 8,
       ),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.6),
+        color: Colors.black.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -27,18 +27,11 @@ class BudgetBreakdownInfoBadge extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyles.bodyRegular.copyWith(
-              fontSize: 16,
-              color: Colors.white,
-            ),
+            style: TextStyles.titleRegular,
           ),
           Text(
             info,
-            style: TextStyles.bodyRegular.copyWith(
-              fontSize: 16,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyles.bodyMedium,
           ),
         ],
       ),

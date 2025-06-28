@@ -33,8 +33,13 @@ class AuthenticatedViewModels extends StatelessWidget {
           create: (_) => TransactionsViewModel(
             sl<TransactionRepositoryInterface>(),
           )
-            ..add(const TransactionsRecentsRequested())
-            ..add(TransactionsRequested(currentMonth)),
+            ..add(const TransactionsStreamInitialized())
+            ..add(
+              TransactionsRequested(
+                month: currentMonth,
+                fetchRecents: true,
+              ),
+            ),
         ),
         BlocProvider(
           create: (_) => BudgetsViewModel(

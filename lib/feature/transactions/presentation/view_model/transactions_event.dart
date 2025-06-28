@@ -7,39 +7,31 @@ sealed class TransactionsEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class TransactionsRecentsRequested extends TransactionsEvent {
-  const TransactionsRecentsRequested();
+class TransactionsStreamInitialized extends TransactionsEvent {
+  const TransactionsStreamInitialized();
 }
 
 class TransactionsRequested extends TransactionsEvent {
-  const TransactionsRequested([this.month]);
+  const TransactionsRequested({
+    required this.month,
+    this.refresh = false,
+    this.fetchRecents = false,
+  });
 
-  final TransactionMonth? month;
-
-  @override
-  List<Object?> get props => [month];
-}
-
-class TransactionsItemCreated extends TransactionsEvent {
-  const TransactionsItemCreated(this.transaction);
-
-  final Transaction transaction;
+  final TransactionMonth month;
+  final bool refresh;
+  final bool fetchRecents;
 
   @override
-  List<Object> get props => [transaction];
+  List<Object?> get props => [
+        month,
+        refresh,
+        fetchRecents,
+      ];
 }
 
 class TransactionsItemDeleted extends TransactionsEvent {
   const TransactionsItemDeleted(this.transaction);
-
-  final Transaction transaction;
-
-  @override
-  List<Object> get props => [transaction];
-}
-
-class TransactionsItemUpdated extends TransactionsEvent {
-  const TransactionsItemUpdated(this.transaction);
 
   final Transaction transaction;
 

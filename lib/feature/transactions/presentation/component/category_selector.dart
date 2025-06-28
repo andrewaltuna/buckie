@@ -57,7 +57,7 @@ class CategorySelector extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   category.label,
-                  style: TextStyles.titleSmall,
+                  style: TextStyles.bodyMedium,
                 ),
                 SizedBox(width: trailingSpace),
               ],

@@ -20,6 +20,7 @@ class CreateTransactionInput {
       'remarks': remarks == '' ? null : remarks,
       'category': category.value,
       'date': date.toIso8601String(),
+      'created_at': DateTime.now().toIso8601String(),
     };
   }
 }

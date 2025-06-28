@@ -62,7 +62,9 @@ class _TransactionsPage extends HookWidget {
 
     useEffect(
       () {
-        context.read<TransactionsViewModel>().add(TransactionsRequested(month));
+        context
+            .read<TransactionsViewModel>()
+            .add(TransactionsRequested(month: month));
 
         return;
       },

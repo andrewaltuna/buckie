@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 const _kDatabaseFile = 'buckie_database.db';
@@ -19,8 +20,22 @@ class AppDatabase {
 
     _database = await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDatabase,
+      onUpgrade: (db, oldVer, newVer) async {
+        if (oldVer < 2) {
+          final currentDate = DateTime.now().toIso8601String();
+
+          await db.execute(
+            '''
+              ALTER TABLE transactions
+              ADD COLUMN created_at TEXT NOT NULL DEFAULT '$currentDate'
+            ''',
+          );
+
+          _upgradeDbMessage(2);
+        }
+      },
     );
   }
 
@@ -36,7 +51,8 @@ class AppDatabase {
           amount REAL NOT NULL,
           remarks TEXT,
           date TEXT NOT NULL,
-          category TEXT NOT NULL
+          category TEXT NOT NULL,
+          created_at TEXT NOT NULL,
         )
       ''',
     );
@@ -54,6 +70,10 @@ class AppDatabase {
       ''',
     );
   }
+
+  void _upgradeDbMessage(int version) => debugPrint(
+        'Database upgraded to version $version',
+      );
 
   // Close the database and stream controllers
   Future<void> close() async {

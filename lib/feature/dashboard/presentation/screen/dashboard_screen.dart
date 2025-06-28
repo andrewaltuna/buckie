@@ -42,7 +42,7 @@ class _Content extends HookWidget {
     TransactionMonth month,
   ) {
     context.read<TransactionsViewModel>().add(
-          TransactionsRequested(month),
+          TransactionsRequested(month: month),
         );
   }
 

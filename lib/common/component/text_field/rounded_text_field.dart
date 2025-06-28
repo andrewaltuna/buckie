@@ -136,8 +136,6 @@ class RoundedTextField extends HookWidget {
                 ? (value) {
                     errorNotifier.value = validator?.call(value) ?? '';
 
-                    print('validated!');
-
                     return null;
                   }
                 : null,

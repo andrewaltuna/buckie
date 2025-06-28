@@ -53,7 +53,7 @@ enum CategoryType {
         CategoryType.transport => Icons.directions_car,
         CategoryType.travel => Icons.flight,
         CategoryType.utilities => Icons.build,
-        CategoryType.other => Icons.more_horiz,
+        CategoryType.other => Icons.category,
       };
 
   Color get color => switch (this) {
