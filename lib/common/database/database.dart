@@ -52,7 +52,7 @@ class AppDatabase {
           remarks TEXT,
           date TEXT NOT NULL,
           category TEXT NOT NULL,
-          created_at TEXT NOT NULL,
+          created_at TEXT NOT NULL
         )
       ''',
     );
