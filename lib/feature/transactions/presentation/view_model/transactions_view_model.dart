@@ -63,13 +63,10 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
       emit(state.copyWith(status: ViewModelStatus.loading));
 
       final result = await Future.wait([
-        // Recents
-        _repository.getTransactions(),
-        // Monthly transactions
-        if (event.fetchRecents)
-          _repository.getTransactions(
-            month: event.month,
-          ),
+        _repository.getTransactions(
+          month: event.month,
+        ),
+        if (event.fetchRecents) _repository.getTransactions(),
       ]);
 
       final transactions = result.elementAt(0);
