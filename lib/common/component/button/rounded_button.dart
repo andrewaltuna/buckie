@@ -1,6 +1,6 @@
 import 'package:expense_tracker/common/enum/button_state.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 class RoundedButton extends StatelessWidget {
@@ -29,7 +29,7 @@ class RoundedButton extends StatelessWidget {
         child: switch (state) {
           ButtonState.idle => Text(
               label,
-              style: TextStyles.buttonRegular,
+              style: AppTextStyles.buttonRegular,
             ),
           ButtonState.loading => const SizedBox(
               height: _loadingIndicatorSize,

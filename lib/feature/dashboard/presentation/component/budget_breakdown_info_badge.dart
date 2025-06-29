@@ -1,4 +1,4 @@
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 class BudgetBreakdownInfoBadge extends StatelessWidget {
@@ -27,11 +27,11 @@ class BudgetBreakdownInfoBadge extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyles.titleRegular,
+            style: AppTextStyles.titleRegular,
           ),
           Text(
             info,
-            style: TextStyles.bodyMedium,
+            style: AppTextStyles.bodyMedium,
           ),
         ],
       ),

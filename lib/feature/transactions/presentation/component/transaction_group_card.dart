@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/extension/transaction_extension.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/category_icon.dart';
@@ -36,11 +36,11 @@ class TransactionGroupCard extends StatelessWidget {
               children: [
                 const Text(
                   'Total  ',
-                  style: TextStyles.titleExtraSmall,
+                  style: AppTextStyles.titleExtraSmall,
                 ),
                 Text(
                   amount,
-                  style: TextStyles.titleSmall.copyWith(
+                  style: AppTextStyles.titleSmall.copyWith(
                     color: AppColors.fontWarning,
                   ),
                 ),
@@ -103,14 +103,14 @@ class _TransactionRow extends StatelessWidget {
                       children: [
                         Text(
                           transaction.category.label,
-                          style: TextStyles.titleExtraSmall.copyWith(
+                          style: AppTextStyles.titleExtraSmall.copyWith(
                             color: AppColors.fontPrimary,
                           ),
                         ),
                         if (transaction.remarks != null)
                           Text(
                             transaction.remarks ?? 'No remarks',
-                            style: TextStyles.bodyRegular.copyWith(
+                            style: AppTextStyles.bodyRegular.copyWith(
                               color: AppColors.fontSecondary,
                             ),
                             overflow: TextOverflow.ellipsis,
@@ -123,7 +123,7 @@ class _TransactionRow extends StatelessWidget {
                     children: [
                       Text(
                         amount,
-                        style: TextStyles.titleExtraSmall.copyWith(
+                        style: AppTextStyles.titleExtraSmall.copyWith(
                             // color: AppColors.fontWarning,
                             ),
                       ),

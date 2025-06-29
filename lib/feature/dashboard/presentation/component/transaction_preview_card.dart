@@ -1,6 +1,6 @@
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_drawer_card_base.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/presentation/helper/transactions_helper.dart';
@@ -33,12 +33,12 @@ class TransactionPreviewCard extends StatelessWidget {
               children: [
                 Text(
                   transaction.category.label,
-                  style: TextStyles.titleExtraSmall,
+                  style: AppTextStyles.titleExtraSmall,
                 ),
                 if (transaction.remarks != null)
                   Text(
                     transaction.remarks ?? 'No remarks',
-                    style: TextStyles.bodyRegular.copyWith(
+                    style: AppTextStyles.bodyRegular.copyWith(
                       color: AppColors.fontSecondary,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -52,13 +52,13 @@ class TransactionPreviewCard extends StatelessWidget {
             children: [
               Text(
                 amount,
-                style: TextStyles.titleExtraSmall.copyWith(
+                style: AppTextStyles.titleExtraSmall.copyWith(
                   color: AppColors.fontWarning,
                 ),
               ),
               Text(
                 Formatter.date(transaction.date),
-                style: TextStyles.bodyRegular.copyWith(
+                style: AppTextStyles.bodyRegular.copyWith(
                   color: AppColors.fontSecondary,
                 ),
               ),

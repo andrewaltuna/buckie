@@ -3,7 +3,7 @@ import 'package:expense_tracker/common/component/text_field/rounded_text_field.d
 import 'package:expense_tracker/common/helper/input_formatter.dart';
 import 'package:expense_tracker/common/helper/modal_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/budget/presentation/view_model/budgets_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +73,7 @@ class SetBudgetModalContent extends HookWidget {
         children: [
           const Text(
             'Configure Budget',
-            style: TextStyles.titleRegular,
+            style: AppTextStyles.titleRegular,
           ),
           const Spacer(),
           _IconButton(

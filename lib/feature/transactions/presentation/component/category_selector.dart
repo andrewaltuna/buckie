@@ -1,7 +1,7 @@
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/extension/screen_size.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:flutter/material.dart';
 
@@ -57,7 +57,7 @@ class CategorySelector extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   category.label,
-                  style: TextStyles.bodyMedium,
+                  style: AppTextStyles.bodyMedium,
                 ),
                 SizedBox(width: trailingSpace),
               ],
@@ -89,7 +89,7 @@ class _SelectionMenu extends StatelessWidget {
             const SizedBox(height: 16),
             const Text(
               'Select Category',
-              style: TextStyles.titleMedium,
+              style: AppTextStyles.titleMedium,
             ),
             const SizedBox(height: 16),
             GridView.builder(
@@ -129,7 +129,7 @@ class _SelectionMenu extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           category.label,
-                          style: TextStyles.bodyRegular,
+                          style: AppTextStyles.bodyRegular,
                         ),
                       ],
                     ),

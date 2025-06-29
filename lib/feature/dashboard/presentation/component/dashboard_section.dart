@@ -1,6 +1,6 @@
 import 'package:expense_tracker/common/component/button/see_more_button.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 class DashboardSection extends StatelessWidget {
@@ -30,7 +30,7 @@ class DashboardSection extends StatelessWidget {
             Expanded(
               child: Text(
                 label,
-                style: TextStyles.titleRegular.copyWith(
+                style: AppTextStyles.titleRegular.copyWith(
                   color: AppColors.fontPrimary,
                 ),
               ),

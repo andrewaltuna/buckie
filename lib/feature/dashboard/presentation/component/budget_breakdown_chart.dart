@@ -1,6 +1,6 @@
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/helper/budget_usage_display_helper.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/budget_breakdown_view_model.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -42,7 +42,7 @@ class BudgetBreakdownChart extends StatelessWidget {
             expense: expense,
             budget: budget,
           ),
-          style: TextStyles.titleMedium.copyWith(
+          style: AppTextStyles.titleMedium.copyWith(
             color: budget > 0
                 ? Color.lerp(
                     AppColors.fontPrimary,

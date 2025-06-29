@@ -4,7 +4,7 @@ import 'package:expense_tracker/common/enum/button_state.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/helper/input_formatter.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/category_selector.dart';
@@ -226,7 +226,7 @@ class _Form extends HookWidget {
             padding: const EdgeInsets.only(left: 4),
             child: Text(
               'Category',
-              style: TextStyles.labelRegular.copyWith(
+              style: AppTextStyles.labelRegular.copyWith(
                 color: AppColors.accent,
               ),
             ),

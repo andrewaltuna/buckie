@@ -1,5 +1,5 @@
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 class SeeMoreButton extends StatelessWidget {
@@ -27,7 +27,7 @@ class SeeMoreButton extends StatelessWidget {
               key: ValueKey(expanded),
               expanded ? 'Less' : 'More',
               textAlign: TextAlign.end,
-              style: TextStyles.titleExtraSmall.copyWith(
+              style: AppTextStyles.titleExtraSmall.copyWith(
                 color: color,
               ),
             ),

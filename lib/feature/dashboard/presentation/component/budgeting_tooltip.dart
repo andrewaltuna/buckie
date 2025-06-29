@@ -1,5 +1,5 @@
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
@@ -34,7 +34,7 @@ class _Tooltip extends StatelessWidget {
       children: [
         Text(
           'Budgeting',
-          style: TextStyles.titleSmall.copyWith(
+          style: AppTextStyles.titleSmall.copyWith(
             color: AppColors.accent,
           ),
         ),
@@ -56,7 +56,7 @@ class _Tooltip extends StatelessWidget {
                 text: ' icon in order to see your remaining balance.',
               ),
             ],
-            style: TextStyles.bodyMedium,
+            style: AppTextStyles.bodyMedium,
           ),
         ),
         const SizedBox(height: 8),
@@ -76,13 +76,13 @@ class _Tooltip extends StatelessWidget {
               ),
               TextSpan(text: ' icon.'),
             ],
-            style: TextStyles.bodyMedium,
+            style: AppTextStyles.bodyMedium,
           ),
         ),
         const SizedBox(height: 8),
         Text(
           'Symbols',
-          style: TextStyles.titleSmall.copyWith(
+          style: AppTextStyles.titleSmall.copyWith(
             color: AppColors.accent,
           ),
         ),
@@ -119,11 +119,11 @@ class _SymbolItem extends StatelessWidget {
         children: [
           TextSpan(
             text: symbol,
-            style: TextStyles.titleExtraSmall,
+            style: AppTextStyles.titleExtraSmall,
           ),
           TextSpan(text: ' — $description'),
         ],
-        style: TextStyles.bodyMedium,
+        style: AppTextStyles.bodyMedium,
       ),
     );
   }

@@ -2,7 +2,7 @@ import 'package:expense_tracker/common/component/main_scaffold.dart';
 import 'package:expense_tracker/common/extension/context.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/budget/presentation/view_model/budgets_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
@@ -124,7 +124,7 @@ class _Header extends StatelessWidget {
             month.toDateTime(),
             includeDay: false,
           ),
-          style: TextStyles.titleMedium,
+          style: AppTextStyles.titleMedium,
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -148,18 +148,18 @@ class _Header extends StatelessWidget {
                       children: [
                         Text(
                           expenseLabel,
-                          style: TextStyles.titleSmall.copyWith(
+                          style: AppTextStyles.titleSmall.copyWith(
                             color: AppColors.fontWarning,
                           ),
                         ),
                         if (budget != null && budget > 0) ...[
                           const Text(
                             ' of ',
-                            style: TextStyles.titleExtraSmall,
+                            style: AppTextStyles.titleExtraSmall,
                           ),
                           Text(
                             Formatter.currency(budget),
-                            style: TextStyles.titleSmall.copyWith(
+                            style: AppTextStyles.titleSmall.copyWith(
                               color: AppColors.accent,
                             ),
                           ),

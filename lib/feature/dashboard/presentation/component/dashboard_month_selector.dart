@@ -2,7 +2,7 @@ import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/component/skeleton/skeleton_display.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +68,7 @@ class DashboardMonthSelector extends StatelessWidget {
                               month.toDateTime(),
                               includeDay: false,
                             ),
-                            style: TextStyles.titleRegular,
+                            style: AppTextStyles.titleRegular,
                           )
                         : const SkeletonDisplay(
                             height: 18,

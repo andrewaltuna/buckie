@@ -1,5 +1,5 @@
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 class TransactionsEmptyIndicator extends StatelessWidget {
@@ -12,7 +12,7 @@ class TransactionsEmptyIndicator extends StatelessWidget {
       children: [
         const Text(
           'No records yet',
-          style: TextStyles.titleSmall,
+          style: AppTextStyles.titleSmall,
         ),
         const SizedBox(height: 4),
         Row(
@@ -20,7 +20,7 @@ class TransactionsEmptyIndicator extends StatelessWidget {
           children: [
             const Text(
               'Tap  ',
-              style: TextStyles.bodyRegular,
+              style: AppTextStyles.bodyRegular,
             ),
             Container(
               height: 20,
@@ -36,7 +36,7 @@ class TransactionsEmptyIndicator extends StatelessWidget {
             ),
             const Text(
               '  to log a transaction',
-              style: TextStyles.bodyRegular,
+              style: AppTextStyles.bodyRegular,
             ),
           ],
         ),

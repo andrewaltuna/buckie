@@ -6,7 +6,7 @@ import 'package:expense_tracker/common/component/main_scaffold.dart';
 import 'package:expense_tracker/common/component/text_field/rounded_text_field.dart';
 import 'package:expense_tracker/common/enum/button_state.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/screen/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -95,7 +95,7 @@ class _SignUpCTA extends StatelessWidget {
       children: [
         const Text(
           "Don't have an account?",
-          style: TextStyles.bodyRegular,
+          style: AppTextStyles.bodyRegular,
         ),
         const SizedBox(width: 5),
         GestureDetector(
@@ -104,7 +104,7 @@ class _SignUpCTA extends StatelessWidget {
           },
           child: Text(
             'Sign Up',
-            style: TextStyles.bodyRegular.copyWith(
+            style: AppTextStyles.bodyRegular.copyWith(
               fontWeight: FontWeight.bold,
               color: AppColors.accent,
             ),

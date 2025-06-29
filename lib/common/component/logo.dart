@@ -1,5 +1,5 @@
 import 'package:expense_tracker/common/component/asset/app_images.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 class Logo extends StatelessWidget {
@@ -14,7 +14,7 @@ class Logo extends StatelessWidget {
         const SizedBox(height: 12),
         const Text(
           'Budgeting with a smile',
-          style: TextStyles.bodyRegular,
+          style: AppTextStyles.bodyRegular,
         ),
       ],
     );

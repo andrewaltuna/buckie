@@ -2,8 +2,8 @@ import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
-class TextStyles {
-  const TextStyles._();
+class AppTextStyles {
+  const AppTextStyles._();
 
   static const _fontFamilyPrimary = Constants.fontFamilyPrimary;
   static const _fontFamilySecondary = Constants.fontFamilySecondary;

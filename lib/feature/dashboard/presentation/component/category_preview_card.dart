@@ -1,7 +1,7 @@
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_drawer_card_base.dart';
 import 'package:flutter/material.dart';
 
@@ -31,11 +31,11 @@ class CategoryPreviewCard extends StatelessWidget {
             children: [
               Text(
                 category.type.label,
-                style: TextStyles.titleExtraSmall,
+                style: AppTextStyles.titleExtraSmall,
               ),
               Text(
                 Formatter.currency(category.expense),
-                style: TextStyles.titleExtraSmall.copyWith(
+                style: AppTextStyles.titleExtraSmall.copyWith(
                   color: AppColors.fontWarning,
                 ),
               ),
@@ -57,7 +57,7 @@ class CategoryPreviewCard extends StatelessWidget {
               const SizedBox(width: 12),
               Text(
                 Formatter.percentage(allocation),
-                style: TextStyles.bodyRegular.copyWith(
+                style: AppTextStyles.bodyRegular.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),

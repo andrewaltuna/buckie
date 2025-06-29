@@ -1,6 +1,6 @@
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/budget/presentation/view_model/budgets_view_model.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
@@ -163,14 +163,14 @@ class _ValueLabel extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyles.titleExtraSmall.copyWith(
+          style: AppTextStyles.titleExtraSmall.copyWith(
             color: AppColors.accent,
           ),
         ),
         const SizedBox(width: 8),
         Text(
           value,
-          style: TextStyles.titleSmall.copyWith(
+          style: AppTextStyles.titleSmall.copyWith(
             color: color,
           ),
         ),

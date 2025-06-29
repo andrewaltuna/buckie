@@ -1,7 +1,7 @@
 import 'package:expense_tracker/common/extension/date_time.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/transaction_group_card.dart';
 import 'package:expense_tracker/feature/transactions/presentation/helper/transactions_helper.dart';
@@ -45,7 +45,7 @@ class TransactionsListView extends StatelessWidget {
                   children: [
                     Text(
                       date.dayOfWeek(shortened: true).toUpperCase(),
-                      style: TextStyles.titleSmall.copyWith(
+                      style: AppTextStyles.titleSmall.copyWith(
                         color: AppColors.accent,
                       ),
                     ),
@@ -55,7 +55,7 @@ class TransactionsListView extends StatelessWidget {
                         includeMonth: false,
                         includeYear: false,
                       ),
-                      style: TextStyles.titleLarge,
+                      style: AppTextStyles.titleLarge,
                     ),
                   ],
                 ),

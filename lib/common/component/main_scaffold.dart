@@ -1,6 +1,6 @@
 import 'package:expense_tracker/common/component/main_navigation_bar.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 class MainScaffold extends StatelessWidget {
@@ -54,7 +54,7 @@ class MainScaffold extends StatelessWidget {
                         children: [
                           Text(
                             title!,
-                            style: TextStyles.titleMedium.copyWith(
+                            style: AppTextStyles.titleMedium.copyWith(
                               color: AppColors.accent,
                             ),
                           ),

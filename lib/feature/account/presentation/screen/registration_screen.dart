@@ -8,7 +8,7 @@ import 'package:expense_tracker/common/component/main_scaffold.dart';
 import 'package:expense_tracker/common/component/text_field/rounded_text_field.dart';
 import 'package:expense_tracker/common/enum/button_state.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -166,7 +166,7 @@ class _LoginCTA extends StatelessWidget {
       children: [
         const Text(
           'Already have an account?',
-          style: TextStyles.bodyRegular,
+          style: AppTextStyles.bodyRegular,
         ),
         const SizedBox(width: 5),
         GestureDetector(
@@ -175,7 +175,7 @@ class _LoginCTA extends StatelessWidget {
           },
           child: Text(
             'Login',
-            style: TextStyles.bodyRegular.copyWith(
+            style: AppTextStyles.bodyRegular.copyWith(
               fontWeight: FontWeight.bold,
               color: AppColors.accent,
             ),

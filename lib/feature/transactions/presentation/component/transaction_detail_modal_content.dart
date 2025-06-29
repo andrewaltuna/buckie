@@ -2,7 +2,7 @@ import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/helper/modal_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/category_icon.dart';
 import 'package:expense_tracker/feature/transactions/presentation/screen/update_transaction_screen.dart';
@@ -78,11 +78,11 @@ class _Header extends StatelessWidget {
           children: [
             Text(
               transaction.category.label,
-              style: TextStyles.titleSmall,
+              style: AppTextStyles.titleSmall,
             ),
             Text(
               Formatter.date(transaction.date),
-              style: TextStyles.bodySmall.copyWith(
+              style: AppTextStyles.bodySmall.copyWith(
                 color: AppColors.fontSecondary,
               ),
             ),
@@ -134,14 +134,14 @@ class _Body extends StatelessWidget {
       children: [
         const Text(
           'Amount',
-          style: TextStyles.titleSmall,
+          style: AppTextStyles.titleSmall,
         ),
         Row(
           children: [
             Flexible(
               child: Text(
                 Formatter.currency(transaction.amount),
-                style: TextStyles.bodyRegular.copyWith(
+                style: AppTextStyles.bodyRegular.copyWith(
                   color: AppColors.fontSecondary,
                 ),
               ),
@@ -151,14 +151,14 @@ class _Body extends StatelessWidget {
         const SizedBox(height: 16),
         const Text(
           'Remarks',
-          style: TextStyles.titleSmall,
+          style: AppTextStyles.titleSmall,
         ),
         Row(
           children: [
             Flexible(
               child: Text(
                 transaction.remarks ?? 'No remarks',
-                style: TextStyles.bodyRegular.copyWith(
+                style: AppTextStyles.bodyRegular.copyWith(
                   color: AppColors.fontSecondary,
                 ),
               ),

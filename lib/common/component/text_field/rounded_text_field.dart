@@ -1,5 +1,5 @@
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/common/theme/typography/text_styles.dart';
+import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -79,7 +79,7 @@ class RoundedTextField extends HookWidget {
             ],
             Text(
               label,
-              style: TextStyles.labelRegular.copyWith(
+              style: AppTextStyles.labelRegular.copyWith(
                 color: AppColors.accent,
               ),
             ),
@@ -97,7 +97,7 @@ class RoundedTextField extends HookWidget {
             focusNode: focusNode,
             keyboardType: keyboardType,
             obscureText: obscureText,
-            style: TextStyles.bodyRegular,
+            style: AppTextStyles.bodyRegular,
             cursorWidth: 1,
             cursorColor: AppColors.accent,
             textInputAction: textInputAction,
@@ -157,7 +157,7 @@ class RoundedTextField extends HookWidget {
                 const SizedBox(width: 5),
                 Text(
                   errorText,
-                  style: TextStyles.textFieldWarning,
+                  style: AppTextStyles.textFieldWarning,
                 ),
               ],
             ),
