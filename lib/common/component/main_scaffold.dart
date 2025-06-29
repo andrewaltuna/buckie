@@ -33,37 +33,39 @@ class MainScaffold extends StatelessWidget {
               elevation: 0,
               leadingWidth: 0,
               surfaceTintColor: Colors.transparent,
-              title: Stack(
-                alignment: Alignment.center,
-                children: [
-                  if (showBackButton)
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: IconButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          color: AppColors.accent,
-                        ),
-                      ),
-                    ),
-                  if (title != null)
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          title!,
-                          style: TextStyles.titleMedium.copyWith(
+              title: Center(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    if (showBackButton)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: IconButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
                             color: AppColors.accent,
                           ),
                         ),
-                        if (titleWidget != null) ...[
-                          const SizedBox(width: 8),
-                          titleWidget!,
+                      ),
+                    if (title != null)
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            title!,
+                            style: TextStyles.titleMedium.copyWith(
+                              color: AppColors.accent,
+                            ),
+                          ),
+                          if (titleWidget != null) ...[
+                            const SizedBox(width: 8),
+                            titleWidget!,
+                          ],
                         ],
-                      ],
-                    ),
-                ],
+                      ),
+                  ],
+                ),
               ),
               backgroundColor: AppColors.widgetBackgroundPrimary,
             )

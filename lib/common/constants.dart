@@ -6,5 +6,5 @@ class Constants {
   static const fontFamilySecondary = 'Outfit';
 
   /// Widgets
-  static const navBarHeight = 80.0;
+  static const navBarHeight = 72.0;
 }

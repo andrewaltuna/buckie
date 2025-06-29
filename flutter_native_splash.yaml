@@ -1,0 +1,10 @@
+# dart run flutter_native_splash:create
+
+flutter_native_splash:
+  color: "#11151c"
+  image: "assets/launcher/icon.png"
+
+  android_12:
+    image: assets/launcher/icon.png
+    icon_background_color: "#11151c"
+

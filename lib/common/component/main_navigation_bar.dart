@@ -27,10 +27,10 @@ class MainNavigationBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            height: Constants.navBarHeight + 16,
+            height: Constants.navBarHeight + 32,
             // TODO: Remove once complete
             width: (perItemWidth * _kNavigationItems.length) + 50,
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            padding: const EdgeInsets.all(16),
             child: DecoratedBox(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(50)),
