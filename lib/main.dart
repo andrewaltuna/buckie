@@ -50,6 +50,9 @@ class App extends StatelessWidget {
             ),
       ),
       routerConfig: AppNavigation.router,
+      builder: (_, child) => MediaQuery.withNoTextScaling(
+        child: child ?? const SizedBox.shrink(),
+      ),
     );
   }
 }
