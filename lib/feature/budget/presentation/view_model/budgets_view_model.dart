@@ -104,7 +104,6 @@ class BudgetsViewModel extends Bloc<BudgetsEvent, BudgetsState> {
         ),
       );
     } on Exception catch (error) {
-      print(error);
       emit(
         state.copyWith(
           status: ViewModelStatus.error,

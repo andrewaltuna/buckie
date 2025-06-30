@@ -3,7 +3,7 @@ import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_drawer_card_base.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
-import 'package:expense_tracker/feature/transactions/presentation/helper/transactions_helper.dart';
+import 'package:expense_tracker/feature/transactions/presentation/helper/transaction_helper.dart';
 import 'package:flutter/material.dart';
 
 class TransactionPreviewCard extends StatelessWidget {
@@ -20,7 +20,7 @@ class TransactionPreviewCard extends StatelessWidget {
 
     return DashboardDrawerCardBase(
       category: transaction.category,
-      onTap: () => TransactionsHelper.of(context).showTransactionDetailsModal(
+      onTap: () => TransactionHelper.of(context).showTransactionDetailsModal(
         transaction,
         allowEditting: false,
       ),

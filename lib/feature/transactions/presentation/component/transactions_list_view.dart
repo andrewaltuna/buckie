@@ -4,7 +4,7 @@ import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/transaction_group_card.dart';
-import 'package:expense_tracker/feature/transactions/presentation/helper/transactions_helper.dart';
+import 'package:expense_tracker/feature/transactions/presentation/helper/transaction_helper.dart';
 import 'package:flutter/material.dart';
 
 class TransactionsListView extends StatelessWidget {
@@ -19,7 +19,7 @@ class TransactionsListView extends StatelessWidget {
     BuildContext context,
     Transaction transaction,
   ) {
-    TransactionsHelper.of(context).showTransactionDetailsModal(transaction);
+    TransactionHelper.of(context).showTransactionDetailsModal(transaction);
   }
 
   @override

@@ -11,6 +11,7 @@ import 'package:expense_tracker/feature/transactions/presentation/component/set_
 import 'package:expense_tracker/feature/transactions/presentation/component/transaction_preview_skeleton.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/transactions_empty_indicator.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/transactions_list_view.dart';
+import 'package:expense_tracker/feature/transactions/presentation/helper/transaction_helper.dart';
 import 'package:expense_tracker/feature/transactions/presentation/view_model/transactions_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,9 +63,7 @@ class _TransactionsPage extends HookWidget {
 
     useEffect(
       () {
-        context
-            .read<TransactionsViewModel>()
-            .add(TransactionsRequested(month: month));
+        TransactionHelper.of(context).fetchMonthData(month);
 
         return;
       },

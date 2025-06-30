@@ -9,6 +9,7 @@ import 'package:expense_tracker/feature/dashboard/presentation/view_model/dashbo
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:expense_tracker/feature/transactions/data/model/extension/transaction_extension.dart';
+import 'package:expense_tracker/feature/transactions/presentation/helper/transaction_helper.dart';
 import 'package:expense_tracker/feature/transactions/presentation/view_model/transactions_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,9 +45,7 @@ class _Content extends HookWidget {
     BuildContext context,
     TransactionMonth month,
   ) {
-    context.read<TransactionsViewModel>().add(
-          TransactionsRequested(month: month),
-        );
+    TransactionHelper.of(context).fetchMonthData(month);
   }
 
   @override
