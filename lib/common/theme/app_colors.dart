@@ -6,6 +6,7 @@ class AppColors {
   // General
   static const fontPrimary = Color(0xFFFFFFFF);
   static const fontSecondary = Color(0xFF8E8E93);
+  static const fontDisabled = Color(0xFF5A5A60);
   static const fontWarning = Color(0xFFF45B69);
   static const defaultBackground = Color(0xFF11151c);
   static const widgetBackgroundPrimary = Color(0xFF151B25);

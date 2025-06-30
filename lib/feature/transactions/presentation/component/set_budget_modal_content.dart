@@ -77,7 +77,7 @@ class SetBudgetModalContent extends HookWidget {
           ),
           const Spacer(),
           _IconButton(
-            icon: Icons.undo,
+            icon: Icons.history,
             primary: false,
             onTap: () => _onUsePreviousBudget(context, controller),
           ),

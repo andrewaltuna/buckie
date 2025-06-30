@@ -30,6 +30,22 @@ class TransactionsRequested extends TransactionsEvent {
       ];
 }
 
+class TransactionsItemUpdated extends TransactionsEvent {
+  const TransactionsItemUpdated({
+    required this.newTransaction,
+    required this.oldTransaction,
+  });
+
+  final Transaction newTransaction;
+  final Transaction oldTransaction;
+
+  @override
+  List<Object> get props => [
+        newTransaction,
+        oldTransaction,
+      ];
+}
+
 class TransactionsItemDeleted extends TransactionsEvent {
   const TransactionsItemDeleted(this.transaction);
 

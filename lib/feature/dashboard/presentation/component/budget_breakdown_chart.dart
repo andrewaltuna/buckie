@@ -8,51 +8,57 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 const _kSectionGap = 2.0;
+const _kCenterRadiusScale = 0.16;
+const _kBaseSectionRadiusScale = 0.24;
 
 class BudgetBreakdownChart extends StatelessWidget {
   const BudgetBreakdownChart({
     required this.budget,
     required this.expense,
     required this.categories,
-    this.centerSpaceRadius = 50,
-    this.baseSectionRadius = 65,
     super.key,
   });
 
   final double budget;
   final double expense;
   final List<Category> categories;
-  final double centerSpaceRadius;
-  final double baseSectionRadius;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        _PieChart(
-          budget: budget,
-          expense: expense,
-          categories: categories,
-          centerSpaceRadius: centerSpaceRadius,
-          baseSectionRadius: baseSectionRadius,
-        ),
-        Text(
-          BudgetUsageDisplayHelper.percentageUsedDisplay(
-            expense: expense,
-            budget: budget,
-          ),
-          style: AppTextStyles.titleMedium.copyWith(
-            color: budget > 0
-                ? Color.lerp(
-                    AppColors.fontPrimary,
-                    AppColors.fontWarning,
-                    (expense / budget).clamp(0, 1),
-                  )
-                : AppColors.fontSecondary,
-          ),
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxHeight = constraints.maxHeight;
+        final centerSpaceRadius = maxHeight * _kCenterRadiusScale;
+        final baseSectionRadius = maxHeight * _kBaseSectionRadiusScale;
+
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            _PieChart(
+              budget: budget,
+              expense: expense,
+              categories: categories,
+              centerSpaceRadius: centerSpaceRadius,
+              baseSectionRadius: baseSectionRadius,
+            ),
+            Text(
+              BudgetUsageDisplayHelper.percentageUsedDisplay(
+                expense: expense,
+                budget: budget,
+              ),
+              style: AppTextStyles.titleMedium.copyWith(
+                color: budget > 0
+                    ? Color.lerp(
+                        AppColors.fontPrimary,
+                        AppColors.fontWarning,
+                        (expense / budget).clamp(0, 1),
+                      )
+                    : AppColors.fontSecondary,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

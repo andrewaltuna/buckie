@@ -72,7 +72,7 @@ class BudgetUsageDisplayHelper {
       PieChartSectionData(
         title: 'Remaining',
         showTitle: false,
-        value: showRemaining && remainingBalance >= 0
+        value: showRemaining && remainingBalance > 0
             ? remainingBalance
             : 0.01, // Workaround to show animation on show/hide
         color: AppColors.widgetBackgroundSecondary,

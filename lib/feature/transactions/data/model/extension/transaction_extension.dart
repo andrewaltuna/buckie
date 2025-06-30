@@ -1,6 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 
+extension TransactionExtension on Transaction {
+  bool isSameMonthAs(Transaction other) => month == other.month;
+}
+
 extension TransactionListExtension on List<Transaction> {
   double sumAmount() {
     return fold(0, (sum, transaction) => sum + transaction.amount);

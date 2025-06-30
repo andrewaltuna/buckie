@@ -98,6 +98,8 @@ class TransactionLocalSource implements TransactionLocalSourceInterface {
 
   @override
   Future<t.Transaction> updateTransaction(UpdateTransactionInput input) async {
+    final oldTransaction = await getTransaction(input.id);
+
     await _db.update(
       _table,
       input.toJson(),
@@ -105,12 +107,15 @@ class TransactionLocalSource implements TransactionLocalSourceInterface {
       whereArgs: [input.id],
     );
 
-    final transaction = await getTransaction(input.id);
+    final newTransaction = await getTransaction(input.id);
 
     _streamController.add(
-      TransactionStreamOutput.update(transaction),
+      TransactionStreamOutput.update(
+        oldTransaction,
+        newTransaction,
+      ),
     );
 
-    return transaction;
+    return newTransaction;
   }
 }

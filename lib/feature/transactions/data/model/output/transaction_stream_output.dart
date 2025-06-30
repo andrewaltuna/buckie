@@ -7,7 +7,8 @@ import 'package:expense_tracker/feature/transactions/data/model/entity/transacti
 class TransactionStreamOutput extends Equatable {
   const TransactionStreamOutput({
     required this.operation,
-    required this.transaction,
+    required this.newTransaction,
+    required this.oldTransaction,
   });
 
   factory TransactionStreamOutput.insert(
@@ -15,16 +16,19 @@ class TransactionStreamOutput extends Equatable {
   ) {
     return TransactionStreamOutput(
       operation: StreamOperation.insert,
-      transaction: transaction,
+      oldTransaction: null,
+      newTransaction: transaction,
     );
   }
 
   factory TransactionStreamOutput.update(
-    Transaction transaction,
+    Transaction oldTransaction,
+    Transaction newTransaction,
   ) {
     return TransactionStreamOutput(
       operation: StreamOperation.update,
-      transaction: transaction,
+      oldTransaction: oldTransaction,
+      newTransaction: newTransaction,
     );
   }
 
@@ -33,16 +37,18 @@ class TransactionStreamOutput extends Equatable {
   ) {
     return TransactionStreamOutput(
       operation: StreamOperation.delete,
-      transaction: transaction,
+      oldTransaction: transaction,
+      newTransaction: null,
     );
   }
 
   final StreamOperation operation;
-  final Transaction transaction;
+  final Transaction? newTransaction;
+  final Transaction? oldTransaction;
 
   @override
   List<Object?> get props => [
         operation,
-        transaction,
+        newTransaction,
       ];
 }

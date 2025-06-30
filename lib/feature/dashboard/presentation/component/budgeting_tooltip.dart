@@ -47,7 +47,7 @@ class _Tooltip extends StatelessWidget {
               ),
               WidgetSpan(
                 child: Icon(
-                  Icons.settings,
+                  Icons.edit_document,
                   color: AppColors.fontPrimary,
                   size: 18,
                 ),

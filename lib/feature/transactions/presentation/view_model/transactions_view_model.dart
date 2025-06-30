@@ -5,6 +5,7 @@ import 'package:expense_tracker/common/enum/view_model_status.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
+import 'package:expense_tracker/feature/transactions/data/model/extension/transaction_extension.dart';
 import 'package:expense_tracker/feature/transactions/data/model/output/transaction_stream_output.dart';
 import 'package:expense_tracker/feature/transactions/data/repository/transaction_repository_interface.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,7 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
   }) : super(const TransactionsState()) {
     on<TransactionsStreamInitialized>(_onStreamInitialized);
     on<TransactionsRequested>(_onRequested);
+    on<TransactionsItemUpdated>(_onItemUpdated);
     on<TransactionsItemDeleted>(_onItemDeleted);
   }
 
@@ -30,18 +32,34 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
   void _onStreamInitialized(_, __) {
     _trxSubscription = _repository.transactionsStream.listen(
       (output) {
-        final operation = output.operation;
-        final transaction = output.transaction;
-        final key = transaction.monthKey;
+        final TransactionStreamOutput(
+          :operation,
+          :newTransaction,
+          :oldTransaction
+        ) = output;
 
+        final key = (oldTransaction ?? newTransaction)?.monthKey;
+
+        // Only continue if transaction month is already loaded.
         if (!state.transactionsByMonth.containsKey(key)) return;
 
         if (operation.isDelete) {
-          add(TransactionsItemDeleted(transaction));
+          add(TransactionsItemDeleted(output.oldTransaction!));
+        } else if (operation.isUpdate) {
+          if (newTransaction == null || oldTransaction == null) return;
+
+          add(
+            TransactionsItemUpdated(
+              newTransaction: newTransaction,
+              oldTransaction: oldTransaction,
+            ),
+          );
         } else {
+          if (newTransaction == null) return;
+
           add(
             TransactionsRequested(
-              month: transaction.month,
+              month: output.newTransaction!.month,
               refresh: true,
               fetchRecents: true,
             ),
@@ -94,26 +112,34 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
     }
   }
 
-  void _onItemDeleted(
-    TransactionsItemDeleted event,
+  void _onItemUpdated(
+    TransactionsItemUpdated event,
     Emitter<TransactionsState> emit,
   ) async {
     try {
-      await _repository.deleteTransaction(event.transaction.id);
+      final isDifferentMonth =
+          !event.oldTransaction.isSameMonthAs(event.newTransaction);
 
-      final key = event.transaction.monthKey;
-      final transactionsByMonth = Map.of(state.transactionsByMonth);
-      final transactions = List.of(transactionsByMonth[key]!);
+      if (isDifferentMonth) {
+        final transactionsByMonth = Map.of(state.transactionsByMonth);
 
-      transactions.removeWhere(
-        (transaction) => transaction.id == event.transaction.id,
-      );
-
-      transactionsByMonth[key] = _sortByDate(transactions);
-
-      emit(
-        state.copyWith(
+        _removeTransaction(
+          event.oldTransaction,
           transactionsByMonth: transactionsByMonth,
+        );
+
+        emit(
+          state.copyWith(
+            transactionsByMonth: transactionsByMonth,
+          ),
+        );
+      }
+
+      add(
+        TransactionsRequested(
+          month: event.newTransaction.month,
+          refresh: true,
+          fetchRecents: true,
         ),
       );
     } on Exception catch (error) {
@@ -126,8 +152,55 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
     }
   }
 
-  List<Transaction> _sortByDate(List<Transaction> transactions) {
-    return transactions..sort((a, b) => b.date.compareTo(a.date));
+  void _onItemDeleted(
+    TransactionsItemDeleted event,
+    Emitter<TransactionsState> emit,
+  ) async {
+    try {
+      await _repository.deleteTransaction(event.transaction.id);
+
+      final transactionsByMonth = Map.of(state.transactionsByMonth);
+
+      _removeTransaction(
+        event.transaction,
+        transactionsByMonth: transactionsByMonth,
+      );
+
+      final recentTransactions = List.of(state.recentTransactions)
+        ..removeWhere(
+          (element) => element.id == event.transaction.id,
+        );
+
+      emit(
+        state.copyWith(
+          transactionsByMonth: transactionsByMonth,
+          recentTransactions: recentTransactions,
+        ),
+      );
+    } on Exception catch (error) {
+      emit(
+        state.copyWith(
+          status: ViewModelStatus.error,
+          error: error,
+        ),
+      );
+    }
+  }
+
+  TransactionsByMonth _removeTransaction(
+    Transaction transaction, {
+    required TransactionsByMonth transactionsByMonth,
+  }) {
+    final key = transaction.monthKey;
+    final transactions = List.of(transactionsByMonth[key]!);
+
+    transactions.removeWhere(
+      (trx) => trx.id == transaction.id,
+    );
+
+    transactionsByMonth[key] = transactions;
+
+    return transactionsByMonth;
   }
 
   @override

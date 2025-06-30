@@ -1,6 +1,7 @@
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
+import 'package:expense_tracker/feature/budget/presentation/helper/budget_helper.dart';
 import 'package:expense_tracker/feature/budget/presentation/view_model/budgets_view_model.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
@@ -8,12 +9,8 @@ import 'package:expense_tracker/feature/dashboard/presentation/component/budget_
 import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_month_selector.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/budget_breakdown_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
-import 'package:expense_tracker/feature/transactions/presentation/component/set_budget_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-const _kCenterRadiusScale = 0.12;
-const _kBaseSectionRadiusScale = 0.18;
 
 class BudgetBreakdownView extends StatelessWidget {
   const BudgetBreakdownView({
@@ -52,8 +49,6 @@ class BudgetBreakdownView extends StatelessWidget {
                 categories: categories,
                 budget: budget,
                 expense: expense,
-                centerSpaceRadius: height * _kCenterRadiusScale,
-                baseSectionRadius: height * _kBaseSectionRadiusScale,
               ),
             ),
           ),
@@ -80,60 +75,61 @@ class _BreakdownInfo extends StatelessWidget {
       builder: (context, state) {
         final balance = budget - expense;
 
-        return Padding(
+        return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Row(
+            spacing: 8,
             children: [
-              if (budget > 0)
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _ValueLabel(
-                        label: 'BAL',
-                        value: Formatter.currency(balance),
-                        color: Color.lerp(
-                          AppColors.fontPrimary,
-                          AppColors.fontWarning,
-                          (expense / budget).clamp(0, 1),
-                        ),
-                      ),
-                      BlocBuilder<BudgetBreakdownViewModel,
-                          BudgetBreakdownState>(
-                        builder: (context, budgetBreakdownState) {
-                          return _ValueLabel(
-                            label: 'BUD',
-                            value: Formatter.currency(budget),
-                            suffixIcon: CustomInkWell(
-                              borderRadius: 50,
-                              padding: const EdgeInsets.all(4),
-                              onTap: () => context
-                                  .read<BudgetBreakdownViewModel>()
-                                  .toggleShowRemaining(),
-                              child: Icon(
-                                budgetBreakdownState.showRemaining
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                color: Colors.white,
-                                size: 22,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                )
-              else
-                Expanded(
-                  child: _ValueLabel(
-                    label: 'EXP',
-                    value: Formatter.currency(expense),
+              Expanded(
+                child: _ValueLabel(
+                  label: 'EXP',
+                  value: Formatter.currency(expense),
+                ),
+              ),
+              Expanded(
+                child: _ValueLabel(
+                  label: 'BUD',
+                  value: budget > 0 ? Formatter.currency(budget) : null,
+                  onTap: () => month != null
+                      ? BudgetHelper.of(context).showSetBudgetModal(
+                          month: month!,
+                          initialValue: budget,
+                        )
+                      : null,
+                  suffixIcon: const Icon(
+                    Icons.edit_document,
+                    color: Colors.white,
+                    size: 16,
                   ),
                 ),
-              SetBudgetButton(
-                month: month,
-                budget: budget,
+              ),
+              Expanded(
+                child:
+                    BlocBuilder<BudgetBreakdownViewModel, BudgetBreakdownState>(
+                  builder: (context, budgetBreakdownState) {
+                    return _ValueLabel(
+                      label: 'BAL',
+                      value: budget > 0 ? Formatter.currency(balance) : null,
+                      color: budget > 0
+                          ? Color.lerp(
+                              AppColors.fontPrimary,
+                              AppColors.fontWarning,
+                              (expense / budget).clamp(0, 1),
+                            )
+                          : null,
+                      onTap: () => context
+                          .read<BudgetBreakdownViewModel>()
+                          .toggleShowRemaining(),
+                      suffixIcon: Icon(
+                        budgetBreakdownState.showRemaining
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -148,35 +144,61 @@ class _ValueLabel extends StatelessWidget {
     required this.label,
     required this.value,
     this.color,
+    this.onTap,
     this.suffixIcon,
   });
 
   final String label;
-  final String value;
+  final String? value;
   final Color? color;
+  final VoidCallback? onTap;
   final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          label,
-          style: AppTextStyles.titleExtraSmall.copyWith(
-            color: AppColors.accent,
+    return CustomInkWell(
+      onTap: onTap,
+      height: 60,
+      borderRadius: 12,
+      color: AppColors.widgetBackgroundSecondary,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 8,
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                style: AppTextStyles.titleExtraSmall.copyWith(
+                  color: AppColors.accent,
+                ),
+              ),
+              if (suffixIcon != null) ...[
+                const SizedBox(width: 8),
+                suffixIcon!,
+              ],
+            ],
           ),
-        ),
-        const SizedBox(width: 8),
-        Text(
-          value,
-          style: AppTextStyles.titleSmall.copyWith(
-            color: color,
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                value ?? 'None',
+                style: value != null
+                    ? AppTextStyles.titleSmall.copyWith(
+                        color: color,
+                      )
+                    : AppTextStyles.bodyMedium.copyWith(
+                        color: color ?? AppColors.fontDisabled,
+                      ),
+              ),
+            ),
           ),
-        ),
-        const SizedBox(width: 4),
-        if (suffixIcon != null) suffixIcon!,
-      ],
+        ],
+      ),
     );
   }
 }

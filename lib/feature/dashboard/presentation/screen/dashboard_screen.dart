@@ -26,7 +26,10 @@ class DashboardScreen extends StatelessWidget {
       create: (_) => DashboardDrawerViewModel(),
       child: const MainScaffold(
         title: 'Overview',
-        titleWidget: BudgetingTooltip(),
+        titleWidget: Padding(
+          padding: EdgeInsets.only(top: 4),
+          child: BudgetingTooltip(),
+        ),
         resizeToAvoidBottomInset: false,
         body: _Content(),
       ),
