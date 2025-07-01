@@ -2,6 +2,7 @@ import 'package:expense_tracker/common/component/button/rounded_button.dart';
 import 'package:expense_tracker/common/component/text_field/rounded_text_field.dart';
 import 'package:expense_tracker/common/enum/button_state.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
+import 'package:expense_tracker/common/helper/haptic_feedback_helper.dart';
 import 'package:expense_tracker/common/helper/input_formatter.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
@@ -25,6 +26,8 @@ class CreateTransactionForm extends HookWidget {
   final Transaction? transaction;
 
   void _onSubmit(BuildContext context) {
+    HapticFeedbackHelper.heavy();
+
     if (_formKey.currentState!.validate()) {
       context.read<CreateTransactionViewModel>().add(
             const CreateTransactionSubmitted(),

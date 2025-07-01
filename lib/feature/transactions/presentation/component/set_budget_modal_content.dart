@@ -1,5 +1,6 @@
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/component/text_field/rounded_text_field.dart';
+import 'package:expense_tracker/common/helper/haptic_feedback_helper.dart';
 import 'package:expense_tracker/common/helper/input_formatter.dart';
 import 'package:expense_tracker/common/helper/modal_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
@@ -24,6 +25,8 @@ class SetBudgetModalContent extends HookWidget {
     BuildContext context,
     TextEditingController controller,
   ) {
+    HapticFeedbackHelper.light();
+
     final amount = controller.text;
     final budget = double.tryParse(amount) ?? 0;
 
@@ -41,6 +44,8 @@ class SetBudgetModalContent extends HookWidget {
     BuildContext context,
     TextEditingController controller,
   ) {
+    HapticFeedbackHelper.light();
+
     final viewModel = context.read<BudgetsViewModel>();
     final latestBudget = viewModel.state.latestBudget;
 

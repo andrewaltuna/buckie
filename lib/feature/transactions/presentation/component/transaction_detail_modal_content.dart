@@ -1,5 +1,6 @@
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
+import 'package:expense_tracker/common/helper/haptic_feedback_helper.dart';
 import 'package:expense_tracker/common/helper/modal_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
@@ -45,6 +46,8 @@ class _Header extends StatelessWidget {
   final bool allowEditting;
 
   void _onUpdate(BuildContext context) {
+    HapticFeedbackHelper.light();
+
     Navigator.of(context).pop();
 
     context.pushNamed(
@@ -57,11 +60,13 @@ class _Header extends StatelessWidget {
   }
 
   void _onDelete(BuildContext context) {
+    HapticFeedbackHelper.light();
+
+    Navigator.of(context).pop();
+
     context
         .read<TransactionsViewModel>()
         .add(TransactionsItemDeleted(transaction));
-
-    Navigator.of(context).pop();
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/extension/screen_size.dart';
+import 'package:expense_tracker/common/helper/haptic_feedback_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
@@ -76,6 +77,17 @@ class _SelectionMenu extends StatelessWidget {
 
   final void Function(CategoryType)? onChanged;
 
+  void _onSelect(
+    BuildContext context,
+    CategoryType category,
+  ) {
+    HapticFeedbackHelper.light();
+
+    Navigator.pop(context);
+
+    onChanged?.call(category);
+  }
+
   @override
   Widget build(BuildContext context) {
     final aspectRatio = ((context.width - 48) / 2) / 48;
@@ -105,10 +117,7 @@ class _SelectionMenu extends StatelessWidget {
                 final category = CategoryType.values[index];
 
                 return InkWell(
-                  onTap: () {
-                    onChanged?.call(category);
-                    Navigator.pop(context);
-                  },
+                  onTap: () => _onSelect(context, category),
                   borderRadius: const BorderRadius.all(
                     Radius.circular(_kBorderRadius),
                   ),

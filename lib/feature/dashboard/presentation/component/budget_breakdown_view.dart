@@ -1,5 +1,6 @@
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
+import 'package:expense_tracker/common/helper/haptic_feedback_helper.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/budget/presentation/helper/budget_helper.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
@@ -10,6 +11,7 @@ import 'package:expense_tracker/feature/dashboard/presentation/view_model/budget
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BudgetBreakdownView extends StatelessWidget {
@@ -84,6 +86,21 @@ class _BreakdownInfo extends StatelessWidget {
   final double budget;
   final double expense;
 
+  void _onBudgetTapped(BuildContext context) {
+    if (month == null) return;
+
+    BudgetHelper.of(context).showSetBudgetModal(
+      month: month!,
+      initialValue: budget,
+    );
+  }
+
+  void _onBalanceTapped(BuildContext context) {
+    HapticFeedbackHelper.light();
+
+    context.read<BudgetBreakdownViewModel>().toggleShowRemaining();
+  }
+
   @override
   Widget build(BuildContext context) {
     final balance = budget - expense;
@@ -103,12 +120,7 @@ class _BreakdownInfo extends StatelessWidget {
             child: _ValueLabel(
               label: 'BUD',
               value: budget > 0 ? Formatter.currency(budget) : null,
-              onTap: () => month != null
-                  ? BudgetHelper.of(context).showSetBudgetModal(
-                      month: month!,
-                      initialValue: budget,
-                    )
-                  : null,
+              onTap: () => _onBudgetTapped(context),
               suffixIcon: const Icon(
                 Icons.edit_document,
                 color: Colors.white,
@@ -130,9 +142,7 @@ class _BreakdownInfo extends StatelessWidget {
                         (expense / budget).clamp(0, 1),
                       )
                     : null,
-                onTap: () => context
-                    .read<BudgetBreakdownViewModel>()
-                    .toggleShowRemaining(),
+                onTap: () => _onBalanceTapped(context),
                 suffixIcon: Icon(
                   showRemaining ? Icons.visibility_off : Icons.visibility,
                   color: Colors.white,

@@ -1,6 +1,7 @@
 import 'package:expense_tracker/common/constants.dart';
 import 'package:expense_tracker/common/enum/navigation_item_type.dart';
 import 'package:expense_tracker/common/extension/screen_size.dart';
+import 'package:expense_tracker/common/helper/haptic_feedback_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/transactions/presentation/screen/create_transaction_screen.dart';
 import 'package:flutter/material.dart';
@@ -98,6 +99,12 @@ class MainNavigationBar extends StatelessWidget {
 class _CreateButton extends StatelessWidget {
   const _CreateButton();
 
+  void _onTap(BuildContext context) {
+    HapticFeedbackHelper.heavy();
+
+    context.pushNamed(CreateTransactionScreen.routeName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -106,7 +113,7 @@ class _CreateButton extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: IconButton(
-        onPressed: () => context.pushNamed(CreateTransactionScreen.routeName),
+        onPressed: () => _onTap(context),
         color: AppColors.fontButtonPrimary,
         icon: const Icon(
           Icons.add_rounded,

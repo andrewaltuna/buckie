@@ -1,6 +1,7 @@
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/component/skeleton/skeleton_display.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
+import 'package:expense_tracker/common/helper/haptic_feedback_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/dashboard_view_model.dart';
@@ -15,6 +16,8 @@ class DashboardMonthSelector extends StatelessWidget {
     BuildContext context,
     bool forward,
   ) {
+    HapticFeedbackHelper.light();
+
     context.read<DashboardViewModel>().adjustMonth(forward);
   }
 
