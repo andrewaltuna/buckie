@@ -34,13 +34,6 @@ class BudgetBreakdownChart extends StatelessWidget {
         return Stack(
           alignment: Alignment.center,
           children: [
-            _PieChart(
-              budget: budget,
-              expense: expense,
-              categories: categories,
-              centerSpaceRadius: centerSpaceRadius,
-              baseSectionRadius: baseSectionRadius,
-            ),
             Text(
               BudgetUsageDisplayHelper.percentageUsedDisplay(
                 expense: expense,
@@ -53,8 +46,15 @@ class BudgetBreakdownChart extends StatelessWidget {
                         AppColors.fontWarning,
                         (expense / budget).clamp(0, 1),
                       )
-                    : AppColors.fontSecondary,
+                    : AppColors.fontDisabled,
               ),
+            ),
+            _PieChart(
+              budget: budget,
+              expense: expense,
+              categories: categories,
+              centerSpaceRadius: centerSpaceRadius,
+              baseSectionRadius: baseSectionRadius,
             ),
           ],
         );
@@ -80,8 +80,11 @@ class _PieChart extends StatelessWidget {
 
   void _onChangeSelection(
     BuildContext context,
+    FlTouchEvent event,
     PieTouchResponse? response,
   ) {
+    if (event is! FlTapUpEvent && event is! FlTapDownEvent) return;
+
     final touchedSectionIndex = response?.touchedSection?.touchedSectionIndex;
 
     // If 'remaining' pie is tapped, do nothing
@@ -105,8 +108,9 @@ class _PieChart extends StatelessWidget {
             startDegreeOffset: -90,
             pieTouchData: PieTouchData(
               enabled: true,
-              touchCallback: (_, response) => _onChangeSelection(
+              touchCallback: (event, response) => _onChangeSelection(
                 context,
+                event,
                 response,
               ),
             ),

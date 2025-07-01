@@ -3,13 +3,12 @@ import 'package:expense_tracker/common/component/main_scaffold.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/budget_breakdown_view.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/budgeting_tooltip.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_drawer.dart';
+import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_listeners.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/helper/dashboard_drawer_helper.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/budget_breakdown_view_model.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/dashboard_drawer_view_model.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/dashboard_view_model.dart';
-import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:expense_tracker/feature/transactions/data/model/extension/transaction_extension.dart';
-import 'package:expense_tracker/feature/transactions/presentation/helper/transaction_helper.dart';
 import 'package:expense_tracker/feature/transactions/presentation/view_model/transactions_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,14 +24,16 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => DashboardDrawerViewModel(),
-      child: const MainScaffold(
-        title: 'Overview',
-        titleWidget: Padding(
-          padding: EdgeInsets.only(top: 4),
-          child: BudgetingTooltip(),
+      child: const DashboardListeners(
+        child: MainScaffold(
+          title: 'Overview',
+          titleWidget: Padding(
+            padding: EdgeInsets.only(top: 4),
+            child: BudgetingTooltip(),
+          ),
+          resizeToAvoidBottomInset: false,
+          body: _Content(),
         ),
-        resizeToAvoidBottomInset: false,
-        body: _Content(),
       ),
     );
   }
@@ -40,13 +41,6 @@ class DashboardScreen extends StatelessWidget {
 
 class _Content extends HookWidget {
   const _Content();
-
-  void _onMonthUpdated(
-    BuildContext context,
-    TransactionMonth month,
-  ) {
-    TransactionHelper.of(context).fetchMonthData(month);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,43 +63,39 @@ class _Content extends HookWidget {
       ),
     );
 
-    return BlocListener<DashboardViewModel, TransactionMonth?>(
-      listenWhen: (_, current) => current != null,
-      listener: (context, month) => _onMonthUpdated(context, month!),
-      child: LayoutBuilder(
-        builder: (_, constraints) {
-          final budgetDisplayHeight = constraints.maxHeight *
-              (1 - DashboardDrawerHelper.percentMinHeight);
+    return LayoutBuilder(
+      builder: (_, constraints) {
+        final budgetDisplayHeight = constraints.maxHeight *
+            (1 - DashboardDrawerHelper.percentMinHeight);
 
-          return Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              BlocProvider(
-                create: (_) => BudgetBreakdownViewModel(),
-                child: BudgetBreakdownView(
-                  month: month,
-                  height: budgetDisplayHeight,
-                  budget: budget,
-                  expense: expense,
-                  categories: categories,
-                ),
+        return Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            BlocProvider(
+              create: (_) => BudgetBreakdownViewModel(),
+              child: BudgetBreakdownView(
+                month: month,
+                height: budgetDisplayHeight,
+                budget: budget,
+                expense: expense,
+                categories: categories,
               ),
-              const Positioned.fill(
-                child: _Overlay(),
+            ),
+            const Positioned.fill(
+              child: _Overlay(),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: DashboardDrawer(
+                maxHeight: constraints.maxHeight,
+                categories: categories,
+                transactions: recentTransactions,
+                expense: expense,
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: DashboardDrawer(
-                  maxHeight: constraints.maxHeight,
-                  categories: categories,
-                  transactions: recentTransactions,
-                  expense: expense,
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -115,16 +105,16 @@ class _Overlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DashboardDrawerViewModel, DashboardDrawerState>(
-      builder: (context, state) {
-        return IgnorePointer(
-          child: Container(
-            color: Colors.black.withValues(
-              alpha: state.overlayOpacity,
-            ),
-          ),
-        );
-      },
+    final opacity = context.select(
+      (DashboardDrawerViewModel vm) => vm.state.overlayOpacity,
+    );
+
+    return IgnorePointer(
+      child: Container(
+        color: Colors.black.withValues(
+          alpha: opacity,
+        ),
+      ),
     );
   }
 }

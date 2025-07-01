@@ -71,6 +71,10 @@ class _TransactionsPage extends HookWidget {
     );
 
     return BlocBuilder<TransactionsViewModel, TransactionsState>(
+      buildWhen: (previous, current) =>
+          previous.status != current.status ||
+          previous.transactionsOf(month.key) !=
+              current.transactionsOf(month.key),
       builder: (context, state) {
         final transactions = state.transactionsOf(month.key);
         final isLoading = state.status.isLoading && transactions == null;

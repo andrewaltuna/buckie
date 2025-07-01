@@ -2,12 +2,12 @@ import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/budget/presentation/helper/budget_helper.dart';
-import 'package:expense_tracker/feature/budget/presentation/view_model/budgets_view_model.dart';
 import 'package:expense_tracker/feature/categories/data/model/category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/budget_breakdown_chart.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_month_selector.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/budget_breakdown_view_model.dart';
+import 'package:expense_tracker/feature/dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,14 +28,25 @@ class BudgetBreakdownView extends StatelessWidget {
   final List<Category> categories;
   final double height;
 
+  void _onChartSwiped(
+    BuildContext context,
+    DragEndDetails details,
+  ) {
+    final velocity = details.velocity.pixelsPerSecond.dx;
+
+    if (velocity == 0) return;
+
+    context.read<DashboardViewModel>().adjustMonth(velocity < 0);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: height,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
         children: [
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           const DashboardMonthSelector(),
           const SizedBox(height: 12),
           _BreakdownInfo(
@@ -44,7 +55,11 @@ class BudgetBreakdownView extends StatelessWidget {
             expense: expense,
           ),
           Expanded(
-            child: Center(
+            child: GestureDetector(
+              onHorizontalDragEnd: (details) => _onChartSwiped(
+                context,
+                details,
+              ),
               child: BudgetBreakdownChart(
                 categories: categories,
                 budget: budget,
@@ -71,70 +86,63 @@ class _BreakdownInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BudgetsViewModel, BudgetsState>(
-      builder: (context, state) {
-        final balance = budget - expense;
+    final balance = budget - expense;
 
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Row(
-            spacing: 8,
-            children: [
-              Expanded(
-                child: _ValueLabel(
-                  label: 'EXP',
-                  value: Formatter.currency(expense),
-                ),
-              ),
-              Expanded(
-                child: _ValueLabel(
-                  label: 'BUD',
-                  value: budget > 0 ? Formatter.currency(budget) : null,
-                  onTap: () => month != null
-                      ? BudgetHelper.of(context).showSetBudgetModal(
-                          month: month!,
-                          initialValue: budget,
-                        )
-                      : null,
-                  suffixIcon: const Icon(
-                    Icons.edit_document,
-                    color: Colors.white,
-                    size: 16,
-                  ),
-                ),
-              ),
-              Expanded(
-                child:
-                    BlocBuilder<BudgetBreakdownViewModel, BudgetBreakdownState>(
-                  builder: (context, budgetBreakdownState) {
-                    return _ValueLabel(
-                      label: 'BAL',
-                      value: budget > 0 ? Formatter.currency(balance) : null,
-                      color: budget > 0
-                          ? Color.lerp(
-                              AppColors.fontPrimary,
-                              AppColors.fontWarning,
-                              (expense / budget).clamp(0, 1),
-                            )
-                          : null,
-                      onTap: () => context
-                          .read<BudgetBreakdownViewModel>()
-                          .toggleShowRemaining(),
-                      suffixIcon: Icon(
-                        budgetBreakdownState.showRemaining
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                        color: Colors.white,
-                        size: 16,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        spacing: 8,
+        children: [
+          Expanded(
+            child: _ValueLabel(
+              label: 'EXP',
+              value: Formatter.currency(expense),
+            ),
           ),
-        );
-      },
+          Expanded(
+            child: _ValueLabel(
+              label: 'BUD',
+              value: budget > 0 ? Formatter.currency(budget) : null,
+              onTap: () => month != null
+                  ? BudgetHelper.of(context).showSetBudgetModal(
+                      month: month!,
+                      initialValue: budget,
+                    )
+                  : null,
+              suffixIcon: const Icon(
+                Icons.edit_document,
+                color: Colors.white,
+                size: 16,
+              ),
+            ),
+          ),
+          Expanded(
+            child: BlocSelector<BudgetBreakdownViewModel, BudgetBreakdownState,
+                bool>(
+              selector: (state) => state.showRemaining,
+              builder: (context, showRemaining) => _ValueLabel(
+                label: 'BAL',
+                value: budget > 0 ? Formatter.currency(balance) : null,
+                color: budget > 0
+                    ? Color.lerp(
+                        AppColors.fontPrimary,
+                        AppColors.fontWarning,
+                        (expense / budget).clamp(0, 1),
+                      )
+                    : null,
+                onTap: () => context
+                    .read<BudgetBreakdownViewModel>()
+                    .toggleShowRemaining(),
+                suffixIcon: Icon(
+                  showRemaining ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.white,
+                  size: 16,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

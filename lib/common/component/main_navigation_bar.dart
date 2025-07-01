@@ -6,6 +6,8 @@ import 'package:expense_tracker/feature/transactions/presentation/screen/create_
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+const _kCircularPadding = 12.0;
+
 // TODO: Uncomment as features are finished
 const _kNavigationItems = [
   NavigationItemType.dashboard,
@@ -27,10 +29,9 @@ class MainNavigationBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            height: Constants.navBarHeight + 32,
-            // TODO: Remove once complete
+            height: Constants.navBarHeight + (_kCircularPadding * 2),
             width: (perItemWidth * _kNavigationItems.length) + 50,
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(_kCircularPadding),
             child: DecoratedBox(
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(50)),
@@ -106,7 +107,7 @@ class _CreateButton extends StatelessWidget {
       ),
       child: IconButton(
         onPressed: () => context.pushNamed(CreateTransactionScreen.routeName),
-        color: AppColors.defaultBackground,
+        color: AppColors.fontButtonPrimary,
         icon: const Icon(
           Icons.add_rounded,
           size: 35,
