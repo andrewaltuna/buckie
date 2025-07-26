@@ -1,5 +1,5 @@
 import 'package:expense_tracker/common/helper/formatter.dart';
-import 'package:expense_tracker/feature/categories/data/model/category.dart';
+import 'package:expense_tracker/feature/categories/data/model/entity/category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_drawer_card_base.dart';
@@ -21,7 +21,7 @@ class CategoryPreviewCard extends StatelessWidget {
     final allocation = category.expense / totalExpense;
 
     return DashboardDrawerCardBase(
-      category: category.type,
+      category: category.details,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,7 +30,7 @@ class CategoryPreviewCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                category.type.label,
+                category.details.label,
                 style: AppTextStyles.titleExtraSmall,
               ),
               Text(
@@ -49,7 +49,7 @@ class CategoryPreviewCard extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: allocation,
                     minHeight: 12,
-                    color: category.type.color,
+                    color: category.details.color.colorData,
                     backgroundColor: AppColors.shadow,
                   ),
                 ),

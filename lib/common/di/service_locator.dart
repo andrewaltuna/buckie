@@ -9,6 +9,10 @@ import 'package:expense_tracker/feature/budget/data/remote/budget_remote_source.
 import 'package:expense_tracker/feature/budget/data/remote/budget_remote_source_interface.dart';
 import 'package:expense_tracker/feature/budget/data/repository/budget_repository.dart';
 import 'package:expense_tracker/feature/budget/data/repository/budget_repository_interface.dart';
+import 'package:expense_tracker/feature/categories/data/local/category_local_source.dart';
+import 'package:expense_tracker/feature/categories/data/local/category_local_source_interface.dart';
+import 'package:expense_tracker/feature/categories/data/repository/category_repository.dart';
+import 'package:expense_tracker/feature/categories/data/repository/category_repository_interface.dart';
 import 'package:expense_tracker/feature/transactions/data/local/transaction_local_source.dart';
 import 'package:expense_tracker/feature/transactions/data/local/transaction_local_source_interface.dart';
 import 'package:expense_tracker/feature/transactions/data/repository/transaction_repository.dart';
@@ -32,6 +36,15 @@ void initializeLocator() {
   sl
     ..registerLazySingleton<AuthRepositoryInterface>(() => AuthRepository(sl()))
     ..registerLazySingleton<AuthServiceInterface>(() => AuthService(sl()));
+
+  // Category
+  sl
+    ..registerLazySingleton<CategoryRepositoryInterface>(
+      () => CategoryRepository(sl()),
+    )
+    ..registerLazySingleton<CategoryLocalSourceInterface>(
+      () => CategoryLocalSource(sl()),
+    );
 
   // Transactions
   sl

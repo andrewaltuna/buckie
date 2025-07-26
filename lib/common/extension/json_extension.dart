@@ -1,4 +1,4 @@
-extension JsonHelper on Map<String, dynamic> {
+extension JsonExtension on Map<String, dynamic> {
   String? tryParseString(String key) {
     final value = this[key];
 
@@ -60,4 +60,14 @@ extension JsonHelper on Map<String, dynamic> {
   }
 
   DateTime parseDateTime(String key) => tryParseDateTime(key) ?? DateTime.now();
+
+  Map<String, dynamic> parseMap(String key) => tryParseMap(key) ?? {};
+
+  Map<String, dynamic>? tryParseMap(String key) {
+    final value = this[key];
+
+    if (value is! Map<String, dynamic>) return null;
+
+    return value;
+  }
 }

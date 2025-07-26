@@ -1,6 +1,6 @@
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/feature/categories/data/model/category.dart';
+import 'package:expense_tracker/feature/categories/data/model/entity/category_details.dart';
 import 'package:flutter/material.dart';
 
 class CategoryIcon extends StatelessWidget {
@@ -12,7 +12,7 @@ class CategoryIcon extends StatelessWidget {
     super.key,
   });
 
-  final CategoryType category;
+  final CategoryDetails category;
   final double? size;
   final double? trailingSpace;
   final VoidCallback? onTap;
@@ -21,14 +21,14 @@ class CategoryIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomInkWell(
       onTap: onTap,
-      color: category.color,
+      color: category.color.colorData,
       borderRadius: 14,
       child: Container(
         height: size,
         width: size,
         alignment: Alignment.center,
         child: Icon(
-          category.icon,
+          category.icon.iconData,
           size: size != null ? size! * 0.5 : null,
           color: AppColors.fontPrimary,
         ),

@@ -1,5 +1,5 @@
 import 'package:expense_tracker/common/component/main_scaffold.dart';
-import 'package:expense_tracker/common/extension/context.dart';
+import 'package:expense_tracker/common/extension/context_extension.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';

@@ -20,7 +20,7 @@ class AppDatabase {
 
     _database = await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: _createDatabase,
       onUpgrade: (db, oldVer, newVer) async {
         if (oldVer < 2) {
@@ -34,6 +34,34 @@ class AppDatabase {
           );
 
           _upgradeDbMessage(2);
+        }
+
+        if (oldVer < 3) {
+          await db.execute(
+            '''
+              CREATE TABLE categories(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                label TEXT NOT NULL,
+                icon TEXT NOT NULL,
+                color TEXT NOT NULL,
+                UNIQUE(label)
+              )
+            ''',
+          );
+
+          await db.execute(
+            '''
+              ALTER TABLE transactions
+              RENAME COLUMN category TO category_id;
+            ''',
+          );
+
+          await db.execute(
+            '''
+              UPDATE transactions
+              SET category_id = LOWER(category_id);
+            ''',
+          );
         }
       },
     );
@@ -51,7 +79,7 @@ class AppDatabase {
           amount REAL NOT NULL,
           remarks TEXT,
           date TEXT NOT NULL,
-          category TEXT NOT NULL,
+          category_id TEXT NOT NULL,
           created_at TEXT NOT NULL
         )
       ''',
@@ -66,6 +94,19 @@ class AppDatabase {
           amount REAL NOT NULL,
           modified_at TEXT NOT NULL,
           UNIQUE(date)
+        )
+      ''',
+    );
+
+    // Create categories table
+    await db.execute(
+      '''
+        CREATE TABLE categories(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          icon TEXT NOT NULL,
+          color TEXT NOT NULL,
+          UNIQUE(name)
         )
       ''',
     );

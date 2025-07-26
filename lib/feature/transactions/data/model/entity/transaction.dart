@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:expense_tracker/common/extension/enum.dart';
-import 'package:expense_tracker/common/extension/json.dart';
-import 'package:expense_tracker/feature/categories/data/model/category.dart';
+import 'package:expense_tracker/common/extension/json_extension.dart';
+import 'package:expense_tracker/feature/categories/data/model/entity/category_details.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 
 typedef TransactionsByMonth = Map<String, List<Transaction>>;
@@ -16,13 +15,16 @@ class Transaction extends Equatable {
     required this.category,
   });
 
-  factory Transaction.fromJson(Map<String, dynamic> json) {
+  factory Transaction.fromJson(
+    Map<String, dynamic> json, {
+    String prefix = 't_',
+  }) {
     return Transaction(
-      id: json['id'].toString(),
-      amount: json.parseDouble('amount'),
-      remarks: json.tryParseString('remarks'),
-      date: json.parseDateTime('date'),
-      category: CategoryType.values.fromValue(json['category']),
+      id: json['${prefix}id'].toString(),
+      amount: json.parseDouble('${prefix}amount'),
+      remarks: json.tryParseString('${prefix}remarks'),
+      date: json.parseDateTime('${prefix}date'),
+      category: CategoryDetails.fromJson(json, prefix: 'c_'),
     );
   }
 
@@ -30,14 +32,14 @@ class Transaction extends Equatable {
   final double amount;
   final String? remarks;
   final DateTime date;
-  final CategoryType category;
+  final CategoryDetails category;
 
   Transaction copyWith({
     String? id,
     double? amount,
     String? remarks,
     DateTime? date,
-    CategoryType? category,
+    CategoryDetails? category,
   }) {
     return Transaction(
       id: id ?? this.id,

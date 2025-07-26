@@ -12,7 +12,8 @@ import 'package:sqflite/sqflite.dart';
 class TransactionLocalSource implements TransactionLocalSourceInterface {
   TransactionLocalSource(this._db);
 
-  static const _table = 'transactions';
+  static const _transactionsTable = 'transactions';
+  static const _categoriesTable = 'categories';
 
   final Database _db;
 
@@ -25,10 +26,9 @@ class TransactionLocalSource implements TransactionLocalSourceInterface {
 
   @override
   Future<t.Transaction> getTransaction(String id) async {
-    final result = await _db.query(
-      _table,
-      where: 'id = ?',
-      whereArgs: [id],
+    final result = await _db.rawQuery(
+      _generateRawQuery(where: 't.id = ?'),
+      [id],
     );
 
     if (result.isEmpty) throw Exception('Transaction not found');
@@ -44,17 +44,19 @@ class TransactionLocalSource implements TransactionLocalSourceInterface {
       final startDate = month.toIso8601String();
       final endDate = month.copyWith(month: month.month + 1).toIso8601String();
 
-      result = await _db.query(
-        _table,
-        where: 'date >= ? AND date < ?',
-        whereArgs: [startDate, endDate],
-        orderBy: 'date DESC, created_at DESC',
+      result = await _db.rawQuery(
+        _generateRawQuery(
+          where: 't.date >= ? AND t.date < ?',
+          orderBy: 't.date DESC, t.created_at DESC',
+        ),
+        [startDate, endDate],
       );
     } else {
-      result = await _db.query(
-        _table,
-        orderBy: 'date DESC, created_at DESC',
-        limit: 10,
+      result = await _db.rawQuery(
+        _generateRawQuery(
+          orderBy: 'date DESC, created_at DESC',
+          limit: 10,
+        ),
       );
     }
 
@@ -67,7 +69,7 @@ class TransactionLocalSource implements TransactionLocalSourceInterface {
   @override
   Future<t.Transaction> createTransaction(CreateTransactionInput input) async {
     final id = await _db.insert(
-      _table,
+      _transactionsTable,
       input.toJson(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -86,7 +88,7 @@ class TransactionLocalSource implements TransactionLocalSourceInterface {
     final transaction = await getTransaction(id);
 
     await _db.delete(
-      _table,
+      _transactionsTable,
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -101,7 +103,7 @@ class TransactionLocalSource implements TransactionLocalSourceInterface {
     final oldTransaction = await getTransaction(input.id);
 
     await _db.update(
-      _table,
+      _transactionsTable,
       input.toJson(),
       where: 'id = ?',
       whereArgs: [input.id],
@@ -117,5 +119,33 @@ class TransactionLocalSource implements TransactionLocalSourceInterface {
     );
 
     return newTransaction;
+  }
+
+  String _generateRawQuery({
+    String where = '',
+    String orderBy = '',
+    int? limit,
+  }) {
+    final whereStatement = where.isNotEmpty ? 'WHERE $where' : '';
+    final orderByStatement = orderBy.isNotEmpty ? 'ORDER BY $orderBy' : '';
+    final limitStatement = limit != null ? 'LIMIT $limit' : '';
+
+    return '''
+      SELECT 
+        t.id AS t_id,
+        t.amount AS t_amount,
+        t.remarks AS t_remarks,
+        t.date AS t_date,
+        t.category_id AS c_id,
+        c.label AS c_label,
+        c.icon AS c_icon,
+        c.color AS c_color
+      FROM $_transactionsTable t
+      LEFT JOIN $_categoriesTable c
+        ON t.category_id = c.id
+      $whereStatement
+      $orderByStatement
+      $limitStatement
+    ''';
   }
 }

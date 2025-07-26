@@ -1,5 +1,5 @@
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/feature/categories/data/model/category.dart';
+import 'package:expense_tracker/feature/categories/data/model/entity/category.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/helper/budget_usage_display_helper.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/budget_breakdown_view_model.dart';

@@ -1,4 +1,4 @@
-import 'package:expense_tracker/common/extension/json.dart';
+import 'package:expense_tracker/common/extension/json_extension.dart';
 import 'package:expense_tracker/feature/budget/data/model/input/set_budget_input.dart';
 import 'package:expense_tracker/feature/budget/data/remote/budget_remote_source_interface.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';

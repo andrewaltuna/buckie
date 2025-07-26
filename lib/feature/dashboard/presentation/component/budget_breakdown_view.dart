@@ -3,7 +3,7 @@ import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/helper/haptic_feedback_helper.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/budget/presentation/helper/budget_helper.dart';
-import 'package:expense_tracker/feature/categories/data/model/category.dart';
+import 'package:expense_tracker/feature/categories/data/model/entity/category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/budget_breakdown_chart.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_month_selector.dart';

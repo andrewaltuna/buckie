@@ -1,6 +1,6 @@
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/feature/categories/data/model/category.dart';
+import 'package:expense_tracker/feature/categories/data/model/entity/category_details.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/category_icon.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +12,7 @@ class DashboardDrawerCardBase extends StatelessWidget {
     super.key,
   });
 
-  final CategoryType category;
+  final CategoryDetails category;
   final VoidCallback? onTap;
   final Widget child;
 

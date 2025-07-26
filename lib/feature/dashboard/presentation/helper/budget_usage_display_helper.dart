@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
-import 'package:expense_tracker/feature/categories/data/model/category.dart';
+import 'package:expense_tracker/feature/categories/data/model/entity/category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/budget_breakdown_info_badge.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -41,7 +41,7 @@ class BudgetUsageDisplayHelper {
       return PieChartSectionData(
         showTitle: false,
         value: category.expense,
-        color: category.type.color,
+        color: category.details.color.colorData,
         radius: isSelected
             ? baseSectionRadius * _selectedRadiusScale
             : baseSectionRadius,
@@ -52,12 +52,12 @@ class BudgetUsageDisplayHelper {
             child: switch (selectedIndex != -1) {
               true => isSelected
                   ? BudgetBreakdownInfoBadge(
-                      label: category.type.label,
+                      label: category.details.label,
                       info: '$expenseLabel ($percentageLabel)',
                     )
                   : null,
               false => Icon(
-                  category.type.icon,
+                  category.details.icon.iconData,
                   color: AppColors.fontPrimary,
                 ),
             },

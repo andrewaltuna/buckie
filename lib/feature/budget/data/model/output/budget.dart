@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:expense_tracker/common/extension/json.dart';
+import 'package:expense_tracker/common/extension/json_extension.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 
 class Budget extends Equatable {

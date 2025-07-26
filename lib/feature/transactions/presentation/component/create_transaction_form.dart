@@ -6,7 +6,7 @@ import 'package:expense_tracker/common/helper/haptic_feedback_helper.dart';
 import 'package:expense_tracker/common/helper/input_formatter.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
-import 'package:expense_tracker/feature/categories/data/model/category.dart';
+import 'package:expense_tracker/feature/categories/presentation/view_model/categories_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/category_selector.dart';
 import 'package:expense_tracker/feature/transactions/presentation/view_model/create_transaction_view_model.dart';
@@ -140,18 +140,21 @@ class _Form extends HookWidget {
 
   void _onCategoryChanged(
     BuildContext context,
-    CategoryType category,
+    String categoryId,
   ) {
     context.read<CreateTransactionViewModel>().add(
-          CreateTransactionCategoryUpdated(category),
+          CreateTransactionCategoryUpdated(categoryId),
         );
   }
 
   @override
   Widget build(BuildContext context) {
     final focusNode = useFocusNode();
+    final categoryId = context.select(
+      (CreateTransactionViewModel vm) => vm.state.categoryId,
+    );
     final category = context.select(
-      (CreateTransactionViewModel vm) => vm.state.category,
+      (CategoriesViewModel vm) => vm.state.categoryWithId(categoryId),
     );
 
     useEffect(

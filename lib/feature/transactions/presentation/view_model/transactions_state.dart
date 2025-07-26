@@ -44,7 +44,7 @@ class TransactionsState extends Equatable {
     final categories = trxByCategory.entries
         .map(
           (entry) => Category(
-            type: entry.key,
+            details: entry.key,
             transactions: entry.value,
           ),
         )

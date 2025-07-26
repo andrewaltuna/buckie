@@ -28,7 +28,7 @@ class UpdateTransactionScreen extends StatelessWidget {
         transactionId: transaction.id,
       )
         ..add(CreateTransactionAmountUpdated(transaction.amount))
-        ..add(CreateTransactionCategoryUpdated(transaction.category))
+        ..add(CreateTransactionCategoryUpdated(transaction.category.id))
         ..add(CreateTransactionDateUpdated(transaction.date))
         ..add(CreateTransactionRemarksUpdated(transaction.remarks ?? '')),
       child: MainScaffold(

@@ -1,7 +1,7 @@
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:intl/intl.dart';
 
-extension DateTimeHelper on DateTime {
+extension DateTimeExtension on DateTime {
   DateTime get dateOnly => DateTime(year, month, day);
 
   TransactionMonth toTransactionMonth() {
