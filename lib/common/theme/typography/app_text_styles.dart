@@ -44,6 +44,13 @@ class AppTextStyles {
     color: AppColors.fontPrimary,
   );
 
+  static const labelLarge = TextStyle(
+    fontFamily: _fontFamilyPrimary,
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    color: AppColors.fontPrimary,
+  );
+
   static const labelMedium = TextStyle(
     fontFamily: _fontFamilyPrimary,
     fontSize: 15,

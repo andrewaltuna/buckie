@@ -27,6 +27,7 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
 
   final TransactionRepositoryInterface _repository;
 
+  /// Used for updating [transactionsByMonth] when transactions are added/changed.
   StreamSubscription<TransactionStreamOutput>? _trxSubscription;
 
   void _onStreamInitialized(_, __) {

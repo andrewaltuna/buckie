@@ -8,7 +8,7 @@ import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/categories/presentation/view_model/categories_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
-import 'package:expense_tracker/feature/transactions/presentation/component/category_selector.dart';
+import 'package:expense_tracker/feature/transactions/presentation/component/category_selector_button.dart';
 import 'package:expense_tracker/feature/transactions/presentation/view_model/create_transaction_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -149,7 +149,8 @@ class _Form extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final focusNode = useFocusNode();
+    final amountFocusNode = useFocusNode();
+    final remarksFocusNode = useFocusNode();
     final categoryId = context.select(
       (CreateTransactionViewModel vm) => vm.state.categoryId,
     );
@@ -159,7 +160,7 @@ class _Form extends HookWidget {
 
     useEffect(
       () {
-        focusNode.requestFocus();
+        amountFocusNode.requestFocus();
 
         return;
       },
@@ -177,7 +178,7 @@ class _Form extends HookWidget {
               Expanded(
                 child: RoundedTextField(
                   controller: amountController,
-                  focusNode: focusNode,
+                  focusNode: amountFocusNode,
                   label: 'Amount',
                   keyboardType: const TextInputType.numberWithOptions(
                     decimal: true,
@@ -196,6 +197,7 @@ class _Form extends HookWidget {
                     context,
                     '',
                   ),
+                  onSubmitted: (_) => remarksFocusNode.requestFocus(),
                 ),
               ),
               const SizedBox(width: 16),
@@ -204,6 +206,7 @@ class _Form extends HookWidget {
                   controller: dateController,
                   label: 'Date',
                   readOnly: true,
+                  allowFocus: false,
                   onTap: () => _onDateTapped(
                     context,
                     dateController,
@@ -215,6 +218,7 @@ class _Form extends HookWidget {
           const SizedBox(height: 8),
           RoundedTextField(
             controller: remarksController,
+            focusNode: remarksFocusNode,
             label: 'Remarks',
             textInputAction: TextInputAction.done,
             allowClear: true,
@@ -238,7 +242,7 @@ class _Form extends HookWidget {
             ),
           ),
           const SizedBox(height: 4),
-          CategorySelector(
+          CategorySelectorButton(
             category: category,
             onChanged: (category) => _onCategoryChanged(
               context,

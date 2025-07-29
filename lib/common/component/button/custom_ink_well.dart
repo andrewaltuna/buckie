@@ -7,6 +7,7 @@ class CustomInkWell extends StatelessWidget {
     this.borderRadius,
     this.color,
     this.onTap,
+    this.onLongPress,
     this.width,
     this.height,
     this.padding,
@@ -14,6 +15,7 @@ class CustomInkWell extends StatelessWidget {
   });
 
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
   final Color? color;
   final double? borderRadius;
   final Widget child;
@@ -33,6 +35,7 @@ class CustomInkWell extends StatelessWidget {
         color: color ?? Colors.transparent,
         child: InkWell(
           onTap: onTap,
+          onLongPress: onLongPress,
           splashColor: splashColor,
           overlayColor: WidgetStateColor.resolveWith(
             (_) => splashColor,
