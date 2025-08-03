@@ -5,6 +5,7 @@ import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/categories/data/model/entity/category_details.dart';
 import 'package:expense_tracker/feature/categories/presentation/view_model/categories_view_model.dart';
+import 'package:expense_tracker/feature/transactions/presentation/component/create_category_modal_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -55,21 +56,22 @@ class CategorySelectorModalContent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _GridView(
-                    aspectRatio: aspectRatio,
-                    categories: categories,
-                    onSelect: (categoryId) => _onSelect(
-                      context,
-                      categoryId,
+                  if (categories.isNotEmpty) ...[
+                    _GridView(
+                      aspectRatio: aspectRatio,
+                      categories: categories,
+                      onSelect: (categoryId) => _onSelect(
+                        context,
+                        categoryId,
+                      ),
                     ),
-                  ),
-                  if (categories.isNotEmpty)
                     const Divider(
                       height: 32,
                       color: AppColors.fontDisabled,
                       indent: 16,
                       endIndent: 16,
                     ),
+                  ],
                   _GridView(
                     label: 'Default Categories',
                     aspectRatio: aspectRatio,
@@ -90,10 +92,10 @@ class CategorySelectorModalContent extends StatelessWidget {
   }
 
   double _calculateAspectRatio(BuildContext context) {
-    final screenWidthAfterPadding =
+    final contentWidthAfterPadding =
         context.width - _kItemGap - (_horizontalPadding * 2);
 
-    return (screenWidthAfterPadding / 2) / _kItemHeight;
+    return (contentWidthAfterPadding / 2) / _kItemHeight;
   }
 }
 
@@ -113,6 +115,14 @@ class _Header extends StatelessWidget {
           color: AppColors.accent,
           borderRadius: _kItemBorderRadius,
           padding: const EdgeInsets.fromLTRB(8, 8, 16, 8),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const CreateCategoryModalContent(),
+              ),
+            );
+          },
           child: Row(
             children: [
               const Icon(

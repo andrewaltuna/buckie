@@ -232,13 +232,11 @@ class _Form extends HookWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.only(left: 4),
+          const Padding(
+            padding: EdgeInsets.only(left: 4),
             child: Text(
               'Category',
-              style: AppTextStyles.labelRegular.copyWith(
-                color: AppColors.accent,
-              ),
+              style: AppTextStyles.textFieldLabel,
             ),
           ),
           const SizedBox(height: 4),

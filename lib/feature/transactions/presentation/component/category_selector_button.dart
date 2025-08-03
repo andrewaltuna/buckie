@@ -42,7 +42,7 @@ class CategorySelectorButton extends StatelessWidget {
           color: category.color.colorData,
           borderRadius: 12,
           child: Container(
-            height: 48,
+            height: 46,
             padding: const EdgeInsets.all(8),
             alignment: Alignment.center,
             child: Row(

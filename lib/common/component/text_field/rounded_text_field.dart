@@ -71,9 +71,7 @@ class RoundedTextField extends HookWidget {
                 ],
                 Text(
                   label,
-                  style: AppTextStyles.labelRegular.copyWith(
-                    color: AppColors.accent,
-                  ),
+                  style: AppTextStyles.textFieldLabel,
                 ),
               ],
             ),
