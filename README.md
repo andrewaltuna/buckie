@@ -1,17 +1,31 @@
-# expense_tracker
+# buckie
+buckie is a simple expense tracker built with Flutter with built in analytics tools to help you spend wiser. 
 
-A new Flutter project.
+## Features
+💵 Budgeting
+- Set custom budgets per month
+- Option to reuse the last entered budget
 
-## Getting Started
+🪙 Expense Logging
+- Log expenses by category
 
-This project is a starting point for a Flutter application.
+📊 Dashboard
+- Interactive pie chart to visualize spending per category
+- View remaining balance for the selected month
+- See your latest expenses at a glance
 
-A few resources to get you started if this is your first Flutter project:
+🧾 Transaction History
+- View daily expenses for the selected month
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Roadmap
+- Custom categories (WIP)
+- Improved expense analytics
+- Search expenses by note/s
+- Month selection via date input
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# flutter-expense-tracker
+## Key Packages
+- Storage
+  - [sqflite](https://pub.dev/packages/sqflite)
+- State management
+  - [flutter_bloc](https://pub.dev/packages/flutter_bloc)
+  - [flutter_hooks](https://pub.dev/packages/flutter_hooks)
