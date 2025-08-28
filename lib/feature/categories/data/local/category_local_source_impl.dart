@@ -37,11 +37,9 @@ class CategoryLocalSourceImpl implements CategoryLocalSource {
     final result = customOnly == null
         ? await _db.query(
             _table,
-            orderBy: 'name ASC',
           )
         : await _db.query(
             _table,
-            orderBy: 'name ASC',
             where: 'is_default = ?',
             whereArgs: [customOnly ? 0 : 1],
           );

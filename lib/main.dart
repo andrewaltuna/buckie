@@ -43,7 +43,7 @@ class App extends StatelessWidget {
         useMaterial3: true,
         fontFamily: Constants.fontFamilySecondary,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.defaultBackground,
+          seedColor: AppColors.accent,
         ),
         textTheme: Theme.of(context).textTheme.apply(
               bodyColor: AppColors.fontPrimary,

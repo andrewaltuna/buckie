@@ -4,44 +4,45 @@ import 'package:expense_tracker/feature/categories/data/model/entity/category_de
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
-const _databaseFile = 'buckie_database.db';
-const _tableCreateStatements = [
-  '''
-    CREATE TABLE categories(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL CHECK(name <> ''),
-      icon TEXT NOT NULL,
-      color TEXT NOT NULL,
-      is_default INTEGER NOT NULL,
-      UNIQUE(name)
-    )
-  ''',
-  '''
-    CREATE TABLE transactions(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      amount REAL NOT NULL,
-      remarks TEXT,
-      date TEXT NOT NULL,
-      created_at TEXT NOT NULL,
-      category_id INTEGER,
-      FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
-    )
-  ''',
-  '''
-    CREATE TABLE budgets(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      date TEXT NOT NULL,
-      amount REAL NOT NULL,
-      modified_at TEXT NOT NULL,
-      UNIQUE(date)
-    )
-  ''',
-];
-
 class AppDatabase {
   AppDatabase._();
 
   static final AppDatabase instance = AppDatabase._();
+
+  static const _dbFileName = 'buckie_database.db';
+
+  static const _createTableStatements = [
+    '''
+      CREATE TABLE categories(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL CHECK(name <> ''),
+        icon TEXT NOT NULL,
+        color TEXT NOT NULL,
+        is_default INTEGER NOT NULL,
+        UNIQUE(name)
+      )
+    ''',
+    '''
+      CREATE TABLE transactions(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        amount REAL NOT NULL,
+        remarks TEXT,
+        date TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        category_id INTEGER,
+        FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+      )
+    ''',
+    '''
+      CREATE TABLE budgets(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        date TEXT NOT NULL,
+        amount REAL NOT NULL,
+        modified_at TEXT NOT NULL,
+        UNIQUE(date)
+      )
+    ''',
+  ];
 
   late Database _database;
 
@@ -49,7 +50,7 @@ class AppDatabase {
   Database get database => _database;
 
   Future<void> initDatabase() async {
-    final path = '${await getDatabasesPath()}/$_databaseFile';
+    final path = '${await getDatabasesPath()}/$_dbFileName';
 
     _database = await openDatabase(
       path,
@@ -63,7 +64,7 @@ class AppDatabase {
   FutureOr<void> _onConfigure(Database db) async {
     await db.execute('PRAGMA foreign_keys = ON');
 
-    if (kDebugMode) debugPrintDatabaseStructure(db);
+    if (kDebugMode) _printDatabaseStructure(db);
   }
 
   Future<void> _onUpgrade(
@@ -77,7 +78,7 @@ class AppDatabase {
     int version,
   ) async {
     // Create tables
-    for (final statement in _tableCreateStatements) {
+    for (final statement in _createTableStatements) {
       await db.execute(statement);
     }
 
@@ -92,11 +93,11 @@ class AppDatabase {
   }
 
   // ignore: unused_element
-  void _upgradeDbMessage(int version) => debugPrint(
+  void _printUpgradeMessage(int version) => debugPrint(
         'Database upgraded to version $version',
       );
 
-  Future<void> debugPrintDatabaseStructure(Database db) async {
+  Future<void> _printDatabaseStructure(Database db) async {
     final tables = await db.rawQuery(
       "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name;",
     );
