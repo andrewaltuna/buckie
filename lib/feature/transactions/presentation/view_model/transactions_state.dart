@@ -38,13 +38,13 @@ class TransactionsState extends Equatable {
 
     final trxByCategory = groupBy(
       transactions,
-      (transaction) => transaction.category,
+      (transaction) => transaction.categoryId,
     );
 
     final categories = trxByCategory.entries
         .map(
           (entry) => Category(
-            details: entry.key,
+            id: entry.key,
             transactions: entry.value,
           ),
         )

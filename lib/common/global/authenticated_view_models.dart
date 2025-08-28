@@ -27,7 +27,9 @@ class AuthenticatedViewModels extends StatelessWidget {
         BlocProvider(
           create: (_) => CategoriesViewModel(
             sl<CategoryRepositoryInterface>(),
-          )..add(const CategoriesRequested()),
+          )
+            ..add(const CategoriesStreamInitialized())
+            ..add(const CategoriesRequested()),
         ),
         BlocProvider(
           create: (_) => TransactionsViewModel(

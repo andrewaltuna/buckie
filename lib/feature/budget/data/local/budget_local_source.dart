@@ -9,7 +9,7 @@ import 'package:sqflite/sqflite.dart';
 class BudgetLocalSource implements BudgetLocalSourceInterface {
   BudgetLocalSource(this._db);
 
-  static const _table = 'monthly_budgets';
+  static const _table = 'budgets';
 
   final Database _db;
 

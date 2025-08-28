@@ -1,6 +1,6 @@
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/feature/categories/data/model/entity/category.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
+import 'package:expense_tracker/feature/categories/data/model/entity/category.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/helper/budget_usage_display_helper.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/budget_breakdown_view_model.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -114,7 +114,7 @@ class _PieChart extends StatelessWidget {
                 response,
               ),
             ),
-            sections: BudgetUsageDisplayHelper.categoryToPieData(
+            sections: BudgetUsageDisplayHelper.of(context).categoryToPieData(
               budget: budget,
               expense: expense,
               categories: categories,

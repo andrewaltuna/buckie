@@ -7,4 +7,5 @@ class Constants {
 
   /// Widgets
   static const navBarHeight = 72.0;
+  static const popupMenuBorderRadius = 12.0;
 }

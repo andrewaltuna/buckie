@@ -7,6 +7,10 @@ sealed class CategoriesEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class CategoriesStreamInitialized extends CategoriesEvent {
+  const CategoriesStreamInitialized();
+}
+
 class CategoriesRequested extends CategoriesEvent {
   const CategoriesRequested();
 }
@@ -35,7 +39,7 @@ class CategoriesItemUpdated extends CategoriesEvent {
   });
 
   // For manual updates
-  final String id;
+  final int id;
   final String name;
   final CategoryIcon icon;
   final CategoryColor color;
@@ -54,7 +58,7 @@ class CategoriesItemDeleted extends CategoriesEvent {
     required this.id,
   });
 
-  final String id;
+  final int id;
 
   @override
   List<Object?> get props => [id];

@@ -4,30 +4,30 @@ import 'package:expense_tracker/common/helper/haptic_feedback_helper.dart';
 import 'package:expense_tracker/common/helper/modal_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
+import 'package:expense_tracker/feature/categories/presentation/helper/category_helper.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
-import 'package:expense_tracker/feature/transactions/presentation/component/category_icon.dart';
+import 'package:expense_tracker/feature/transactions/presentation/component/category_icon_display.dart';
 import 'package:expense_tracker/feature/transactions/presentation/screen/update_transaction_screen.dart';
 import 'package:expense_tracker/feature/transactions/presentation/view_model/transactions_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class TransactionDetailModalContent extends StatelessWidget {
   const TransactionDetailModalContent({
     required this.transaction,
-    this.allowEditting = true,
+    this.allowEditing = true,
     super.key,
   });
 
   final Transaction transaction;
-  final bool allowEditting;
+  final bool allowEditing;
 
   @override
   Widget build(BuildContext context) {
     return ModalBase(
       header: _Header(
         transaction: transaction,
-        allowEditting: allowEditting,
+        allowEditting: allowEditing,
       ),
       body: _Body(
         transaction: transaction,
@@ -50,12 +50,9 @@ class _Header extends StatelessWidget {
 
     Navigator.of(context).pop();
 
-    context.pushNamed(
-      UpdateTransactionScreen.routeName,
-      pathParameters: {
-        'id': transaction.id,
-      },
-      extra: transaction,
+    UpdateTransactionScreen.navigateTo(
+      context: context,
+      transaction: transaction,
     );
   }
 
@@ -71,18 +68,21 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final category =
+        CategoryHelper.of(context).watchCategoryWithId(transaction.categoryId);
+
     return Row(
       children: [
-        CategoryIcon(
+        CategoryIconDisplay(
           size: 40,
-          category: transaction.category,
+          category: category,
         ),
         const SizedBox(width: 12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              transaction.category.label,
+              category.name,
               style: AppTextStyles.titleSmall,
             ),
             Text(

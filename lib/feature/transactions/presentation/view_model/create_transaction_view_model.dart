@@ -15,7 +15,7 @@ class CreateTransactionViewModel
     extends Bloc<CreateTransactionEvent, CreateTransactionState> {
   CreateTransactionViewModel(
     this._repository, {
-    String? transactionId,
+    int? transactionId,
   })  : _transactionId = transactionId,
         super(const CreateTransactionState()) {
     on<CreateTransactionDateUpdated>(_onDateUpdated);
@@ -26,7 +26,7 @@ class CreateTransactionViewModel
   }
 
   final TransactionRepositoryInterface _repository;
-  final String? _transactionId;
+  final int? _transactionId;
 
   void _onDateUpdated(
     CreateTransactionDateUpdated event,
@@ -53,7 +53,11 @@ class CreateTransactionViewModel
     CreateTransactionCategoryUpdated event,
     Emitter<CreateTransactionState> emit,
   ) {
-    emit(state.copyWith(categoryId: event.id));
+    emit(
+      state.copyWith(
+        categoryId: event.id,
+      ),
+    );
   }
 
   Future<void> _onSubmitted(
@@ -92,7 +96,7 @@ class CreateTransactionViewModel
 
       emit(
         state.copyWith(
-          status: ViewModelStatus.loaded,
+          status: ViewModelStatus.success,
         ),
       );
     } on Exception catch (error) {

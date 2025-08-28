@@ -43,11 +43,15 @@ class ModalBase extends StatelessWidget {
   const ModalBase({
     required this.body,
     this.header,
+    this.headerPadding,
+    this.bodyPadding,
     super.key,
   });
 
   final Widget? header;
   final Widget body;
+  final EdgeInsetsGeometry? headerPadding;
+  final EdgeInsetsGeometry? bodyPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -61,19 +65,21 @@ class ModalBase extends StatelessWidget {
             if (header != null)
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(16),
+                padding: headerPadding ?? const EdgeInsets.all(16),
                 decoration: const BoxDecoration(
                   color: AppColors.widgetBackgroundSecondary,
                 ),
                 child: header,
               ),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: const BoxDecoration(
-                color: AppColors.widgetBackgroundTertiary,
+            Flexible(
+              child: Container(
+                width: double.infinity,
+                padding: bodyPadding ?? const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  color: AppColors.widgetBackgroundTertiary,
+                ),
+                child: body,
               ),
-              child: body,
             ),
           ],
         ),

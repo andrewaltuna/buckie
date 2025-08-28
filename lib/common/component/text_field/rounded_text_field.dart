@@ -18,6 +18,7 @@ class RoundedTextField extends HookWidget {
     this.icon,
     this.readOnly = false,
     this.allowFocus = true,
+    this.isInitialFocus = false,
     this.textInputAction,
     this.inputFormatters,
     this.validator,
@@ -40,6 +41,7 @@ class RoundedTextField extends HookWidget {
   final Widget? icon;
   final bool readOnly;
   final bool allowFocus;
+  final bool isInitialFocus;
   final TextInputAction? textInputAction;
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
@@ -51,6 +53,17 @@ class RoundedTextField extends HookWidget {
     final focusNode = allowFocus ? this.focusNode ?? useFocusNode() : null;
     final controller = this.controller ?? useTextEditingController();
     final isFocused = useListenable(focusNode)?.hasFocus ?? false;
+
+    if (isInitialFocus) {
+      useEffect(
+        () {
+          focusNode?.requestFocus();
+
+          return;
+        },
+        [],
+      );
+    }
 
     return _NotifierWrapper(
       controller: controller,

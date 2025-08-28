@@ -7,32 +7,41 @@ import 'package:expense_tracker/feature/categories/data/enum/category_icon.dart'
 class CategoryDetails extends Equatable {
   const CategoryDetails({
     required this.id,
-    required this.label,
+    required this.name,
     required this.icon,
     required this.color,
+    required this.isDefault,
   });
 
-  static const fallbackId = _kFallbackCategoryId;
+  const CategoryDetails.defaultCategory({
+    required String name,
+    required CategoryIcon icon,
+    required CategoryColor color,
+  }) : this(
+          id: -1,
+          name: name,
+          icon: icon,
+          color: color,
+          isDefault: true,
+        );
+
+  static const fallbackId = 1;
   static const fallback = _kFallbackCategory;
 
+  // Used for populating DB with default categories
   static const defaultCategories = _kDefaultCategories;
 
   factory CategoryDetails.fromJson(
     Map<String, dynamic> json, {
     String prefix = '',
   }) {
-    final id = json.parseString('${prefix}id');
+    final id = json.tryParseInt('${prefix}id');
 
-    // Check if id is not an int (for default categories)
-    if (int.tryParse(id) == null) {
-      return defaultCategories.firstWhere(
-        (category) => category.id == id,
-      );
-    }
+    if (id == null) return fallback;
 
     return CategoryDetails(
       id: id,
-      label: json.parseString('${prefix}label'),
+      name: json.parseString('${prefix}name'),
       icon: CategoryIcon.values.fromValue(
         json.parseString('${prefix}icon'),
         orElse: CategoryIcon.other,
@@ -41,98 +50,99 @@ class CategoryDetails extends Equatable {
         json.parseString('${prefix}color'),
         orElse: CategoryColor.darkGray,
       ),
+      isDefault: json.parseBool('${prefix}is_default'),
     );
   }
 
-  final String id;
-  final String label;
+  final int id;
+  final String name;
   final CategoryIcon icon;
   final CategoryColor color;
+  final bool isDefault;
+
+  Map<String, dynamic> toJson({
+    bool withId = true,
+  }) {
+    return {
+      if (withId) 'id': id,
+      'name': name,
+      'icon': icon.value,
+      'color': color.value,
+      'is_default': isDefault ? 1 : 0,
+    };
+  }
 
   @override
   List<Object?> get props => [
         id,
-        label,
+        name,
         icon,
         color,
+        isDefault,
       ];
 }
 
-const _kDefaultCategories = [
-  CategoryDetails(
-    id: 'clothing',
-    label: 'Clothing',
-    icon: CategoryIcon.clothing,
-    color: CategoryColor.purple,
-  ),
-  CategoryDetails(
-    id: 'date',
-    label: 'Date',
-    icon: CategoryIcon.date,
-    color: CategoryColor.red,
-  ),
-  CategoryDetails(
-    id: 'education',
-    label: 'Education',
-    icon: CategoryIcon.education,
-    color: CategoryColor.blue,
-  ),
-  CategoryDetails(
-    id: 'entertainment',
-    label: 'Entertainment',
-    icon: CategoryIcon.entertainment,
-    color: CategoryColor.pink,
-  ),
-  CategoryDetails(
-    id: 'food',
-    label: 'Food',
-    icon: CategoryIcon.food,
-    color: CategoryColor.orange,
-  ),
-  CategoryDetails(
-    id: 'gift',
-    label: 'Gift',
-    icon: CategoryIcon.gift,
-    color: CategoryColor.red,
-  ),
-  CategoryDetails(
-    id: 'groceries',
-    label: 'Groceries',
-    icon: CategoryIcon.groceries,
-    color: CategoryColor.teal,
-  ),
-  CategoryDetails(
-    id: 'health',
-    label: 'Health',
-    icon: CategoryIcon.health,
-    color: CategoryColor.magenta,
-  ),
-  CategoryDetails(
-    id: 'transport',
-    label: 'Transport',
-    icon: CategoryIcon.transport,
-    color: CategoryColor.cyan,
-  ),
-  CategoryDetails(
-    id: 'travel',
-    label: 'Travel',
-    icon: CategoryIcon.travel,
-    color: CategoryColor.green,
-  ),
-  CategoryDetails(
-    id: 'utilities',
-    label: 'Utilities',
-    icon: CategoryIcon.utilities,
-    color: CategoryColor.gray,
-  ),
-  _kFallbackCategory,
-];
-
-const _kFallbackCategory = CategoryDetails(
-  id: _kFallbackCategoryId,
-  label: 'Other',
+const _kFallbackCategory = CategoryDetails.defaultCategory(
+  name: 'Other',
   icon: CategoryIcon.other,
   color: CategoryColor.darkGray,
 );
 
-const _kFallbackCategoryId = 'other';
+const _kDefaultCategories = [
+  _kFallbackCategory,
+  CategoryDetails.defaultCategory(
+    name: 'Clothing',
+    icon: CategoryIcon.clothing,
+    color: CategoryColor.purple,
+  ),
+  CategoryDetails.defaultCategory(
+    name: 'Date',
+    icon: CategoryIcon.date,
+    color: CategoryColor.red,
+  ),
+  CategoryDetails.defaultCategory(
+    name: 'Education',
+    icon: CategoryIcon.education,
+    color: CategoryColor.blue,
+  ),
+  CategoryDetails.defaultCategory(
+    name: 'Entertainment',
+    icon: CategoryIcon.entertainment,
+    color: CategoryColor.pink,
+  ),
+  CategoryDetails.defaultCategory(
+    name: 'Food',
+    icon: CategoryIcon.food,
+    color: CategoryColor.orange,
+  ),
+  CategoryDetails.defaultCategory(
+    name: 'Gift',
+    icon: CategoryIcon.gift,
+    color: CategoryColor.red,
+  ),
+  CategoryDetails.defaultCategory(
+    name: 'Groceries',
+    icon: CategoryIcon.groceries,
+    color: CategoryColor.teal,
+  ),
+  CategoryDetails.defaultCategory(
+    name: 'Health',
+    icon: CategoryIcon.health,
+    color: CategoryColor.magenta,
+  ),
+  CategoryDetails.defaultCategory(
+    name: 'Transport',
+    icon: CategoryIcon.transport,
+    color: CategoryColor.cyan,
+  ),
+  CategoryDetails.defaultCategory(
+    name: 'Travel',
+    icon: CategoryIcon.travel,
+    color: CategoryColor.green,
+  ),
+  CategoryDetails.defaultCategory(
+    name: 'Utilities',
+    icon: CategoryIcon.utilities,
+    color: CategoryColor.gray,
+  ),
+];

@@ -1,16 +1,22 @@
 import 'package:collection/collection.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
-import 'package:expense_tracker/feature/categories/data/model/entity/category.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
+import 'package:expense_tracker/feature/categories/data/model/entity/category.dart';
+import 'package:expense_tracker/feature/categories/presentation/helper/category_helper.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/budget_breakdown_info_badge.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class BudgetUsageDisplayHelper {
-  const BudgetUsageDisplayHelper._();
+  const BudgetUsageDisplayHelper._(this._context);
+
+  factory BudgetUsageDisplayHelper.of(BuildContext context) =>
+      BudgetUsageDisplayHelper._(context);
 
   static const _selectedRadiusScale = 1.15;
   static const _remainingRadiusScale = 0.85;
+
+  final BuildContext _context;
 
   static String percentageUsedDisplay({
     required double expense,
@@ -23,7 +29,7 @@ class BudgetUsageDisplayHelper {
     return Formatter.percentage(percentage);
   }
 
-  static List<PieChartSectionData> categoryToPieData({
+  List<PieChartSectionData> categoryToPieData({
     required double budget,
     required double expense,
     required List<Category> categories,
@@ -32,6 +38,9 @@ class BudgetUsageDisplayHelper {
     required double baseSectionRadius,
   }) {
     final pieData = categories.mapIndexed((index, category) {
+      final details =
+          CategoryHelper.of(_context).readCategoryWithId(category.id);
+
       final isSelected = index == selectedIndex;
       final percentage = category.expense / (showRemaining ? budget : expense);
 
@@ -41,7 +50,7 @@ class BudgetUsageDisplayHelper {
       return PieChartSectionData(
         showTitle: false,
         value: category.expense,
-        color: category.details.color.colorData,
+        color: details.color.colorData,
         radius: isSelected
             ? baseSectionRadius * _selectedRadiusScale
             : baseSectionRadius,
@@ -52,12 +61,12 @@ class BudgetUsageDisplayHelper {
             child: switch (selectedIndex != -1) {
               true => isSelected
                   ? BudgetBreakdownInfoBadge(
-                      label: category.details.label,
+                      label: details.name,
                       info: '$expenseLabel ($percentageLabel)',
                     )
                   : null,
               false => Icon(
-                  category.details.icon.iconData,
+                  details.icon.iconData,
                   color: AppColors.fontPrimary,
                 ),
             },

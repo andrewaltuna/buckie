@@ -33,7 +33,7 @@ class AuthViewModel extends Bloc<AuthEvent, AuthState> {
     _authStream = _authRepository.authStream.listen((data) {
       emit(
         state.copyWith(
-          status: ViewModelStatus.loaded,
+          status: ViewModelStatus.success,
           isAuthenticated: data.session != null,
         ),
       );
@@ -60,7 +60,7 @@ class AuthViewModel extends Bloc<AuthEvent, AuthState> {
       if (result.session != null) {
         emit(
           state.copyWith(
-            status: ViewModelStatus.loaded,
+            status: ViewModelStatus.success,
             isAuthenticated: true,
           ),
         );
@@ -90,7 +90,7 @@ class AuthViewModel extends Bloc<AuthEvent, AuthState> {
       if (result.session != null) {
         emit(
           state.copyWith(
-            status: ViewModelStatus.loaded,
+            status: ViewModelStatus.success,
             isAuthenticated: true,
           ),
         );
@@ -117,7 +117,7 @@ class AuthViewModel extends Bloc<AuthEvent, AuthState> {
 
       emit(
         state.copyWith(
-          status: ViewModelStatus.loaded,
+          status: ViewModelStatus.success,
           isAuthenticated: false,
         ),
       );

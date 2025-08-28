@@ -9,7 +9,7 @@ class UpdateCategoryInput extends CreateCategoryInput {
     required super.color,
   });
 
-  final String id;
+  final int id;
 
   @override
   Map<String, dynamic> toJson() {

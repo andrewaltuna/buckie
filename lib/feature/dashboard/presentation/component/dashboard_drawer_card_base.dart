@@ -1,7 +1,7 @@
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/categories/data/model/entity/category_details.dart';
-import 'package:expense_tracker/feature/transactions/presentation/component/category_icon.dart';
+import 'package:expense_tracker/feature/transactions/presentation/component/category_icon_display.dart';
 import 'package:flutter/material.dart';
 
 class DashboardDrawerCardBase extends StatelessWidget {
@@ -35,7 +35,7 @@ class DashboardDrawerCardBase extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            CategoryIcon(
+            CategoryIconDisplay(
               category: category,
               size: 40,
             ),

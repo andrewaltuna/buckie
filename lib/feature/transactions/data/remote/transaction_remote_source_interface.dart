@@ -10,11 +10,11 @@ abstract interface class TransactionRemoteSourceInterface {
 
   Future<List<Transaction>> getTransactions({TransactionMonth? month});
 
-  Future<Transaction> getTransaction(String id);
+  Future<Transaction> getTransaction(int id);
 
   Future<Transaction> createTransaction(CreateTransactionInput input);
 
   Future<Transaction> updateTransaction(UpdateTransactionInput input);
 
-  Future<void> deleteTransaction(String id);
+  Future<void> deleteTransaction(int id);
 }

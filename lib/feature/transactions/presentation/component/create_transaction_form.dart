@@ -4,9 +4,9 @@ import 'package:expense_tracker/common/enum/button_state.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/helper/haptic_feedback_helper.dart';
 import 'package:expense_tracker/common/helper/input_formatter.dart';
-import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
-import 'package:expense_tracker/feature/categories/presentation/view_model/categories_view_model.dart';
+import 'package:expense_tracker/feature/categories/data/model/entity/category_details.dart';
+import 'package:expense_tracker/feature/categories/presentation/helper/category_helper.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/category_selector_button.dart';
 import 'package:expense_tracker/feature/transactions/presentation/view_model/create_transaction_view_model.dart';
@@ -48,7 +48,7 @@ class CreateTransactionForm extends HookWidget {
     );
 
     return BlocListener<CreateTransactionViewModel, CreateTransactionState>(
-      listenWhen: (_, current) => current.status.isLoaded,
+      listenWhen: (_, current) => current.status.isSuccess,
       listener: (context, _) => Navigator.pop(context),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -118,15 +118,6 @@ class _Form extends HookWidget {
     }
   }
 
-  void _onRemarksUpdated(
-    BuildContext context,
-    String value,
-  ) {
-    context.read<CreateTransactionViewModel>().add(
-          CreateTransactionRemarksUpdated(value),
-        );
-  }
-
   void _onAmountUpdated(
     BuildContext context,
     String value,
@@ -138,25 +129,16 @@ class _Form extends HookWidget {
         );
   }
 
-  void _onCategoryChanged(
-    BuildContext context,
-    String categoryId,
-  ) {
-    context.read<CreateTransactionViewModel>().add(
-          CreateTransactionCategoryUpdated(categoryId),
-        );
-  }
-
   @override
   Widget build(BuildContext context) {
     final amountFocusNode = useFocusNode();
     final remarksFocusNode = useFocusNode();
+
+    final viewModel = context.read<CreateTransactionViewModel>();
     final categoryId = context.select(
       (CreateTransactionViewModel vm) => vm.state.categoryId,
     );
-    final category = context.select(
-      (CategoriesViewModel vm) => vm.state.categoryWithId(categoryId),
-    );
+    final category = CategoryHelper.of(context).watchCategoryWithId(categoryId);
 
     useEffect(
       () {
@@ -222,13 +204,11 @@ class _Form extends HookWidget {
             label: 'Remarks',
             textInputAction: TextInputAction.done,
             allowClear: true,
-            onChanged: (value) => _onRemarksUpdated(
-              context,
-              value,
+            onChanged: (value) => viewModel.add(
+              CreateTransactionRemarksUpdated(value),
             ),
-            onClear: () => _onRemarksUpdated(
-              context,
-              '',
+            onClear: () => viewModel.add(
+              const CreateTransactionRemarksUpdated(''),
             ),
           ),
           const SizedBox(height: 8),
@@ -242,10 +222,18 @@ class _Form extends HookWidget {
           const SizedBox(height: 4),
           CategorySelectorButton(
             category: category,
-            onChanged: (category) => _onCategoryChanged(
-              context,
-              category,
+            onChanged: (id) => viewModel.add(
+              CreateTransactionCategoryUpdated(categoryId),
             ),
+            onDeleted: (id) {
+              if (id != categoryId) return;
+
+              viewModel.add(
+                const CreateTransactionCategoryUpdated(
+                  CategoryDetails.fallbackId,
+                ),
+              );
+            },
           ),
         ],
       ),

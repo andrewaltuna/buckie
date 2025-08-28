@@ -9,11 +9,13 @@ class CategorySelectorButton extends StatelessWidget {
   const CategorySelectorButton({
     required this.category,
     this.onChanged,
+    this.onDeleted,
     super.key,
   });
 
   final CategoryDetails category;
-  final void Function(String)? onChanged;
+  final void Function(int)? onChanged;
+  final void Function(int)? onDeleted;
 
   void _onTap(BuildContext context) {
     showModalBottomSheet(
@@ -26,6 +28,7 @@ class CategorySelectorButton extends StatelessWidget {
       backgroundColor: AppColors.widgetBackgroundPrimary,
       builder: (_) => CategorySelectorModalContent(
         onChanged: onChanged,
+        onDeleted: onDeleted,
       ),
     );
   }
@@ -54,7 +57,7 @@ class CategorySelectorButton extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  category.label,
+                  category.name,
                   style: AppTextStyles.bodyMedium,
                 ),
                 SizedBox(width: trailingSpace),

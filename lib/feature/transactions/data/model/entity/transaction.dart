@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:expense_tracker/common/extension/json_extension.dart';
-import 'package:expense_tracker/feature/categories/data/model/entity/category_details.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 
 typedef TransactionsByMonth = Map<String, List<Transaction>>;
@@ -12,41 +11,42 @@ class Transaction extends Equatable {
     required this.amount,
     required this.remarks,
     required this.date,
-    required this.category,
+    required this.categoryId,
   });
 
   factory Transaction.fromJson(
     Map<String, dynamic> json, {
-    String prefix = 't_',
+    String prefix = '',
   }) {
     return Transaction(
-      id: json['${prefix}id'].toString(),
+      id: json.parseInt('${prefix}id'),
       amount: json.parseDouble('${prefix}amount'),
       remarks: json.tryParseString('${prefix}remarks'),
       date: json.parseDateTime('${prefix}date'),
-      category: CategoryDetails.fromJson(json, prefix: 'c_'),
+      categoryId: json.tryParseInt('category_id') ?? 1,
+      // categoryId: int.fromJson(json, prefix: 'c_'),
     );
   }
 
-  final String id;
+  final int id;
   final double amount;
   final String? remarks;
   final DateTime date;
-  final CategoryDetails category;
+  final int categoryId;
 
   Transaction copyWith({
-    String? id,
+    int? id,
     double? amount,
     String? remarks,
     DateTime? date,
-    CategoryDetails? category,
+    int? categoryId,
   }) {
     return Transaction(
       id: id ?? this.id,
       amount: amount ?? this.amount,
       remarks: remarks ?? this.remarks,
       date: date ?? this.date,
-      category: category ?? this.category,
+      categoryId: categoryId ?? this.categoryId,
     );
   }
 
@@ -64,6 +64,6 @@ class Transaction extends Equatable {
         amount,
         remarks,
         date,
-        category,
+        categoryId,
       ];
 }

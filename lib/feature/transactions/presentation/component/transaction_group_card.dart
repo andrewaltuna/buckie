@@ -3,9 +3,10 @@ import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
+import 'package:expense_tracker/feature/categories/presentation/helper/category_helper.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/extension/transaction_extension.dart';
-import 'package:expense_tracker/feature/transactions/presentation/component/category_icon.dart';
+import 'package:expense_tracker/feature/transactions/presentation/component/category_icon_display.dart';
 import 'package:flutter/material.dart';
 
 /// Displays a set of transactions grouped by date
@@ -80,6 +81,8 @@ class _TransactionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final amount = Formatter.currency(transaction.amount);
+    final category =
+        CategoryHelper.of(context).watchCategoryWithId(transaction.categoryId);
 
     return CustomInkWell(
       color: color,
@@ -88,9 +91,9 @@ class _TransactionRow extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: Row(
           children: [
-            CategoryIcon(
+            CategoryIconDisplay(
               size: 40,
-              category: transaction.category,
+              category: category,
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -102,7 +105,7 @@ class _TransactionRow extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          transaction.category.label,
+                          category.name,
                           style: AppTextStyles.titleExtraSmall.copyWith(
                             color: AppColors.fontPrimary,
                           ),
@@ -118,16 +121,9 @@ class _TransactionRow extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        amount,
-                        style: AppTextStyles.titleExtraSmall.copyWith(
-                            // color: AppColors.fontWarning,
-                            ),
-                      ),
-                    ],
+                  Text(
+                    amount,
+                    style: AppTextStyles.titleExtraSmall,
                   ),
                 ],
               ),

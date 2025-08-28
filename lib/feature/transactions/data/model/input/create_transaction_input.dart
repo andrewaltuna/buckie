@@ -9,7 +9,7 @@ class CreateTransactionInput {
   final double amount;
   final String? remarks;
   final DateTime date;
-  final String categoryId;
+  final int categoryId;
 
   Map<String, dynamic> toJson() {
     return {

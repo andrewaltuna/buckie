@@ -41,7 +41,7 @@ class CreateTransactionAmountUpdated extends CreateTransactionEvent {
 class CreateTransactionCategoryUpdated extends CreateTransactionEvent {
   const CreateTransactionCategoryUpdated(this.id);
 
-  final String id;
+  final int id;
 
   @override
   List<Object> get props => [id];

@@ -1,6 +1,7 @@
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
+import 'package:expense_tracker/feature/categories/presentation/helper/category_helper.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_drawer_card_base.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/presentation/helper/transaction_helper.dart';
@@ -17,12 +18,15 @@ class TransactionPreviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final amount = Formatter.currency(transaction.amount);
+    final category = CategoryHelper.of(context).watchCategoryWithId(
+      transaction.categoryId,
+    );
 
     return DashboardDrawerCardBase(
-      category: transaction.category,
+      category: category,
       onTap: () => TransactionHelper.of(context).showTransactionDetailsModal(
         transaction,
-        allowEditting: false,
+        allowEditing: false,
       ),
       child: Row(
         children: [
@@ -32,7 +36,7 @@ class TransactionPreviewCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  transaction.category.label,
+                  category.name,
                   style: AppTextStyles.titleExtraSmall,
                 ),
                 if (transaction.remarks != null)

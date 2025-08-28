@@ -18,7 +18,7 @@ class CreateCategoryInput {
       'name': name,
       'icon': icon.value,
       'color': color.value,
-      'created_date': DateTime.now().toIso8601String(),
+      'is_default': 0,
     };
   }
 }

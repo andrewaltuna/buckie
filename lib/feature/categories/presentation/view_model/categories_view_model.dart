@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:expense_tracker/common/enum/view_model_status.dart';
 import 'package:expense_tracker/feature/categories/data/enum/category_color.dart';
 import 'package:expense_tracker/feature/categories/data/enum/category_icon.dart';
+import 'package:expense_tracker/feature/categories/data/model/category_typedefs.dart';
 import 'package:expense_tracker/feature/categories/data/model/entity/category_details.dart';
-import 'package:expense_tracker/feature/categories/data/model/input/create_category_input.dart';
 import 'package:expense_tracker/feature/categories/data/model/input/update_category_input.dart';
 import 'package:expense_tracker/feature/categories/data/repository/category_repository_interface.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,13 +15,22 @@ part 'categories_state.dart';
 
 class CategoriesViewModel extends Bloc<CategoriesEvent, CategoriesState> {
   CategoriesViewModel(this._repository) : super(const CategoriesState()) {
+    on<CategoriesStreamInitialized>(_onStreamInitialized);
     on<CategoriesRequested>(_onRequested);
-    on<CategoriesItemCreated>(_onCategoryCreated);
     on<CategoriesItemUpdated>(_onCategoryUpdated);
     on<CategoriesItemDeleted>(_onCategoryDeleted);
   }
 
   final CategoryRepositoryInterface _repository;
+
+  StreamSubscription<CategoryStreamOutput>? _categorySubscription;
+
+  void _onStreamInitialized(_, __) {
+    _categorySubscription = _repository.categoryStream.listen(
+      // Refresh list once changes are made.
+      (_) => add(const CategoriesRequested()),
+    );
+  }
 
   Future<void> _onRequested(
     CategoriesRequested event,
@@ -33,40 +41,17 @@ class CategoriesViewModel extends Bloc<CategoriesEvent, CategoriesState> {
 
       final categories = await _repository.getCategories();
 
-      print(categories);
+      final categoriesMap = {
+        for (final category in categories) category.id: category,
+      };
 
       emit(
         state.copyWith(
-          status: ViewModelStatus.loaded,
+          status: ViewModelStatus.success,
           categories: categories,
+          categoriesMap: categoriesMap,
         ),
       );
-    } on Exception catch (error) {
-      emit(
-        state.copyWith(
-          status: ViewModelStatus.error,
-          error: error,
-        ),
-      );
-    }
-  }
-
-  Future<void> _onCategoryCreated(
-    CategoriesItemCreated event,
-    Emitter<CategoriesState> emit,
-  ) async {
-    try {
-      emit(state.copyWith(status: ViewModelStatus.loading));
-
-      await _repository.createCategory(
-        CreateCategoryInput(
-          name: event.name,
-          icon: event.icon,
-          color: event.color,
-        ),
-      );
-
-      emit(state.copyWith(status: ViewModelStatus.loaded));
     } on Exception catch (error) {
       emit(
         state.copyWith(
@@ -93,7 +78,7 @@ class CategoriesViewModel extends Bloc<CategoriesEvent, CategoriesState> {
         ),
       );
 
-      emit(state.copyWith(status: ViewModelStatus.loaded));
+      emit(state.copyWith(status: ViewModelStatus.success));
     } on Exception catch (error) {
       emit(
         state.copyWith(
@@ -113,15 +98,9 @@ class CategoriesViewModel extends Bloc<CategoriesEvent, CategoriesState> {
 
       await _repository.deleteCategory(event.id);
 
-      final categories = List.of(state.categories)
-        ..removeWhere(
-          (element) => element.id == event.id,
-        );
-
       emit(
         state.copyWith(
-          categories: categories,
-          status: ViewModelStatus.loaded,
+          status: ViewModelStatus.success,
         ),
       );
     } on Exception catch (error) {
@@ -132,5 +111,11 @@ class CategoriesViewModel extends Bloc<CategoriesEvent, CategoriesState> {
         ),
       );
     }
+  }
+
+  @override
+  Future<void> close() {
+    _categorySubscription?.cancel();
+    return super.close();
   }
 }

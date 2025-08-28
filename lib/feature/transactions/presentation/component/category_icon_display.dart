@@ -3,8 +3,8 @@ import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/feature/categories/data/model/entity/category_details.dart';
 import 'package:flutter/material.dart';
 
-class CategoryIcon extends StatelessWidget {
-  const CategoryIcon({
+class CategoryIconDisplay extends StatelessWidget {
+  const CategoryIconDisplay({
     required this.category,
     this.size,
     this.trailingSpace,

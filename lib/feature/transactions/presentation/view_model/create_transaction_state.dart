@@ -14,7 +14,7 @@ class CreateTransactionState extends Equatable {
   final DateTime? date;
   final String? remarks;
   final double amount;
-  final String categoryId;
+  final int categoryId;
   final Exception? error;
 
   CreateTransactionState copyWith({
@@ -22,7 +22,7 @@ class CreateTransactionState extends Equatable {
     DateTime? date,
     String? remarks,
     double? amount,
-    String? categoryId,
+    int? categoryId,
     Exception? error,
   }) {
     return CreateTransactionState(

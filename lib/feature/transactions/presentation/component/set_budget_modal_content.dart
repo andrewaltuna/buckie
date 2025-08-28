@@ -94,6 +94,7 @@ class SetBudgetModalContent extends HookWidget {
         ],
       ),
       body: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           RoundedTextField(

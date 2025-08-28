@@ -80,7 +80,7 @@ class TransactionRemoteSource implements TransactionRemoteSourceInterface {
   Stream<TransactionMonth?> get transactionsStream => _controller.stream;
 
   @override
-  Future<Transaction> getTransaction(String id) {
+  Future<Transaction> getTransaction(int id) {
     // TODO: implement getTransaction
     throw UnimplementedError();
   }
@@ -131,7 +131,7 @@ class TransactionRemoteSource implements TransactionRemoteSourceInterface {
   }
 
   @override
-  Future<void> deleteTransaction(String id) async {
+  Future<void> deleteTransaction(int id) async {
     await _supabaseClient.from(_table).delete().eq('id', id);
   }
 

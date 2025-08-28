@@ -1,4 +1,5 @@
-import 'package:expense_tracker/feature/categories/data/local/category_local_source_interface.dart';
+import 'package:expense_tracker/feature/categories/data/local/category_local_source.dart';
+import 'package:expense_tracker/feature/categories/data/model/category_typedefs.dart';
 import 'package:expense_tracker/feature/categories/data/model/entity/category_details.dart';
 import 'package:expense_tracker/feature/categories/data/model/input/create_category_input.dart';
 import 'package:expense_tracker/feature/categories/data/model/input/update_category_input.dart';
@@ -7,11 +8,15 @@ import 'package:expense_tracker/feature/categories/data/repository/category_repo
 class CategoryRepository implements CategoryRepositoryInterface {
   const CategoryRepository(this._localSource);
 
-  final CategoryLocalSourceInterface _localSource;
+  final CategoryLocalSource _localSource;
 
   @override
-  Future<List<CategoryDetails>> getCategories() {
-    return _localSource.getCategories();
+  Stream<CategoryStreamOutput> get categoryStream =>
+      _localSource.categoryStream;
+
+  @override
+  Future<List<CategoryDetails>> getCategories({bool? customOnly}) {
+    return _localSource.getCategories(customOnly);
   }
 
   @override
@@ -25,7 +30,7 @@ class CategoryRepository implements CategoryRepositoryInterface {
   }
 
   @override
-  Future<void> deleteCategory(String id) {
+  Future<void> deleteCategory(int id) {
     return _localSource.deleteCategory(id);
   }
 }

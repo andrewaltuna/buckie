@@ -2,9 +2,9 @@ extension JsonExtension on Map<String, dynamic> {
   String? tryParseString(String key) {
     final value = this[key];
 
-    if (value is! String) return null;
+    if (value == null) return null;
 
-    return value;
+    return value.toString();
   }
 
   String parseString(String key) => tryParseString(key) ?? '';
@@ -42,9 +42,11 @@ extension JsonExtension on Map<String, dynamic> {
   bool? tryParseBool(String key) {
     final value = this[key];
 
-    if (value is! String) return null;
+    if (value is int) return value == 1;
 
-    return value.toLowerCase() == 'true';
+    if (value is String) return value.toLowerCase() == 'true';
+
+    return null;
   }
 
   bool parseBool(String key) => tryParseBool(key) ?? false;

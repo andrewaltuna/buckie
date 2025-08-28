@@ -1,5 +1,5 @@
 import 'package:expense_tracker/common/constants.dart';
-import 'package:expense_tracker/common/database/database.dart';
+import 'package:expense_tracker/common/database/app_database.dart';
 import 'package:expense_tracker/common/di/service_locator.dart';
 import 'package:expense_tracker/common/navigation/app_router.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';

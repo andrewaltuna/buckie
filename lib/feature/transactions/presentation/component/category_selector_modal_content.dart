@@ -1,13 +1,19 @@
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
+import 'package:expense_tracker/common/component/popup_menu/custom_popup_menu_item.dart';
+import 'package:expense_tracker/common/component/scroll_view/fading_scroll_view.dart';
 import 'package:expense_tracker/common/extension/context_extension.dart';
 import 'package:expense_tracker/common/helper/haptic_feedback_helper.dart';
+import 'package:expense_tracker/common/helper/modal_helper.dart';
+import 'package:expense_tracker/common/helper/popup_menu_helper.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/categories/data/model/entity/category_details.dart';
+import 'package:expense_tracker/feature/categories/presentation/screen/create_category_screen.dart';
+import 'package:expense_tracker/feature/categories/presentation/screen/update_category_screen.dart';
 import 'package:expense_tracker/feature/categories/presentation/view_model/categories_view_model.dart';
-import 'package:expense_tracker/feature/transactions/presentation/component/create_category_modal_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 const _kItemHeight = 48.0;
 const _kItemBorderRadius = 12.0;
@@ -15,30 +21,155 @@ const _kItemGap = 8.0;
 
 class CategorySelectorModalContent extends StatelessWidget {
   const CategorySelectorModalContent({
-    required this.onChanged,
+    this.onChanged,
+    this.onDeleted,
     super.key,
   });
 
   static const _horizontalPadding = 16.0;
 
-  final void Function(String)? onChanged;
+  final void Function(int)? onChanged;
+  final void Function(int)? onDeleted;
 
   void _onSelect(
     BuildContext context,
-    String categoryId,
+    int id,
   ) {
     HapticFeedbackHelper.light();
 
     Navigator.pop(context);
 
-    onChanged?.call(categoryId);
+    onChanged?.call(id);
+  }
+
+  void _onLongPressStart(
+    BuildContext context,
+    CategoryDetails category,
+    LongPressStartDetails details,
+  ) async {
+    HapticFeedbackHelper.light();
+
+    await PopupMenuHelper.of(context).showPopupMenu(
+      position: details.globalPosition,
+      items: [
+        CustomPopupMenuItem<String>(
+          onTap: (_) {
+            UpdateCategoryScreen.navigateTo(
+              context: context,
+              category: category,
+            );
+
+            Navigator.of(context).pop();
+          },
+          value: 'edit',
+          label: 'Edit',
+          icon: Icons.edit,
+        ),
+        CustomPopupMenuItem<String>(
+          onTap: (_) {
+            _showDeleteConfirmation(
+              context,
+              category.id,
+            );
+
+            Navigator.of(context).pop();
+          },
+          value: 'delete',
+          label: 'Delete',
+          icon: Icons.delete,
+          color: AppColors.fontWarning,
+        ),
+      ],
+    );
+  }
+
+  void _showDeleteConfirmation(
+    BuildContext context,
+    int id,
+  ) {
+    const fallbackCategory = CategoryDetails.fallback;
+
+    ModalHelper.of(context).showModal(
+      builder: (modalCtx) => ModalBase(
+        header: Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'Delete Category?',
+                style: AppTextStyles.titleRegular,
+              ),
+            ),
+            CustomInkWell(
+              width: 36,
+              height: 36,
+              borderRadius: 12,
+              color: AppColors.fontWarning,
+              onTap: () {
+                context
+                    .read<CategoriesViewModel>()
+                    .add(CategoriesItemDeleted(id: id));
+                Navigator.of(modalCtx).pop();
+                onDeleted?.call(id);
+              },
+              child: const Icon(
+                Icons.delete,
+                color: AppColors.fontButtonPrimary,
+              ),
+            ),
+          ],
+        ),
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RichText(
+              text: TextSpan(
+                children: [
+                  const TextSpan(
+                    text:
+                        'All transactions in this category will be reassigned to ',
+                    style: AppTextStyles.bodyMedium,
+                  ),
+                  WidgetSpan(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          fallbackCategory.icon.iconData,
+                          size: 12,
+                          color: AppColors.fontPrimary,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          fallbackCategory.name,
+                          style: AppTextStyles.titleExtraSmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const TextSpan(
+                    text: ' upon deletion.',
+                    style: AppTextStyles.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final aspectRatio = _calculateAspectRatio(context);
-    final categories = context.select(
-      (CategoriesViewModel vm) => vm.state.categories,
+    final (
+      customCategories,
+      defaultCategories,
+    ) = context.select(
+      (CategoriesViewModel vm) => (
+        vm.state.customCategories,
+        vm.state.defaultCategories,
+      ),
     );
 
     return Padding(
@@ -52,36 +183,34 @@ class CategorySelectorModalContent extends StatelessWidget {
           const _Header(),
           const SizedBox(height: 16),
           Flexible(
-            child: SingleChildScrollView(
+            child: FadingScrollView(
+              bottom: false,
+              gradientColor: AppColors.widgetBackgroundPrimary,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (categories.isNotEmpty) ...[
+                  if (customCategories.isNotEmpty) ...[
                     _GridView(
+                      label: 'Custom Categories',
                       aspectRatio: aspectRatio,
-                      categories: categories,
-                      onSelect: (categoryId) => _onSelect(
+                      categories: customCategories,
+                      onLongPressStart: (category, details) =>
+                          _onLongPressStart(
                         context,
-                        categoryId,
+                        category,
+                        details,
                       ),
+                      onSelect: (id) => _onSelect(context, id),
                     ),
-                    const Divider(
-                      height: 32,
-                      color: AppColors.fontDisabled,
-                      indent: 16,
-                      endIndent: 16,
-                    ),
+                    const SizedBox(height: 16),
                   ],
                   _GridView(
                     label: 'Default Categories',
                     aspectRatio: aspectRatio,
-                    categories: CategoryDetails.defaultCategories,
-                    onSelect: (categoryId) => _onSelect(
-                      context,
-                      categoryId,
-                    ),
+                    categories: defaultCategories,
+                    onSelect: (id) => _onSelect(context, id),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: context.padding.bottom),
                 ],
               ),
             ),
@@ -112,17 +241,10 @@ class _Header extends StatelessWidget {
           style: AppTextStyles.titleMedium,
         ),
         CustomInkWell(
+          onTap: () => context.pushNamed(CreateCategoryScreen.routeName),
           color: AppColors.accent,
           borderRadius: _kItemBorderRadius,
           padding: const EdgeInsets.fromLTRB(8, 8, 16, 8),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const CreateCategoryModalContent(),
-              ),
-            );
-          },
           child: Row(
             children: [
               const Icon(
@@ -150,14 +272,14 @@ class _GridView extends StatelessWidget {
     required this.categories,
     required this.onSelect,
     this.label,
-    this.onLongPress,
+    this.onLongPressStart,
   });
 
   final String? label;
   final double aspectRatio;
   final List<CategoryDetails> categories;
-  final void Function(String) onSelect;
-  final void Function()? onLongPress;
+  final void Function(int) onSelect;
+  final void Function(CategoryDetails, LongPressStartDetails)? onLongPressStart;
 
   @override
   Widget build(BuildContext context) {
@@ -180,12 +302,17 @@ class _GridView extends StatelessWidget {
             mainAxisSpacing: _kItemGap,
             crossAxisSpacing: _kItemGap,
           ),
+          padding: EdgeInsets.zero,
+          itemCount: categories.length,
           itemBuilder: (context, index) {
             final category = categories[index];
 
             return CustomInkWell(
               onTap: () => onSelect(category.id),
-              onLongPress: onLongPress,
+              onLongPressStart: (details) => onLongPressStart?.call(
+                category,
+                details,
+              ),
               borderRadius: _kItemBorderRadius,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               color: category.color.colorData,
@@ -197,14 +324,13 @@ class _GridView extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    category.label,
+                    category.name,
                     style: AppTextStyles.bodyRegular,
                   ),
                 ],
               ),
             );
           },
-          itemCount: categories.length,
         ),
       ],
     );

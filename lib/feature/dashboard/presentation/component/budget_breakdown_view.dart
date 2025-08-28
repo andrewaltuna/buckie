@@ -1,17 +1,17 @@
 import 'package:expense_tracker/common/component/button/custom_ink_well.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/helper/haptic_feedback_helper.dart';
+import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
 import 'package:expense_tracker/feature/budget/presentation/helper/budget_helper.dart';
 import 'package:expense_tracker/feature/categories/data/model/entity/category.dart';
-import 'package:expense_tracker/common/theme/app_colors.dart';
+import 'package:expense_tracker/feature/categories/presentation/view_model/categories_view_model.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/budget_breakdown_chart.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_month_selector.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/budget_breakdown_view_model.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BudgetBreakdownView extends StatelessWidget {
@@ -43,6 +43,10 @@ class BudgetBreakdownView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final categoriesStatus = context.select(
+      (CategoriesViewModel vm) => vm.state.status,
+    );
+
     return Container(
       height: height,
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -57,17 +61,19 @@ class BudgetBreakdownView extends StatelessWidget {
             expense: expense,
           ),
           Expanded(
-            child: GestureDetector(
-              onHorizontalDragEnd: (details) => _onChartSwiped(
-                context,
-                details,
-              ),
-              child: BudgetBreakdownChart(
-                categories: categories,
-                budget: budget,
-                expense: expense,
-              ),
-            ),
+            child: categoriesStatus.isLoading
+                ? const SizedBox.shrink()
+                : GestureDetector(
+                    onHorizontalDragEnd: (details) => _onChartSwiped(
+                      context,
+                      details,
+                    ),
+                    child: BudgetBreakdownChart(
+                      categories: categories,
+                      budget: budget,
+                      expense: expense,
+                    ),
+                  ),
           ),
         ],
       ),

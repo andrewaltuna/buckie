@@ -4,8 +4,14 @@ sealed class CategoriesException extends CustomException {
   const CategoriesException({super.message});
 }
 
+class CategoriesEmptyNameException extends CategoriesException {
+  const CategoriesEmptyNameException({
+    super.message = 'Name is required',
+  });
+}
+
 class CategoriesDuplicateException extends CategoriesException {
   const CategoriesDuplicateException({
-    super.message = 'A category with this name already exists.',
+    super.message = 'Category with name already exists',
   });
 }

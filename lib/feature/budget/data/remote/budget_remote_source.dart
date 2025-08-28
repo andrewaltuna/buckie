@@ -7,7 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class BudgetRemoteSource implements BudgetRemoteSourceInterface {
   const BudgetRemoteSource(this._supabaseClient);
 
-  static const _table = 'monthly_budgets';
+  static const _table = 'budgets';
 
   final SupabaseClient _supabaseClient;
 

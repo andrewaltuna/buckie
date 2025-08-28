@@ -9,14 +9,14 @@ class UpdateTransactionInput extends CreateTransactionInput {
     required super.categoryId,
   });
 
-  final String id;
+  final int id;
 
   UpdateTransactionInput copyWith({
-    String? id,
+    int? id,
     double? amount,
     String? remarks,
     DateTime? date,
-    String? categoryId,
+    int? categoryId,
   }) {
     return UpdateTransactionInput(
       id: id ?? this.id,
