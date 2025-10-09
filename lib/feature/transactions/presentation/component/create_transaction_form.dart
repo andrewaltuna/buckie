@@ -223,7 +223,7 @@ class _Form extends HookWidget {
           CategorySelectorButton(
             category: category,
             onChanged: (id) => viewModel.add(
-              CreateTransactionCategoryUpdated(categoryId),
+              CreateTransactionCategoryUpdated(id),
             ),
             onDeleted: (id) {
               if (id != categoryId) return;
