@@ -160,6 +160,8 @@ class _ColorSelectorButton extends StatelessWidget {
     BuildContext modalCtx,
     CategoryColor color,
   ) {
+    HapticFeedbackHelper.light();
+
     parentCtx
         .read<CreateCategoryViewModel>()
         .add(CreateCategoryColorUpdated(color));
@@ -208,6 +210,8 @@ class _IconSelectorButton extends HookWidget {
     BuildContext modalCtx,
     CategoryIcon icon,
   ) {
+    HapticFeedbackHelper.light();
+
     parentCtx
         .read<CreateCategoryViewModel>()
         .add(CreateCategoryIconUpdated(icon));

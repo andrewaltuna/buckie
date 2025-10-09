@@ -4,8 +4,8 @@ class CreateCategoryState extends Equatable {
   const CreateCategoryState({
     this.status = ViewModelStatus.initial,
     this.name = '',
-    this.icon = CategoryIcon.home,
-    this.color = CategoryColor.red,
+    this.icon = CategoryIcon.other,
+    this.color = CategoryColor.yellow,
     this.error,
     this.nameError = '',
   });

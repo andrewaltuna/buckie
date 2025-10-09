@@ -22,23 +22,34 @@ class CategoryIconFormModalContent extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Visibly changes selection once icon is selected
+    final selectedIconNotifier = useState(selectedIcon);
+
     return CategoryFormModalBase(
       items: icons,
       itemsPerPage: _kItemsPerPage,
-      builder: (icon) => CustomInkWell(
-        height: _kItemSize,
-        width: _kItemSize,
-        color: AppColors.widgetBackgroundSecondary,
-        borderRadius: 16,
-        borderSide: icon == selectedIcon
-            ? CategoryFormModalBase.selectedItemBorder
-            : null,
-        child: Icon(
-          icon.iconData,
-          color: AppColors.fontPrimary,
-        ),
-        onTap: () => onSelect(icon),
-      ),
+      builder: (icon) {
+        final isSelected = icon == selectedIconNotifier.value;
+
+        return CustomInkWell(
+          height: _kItemSize,
+          width: _kItemSize,
+          color: isSelected
+              ? AppColors.accent
+              : AppColors.widgetBackgroundSecondary,
+          borderRadius: 16,
+          child: Icon(
+            icon.iconData,
+            color: isSelected
+                ? AppColors.widgetBackgroundSecondary
+                : AppColors.fontPrimary,
+          ),
+          onTap: () {
+            selectedIconNotifier.value = icon;
+            onSelect(icon);
+          },
+        );
+      },
     );
   }
 }

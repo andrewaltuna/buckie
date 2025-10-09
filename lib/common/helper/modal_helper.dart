@@ -45,11 +45,13 @@ class ModalBase extends StatelessWidget {
     this.header,
     this.headerPadding,
     this.bodyPadding,
+    this.borderRadius = 12,
     super.key,
   });
 
   final Widget? header;
   final Widget body;
+  final double borderRadius;
   final EdgeInsetsGeometry? headerPadding;
   final EdgeInsetsGeometry? bodyPadding;
 
@@ -58,7 +60,7 @@ class ModalBase extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(borderRadius),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

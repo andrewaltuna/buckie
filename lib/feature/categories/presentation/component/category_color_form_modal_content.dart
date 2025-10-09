@@ -21,6 +21,9 @@ class CategoryColorFormModalContent extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Visibly changes selection once color is selected
+    final selectedColorNotifier = useState(selectedColor);
+
     return CategoryFormModalBase(
       items: colors,
       itemsPerPage: _kItemsPerPage,
@@ -28,11 +31,14 @@ class CategoryColorFormModalContent extends HookWidget {
         height: _kItemSize,
         width: _kItemSize,
         color: color.colorData,
-        borderSide: color == selectedColor
+        borderSide: color == selectedColorNotifier.value
             ? CategoryFormModalBase.selectedItemBorder
             : null,
         borderRadius: 16,
-        onTap: () => onSelect(color),
+        onTap: () {
+          selectedColorNotifier.value = color;
+          onSelect(color);
+        },
       ),
     );
   }
