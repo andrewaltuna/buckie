@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:expense_tracker/common/enum/view_model_status.dart';
-import 'package:expense_tracker/common/extension/date_time.dart';
-import 'package:expense_tracker/feature/categories/data/model/category.dart';
+import 'package:expense_tracker/common/extension/date_time_extension.dart';
+import 'package:expense_tracker/feature/categories/data/model/entity/category_details.dart';
 import 'package:expense_tracker/feature/transactions/data/exception/transaction_exception.dart';
 import 'package:expense_tracker/feature/transactions/data/model/input/create_transaction_input.dart';
 import 'package:expense_tracker/feature/transactions/data/model/input/update_transaction_input.dart';
@@ -15,7 +15,7 @@ class CreateTransactionViewModel
     extends Bloc<CreateTransactionEvent, CreateTransactionState> {
   CreateTransactionViewModel(
     this._repository, {
-    String? transactionId,
+    int? transactionId,
   })  : _transactionId = transactionId,
         super(const CreateTransactionState()) {
     on<CreateTransactionDateUpdated>(_onDateUpdated);
@@ -26,7 +26,7 @@ class CreateTransactionViewModel
   }
 
   final TransactionRepositoryInterface _repository;
-  final String? _transactionId;
+  final int? _transactionId;
 
   void _onDateUpdated(
     CreateTransactionDateUpdated event,
@@ -53,7 +53,11 @@ class CreateTransactionViewModel
     CreateTransactionCategoryUpdated event,
     Emitter<CreateTransactionState> emit,
   ) {
-    emit(state.copyWith(category: event.category));
+    emit(
+      state.copyWith(
+        categoryId: event.id,
+      ),
+    );
   }
 
   Future<void> _onSubmitted(
@@ -76,7 +80,7 @@ class CreateTransactionViewModel
             amount: state.amount,
             remarks: state.remarks,
             date: date,
-            category: state.category,
+            categoryId: state.categoryId,
           ),
         );
       } else {
@@ -85,14 +89,14 @@ class CreateTransactionViewModel
             amount: state.amount,
             remarks: state.remarks,
             date: date,
-            category: state.category,
+            categoryId: state.categoryId,
           ),
         );
       }
 
       emit(
         state.copyWith(
-          status: ViewModelStatus.loaded,
+          status: ViewModelStatus.success,
         ),
       );
     } on Exception catch (error) {

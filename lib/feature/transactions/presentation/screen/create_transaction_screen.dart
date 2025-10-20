@@ -11,7 +11,7 @@ class CreateTransactionScreen extends StatelessWidget {
   const CreateTransactionScreen({super.key});
 
   static const routeName = 'Create Transaction';
-  static const routePath = '${TransactionsScreen.routePath}/create-transaction';
+  static const routePath = '${TransactionsScreen.routePath}/create';
 
   @override
   Widget build(BuildContext context) {

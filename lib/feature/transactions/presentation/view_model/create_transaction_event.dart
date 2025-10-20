@@ -39,10 +39,10 @@ class CreateTransactionAmountUpdated extends CreateTransactionEvent {
 }
 
 class CreateTransactionCategoryUpdated extends CreateTransactionEvent {
-  const CreateTransactionCategoryUpdated(this.category);
+  const CreateTransactionCategoryUpdated(this.id);
 
-  final CategoryType category;
+  final int id;
 
   @override
-  List<Object> get props => [category];
+  List<Object> get props => [id];
 }

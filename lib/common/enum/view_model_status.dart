@@ -2,12 +2,12 @@ enum ViewModelStatus {
   initial,
   loading,
   loadingMore,
-  loaded,
+  success,
   error;
 
   bool get isInitial => this == initial;
   bool get isLoading => this == loading;
   bool get isLoadingMore => this == loadingMore;
-  bool get isLoaded => this == loaded;
+  bool get isSuccess => this == success;
   bool get isError => this == error;
 }

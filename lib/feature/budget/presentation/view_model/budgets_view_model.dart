@@ -30,7 +30,7 @@ class BudgetsViewModel extends Bloc<BudgetsEvent, BudgetsState> {
 
       emit(
         state.copyWith(
-          status: ViewModelStatus.loaded,
+          status: ViewModelStatus.success,
           latestBudget: budget?.amount,
         ),
       );
@@ -58,7 +58,7 @@ class BudgetsViewModel extends Bloc<BudgetsEvent, BudgetsState> {
 
       emit(
         state.copyWith(
-          status: ViewModelStatus.loaded,
+          status: ViewModelStatus.success,
           budgetsByMonth: budgetsByMonth,
         ),
       );
@@ -98,7 +98,7 @@ class BudgetsViewModel extends Bloc<BudgetsEvent, BudgetsState> {
 
       emit(
         state.copyWith(
-          status: ViewModelStatus.loaded,
+          status: ViewModelStatus.success,
           budgetsByMonth: budgetsByMonth,
           latestBudget: event.amount > 0 ? event.amount : null,
         ),

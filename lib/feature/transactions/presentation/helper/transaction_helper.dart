@@ -1,5 +1,6 @@
 import 'package:expense_tracker/common/helper/modal_helper.dart';
 import 'package:expense_tracker/feature/budget/presentation/view_model/budgets_view_model.dart';
+import 'package:expense_tracker/feature/categories/presentation/view_model/categories_view_model.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:expense_tracker/feature/transactions/presentation/component/transaction_detail_modal_content.dart';
@@ -17,16 +18,23 @@ class TransactionHelper {
 
   void showTransactionDetailsModal(
     Transaction transaction, {
-    bool allowEditting = true,
+    bool allowEditing = true,
   }) {
     ModalHelper.of(_context).showModal(
-      wrapperBuilder: (child) => BlocProvider.value(
-        value: BlocProvider.of<TransactionsViewModel>(_context),
+      wrapperBuilder: (child) => MultiBlocProvider(
+        providers: [
+          BlocProvider.value(
+            value: BlocProvider.of<TransactionsViewModel>(_context),
+          ),
+          BlocProvider.value(
+            value: BlocProvider.of<CategoriesViewModel>(_context),
+          ),
+        ],
         child: child,
       ),
       builder: (_) => TransactionDetailModalContent(
         transaction: transaction,
-        allowEditting: allowEditting,
+        allowEditing: allowEditing,
       ),
     );
   }

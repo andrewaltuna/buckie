@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 
 class CustomInkWell extends StatelessWidget {
   const CustomInkWell({
-    required this.child,
+    this.child,
     this.borderRadius,
+    this.borderSide,
     this.color,
     this.onTap,
+    this.onLongPressStart,
     this.width,
     this.height,
     this.padding,
@@ -14,9 +16,11 @@ class CustomInkWell extends StatelessWidget {
   });
 
   final VoidCallback? onTap;
+  final void Function(LongPressStartDetails)? onLongPressStart;
   final Color? color;
   final double? borderRadius;
-  final Widget child;
+  final BorderSide? borderSide;
+  final Widget? child;
   final double? width;
   final double? height;
   final EdgeInsetsGeometry? padding;
@@ -31,17 +35,26 @@ class CustomInkWell extends StatelessWidget {
       ),
       child: Material(
         color: color ?? Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          splashColor: splashColor,
-          overlayColor: WidgetStateColor.resolveWith(
-            (_) => splashColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(borderRadius ?? 0),
           ),
-          child: Container(
-            width: width,
-            height: height,
-            padding: padding,
-            child: child,
+          side: borderSide ?? BorderSide.none,
+        ),
+        child: GestureDetector(
+          onLongPressStart: onLongPressStart,
+          child: InkWell(
+            onTap: onTap,
+            splashColor: splashColor,
+            overlayColor: WidgetStateColor.resolveWith(
+              (_) => splashColor,
+            ),
+            child: Container(
+              width: width,
+              height: height,
+              padding: padding,
+              child: child,
+            ),
           ),
         ),
       ),

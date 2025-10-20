@@ -4,11 +4,11 @@ import 'package:expense_tracker/common/enum/button_state.dart';
 import 'package:expense_tracker/common/helper/formatter.dart';
 import 'package:expense_tracker/common/helper/haptic_feedback_helper.dart';
 import 'package:expense_tracker/common/helper/input_formatter.dart';
-import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:expense_tracker/common/theme/typography/app_text_styles.dart';
-import 'package:expense_tracker/feature/categories/data/model/category.dart';
+import 'package:expense_tracker/feature/categories/data/model/entity/category_details.dart';
+import 'package:expense_tracker/feature/categories/presentation/helper/category_helper.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
-import 'package:expense_tracker/feature/transactions/presentation/component/category_selector.dart';
+import 'package:expense_tracker/feature/transactions/presentation/component/category_selector_button.dart';
 import 'package:expense_tracker/feature/transactions/presentation/view_model/create_transaction_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,7 +48,7 @@ class CreateTransactionForm extends HookWidget {
     );
 
     return BlocListener<CreateTransactionViewModel, CreateTransactionState>(
-      listenWhen: (_, current) => current.status.isLoaded,
+      listenWhen: (_, current) => current.status.isSuccess,
       listener: (context, _) => Navigator.pop(context),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -118,15 +118,6 @@ class _Form extends HookWidget {
     }
   }
 
-  void _onRemarksUpdated(
-    BuildContext context,
-    String value,
-  ) {
-    context.read<CreateTransactionViewModel>().add(
-          CreateTransactionRemarksUpdated(value),
-        );
-  }
-
   void _onAmountUpdated(
     BuildContext context,
     String value,
@@ -138,25 +129,20 @@ class _Form extends HookWidget {
         );
   }
 
-  void _onCategoryChanged(
-    BuildContext context,
-    CategoryType category,
-  ) {
-    context.read<CreateTransactionViewModel>().add(
-          CreateTransactionCategoryUpdated(category),
-        );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final focusNode = useFocusNode();
-    final category = context.select(
-      (CreateTransactionViewModel vm) => vm.state.category,
+    final amountFocusNode = useFocusNode();
+    final remarksFocusNode = useFocusNode();
+
+    final viewModel = context.read<CreateTransactionViewModel>();
+    final categoryId = context.select(
+      (CreateTransactionViewModel vm) => vm.state.categoryId,
     );
+    final category = CategoryHelper.of(context).watchCategoryWithId(categoryId);
 
     useEffect(
       () {
-        focusNode.requestFocus();
+        amountFocusNode.requestFocus();
 
         return;
       },
@@ -174,7 +160,7 @@ class _Form extends HookWidget {
               Expanded(
                 child: RoundedTextField(
                   controller: amountController,
-                  focusNode: focusNode,
+                  focusNode: amountFocusNode,
                   label: 'Amount',
                   keyboardType: const TextInputType.numberWithOptions(
                     decimal: true,
@@ -193,6 +179,7 @@ class _Form extends HookWidget {
                     context,
                     '',
                   ),
+                  onSubmitted: (_) => remarksFocusNode.requestFocus(),
                 ),
               ),
               const SizedBox(width: 16),
@@ -201,6 +188,7 @@ class _Form extends HookWidget {
                   controller: dateController,
                   label: 'Date',
                   readOnly: true,
+                  allowFocus: false,
                   onTap: () => _onDateTapped(
                     context,
                     dateController,
@@ -212,35 +200,40 @@ class _Form extends HookWidget {
           const SizedBox(height: 8),
           RoundedTextField(
             controller: remarksController,
+            focusNode: remarksFocusNode,
             label: 'Remarks',
             textInputAction: TextInputAction.done,
             allowClear: true,
-            onChanged: (value) => _onRemarksUpdated(
-              context,
-              value,
+            onChanged: (value) => viewModel.add(
+              CreateTransactionRemarksUpdated(value),
             ),
-            onClear: () => _onRemarksUpdated(
-              context,
-              '',
+            onClear: () => viewModel.add(
+              const CreateTransactionRemarksUpdated(''),
             ),
           ),
           const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.only(left: 4),
+          const Padding(
+            padding: EdgeInsets.only(left: 4),
             child: Text(
               'Category',
-              style: AppTextStyles.labelRegular.copyWith(
-                color: AppColors.accent,
-              ),
+              style: AppTextStyles.textFieldLabel,
             ),
           ),
           const SizedBox(height: 4),
-          CategorySelector(
+          CategorySelectorButton(
             category: category,
-            onChanged: (category) => _onCategoryChanged(
-              context,
-              category,
+            onChanged: (id) => viewModel.add(
+              CreateTransactionCategoryUpdated(id),
             ),
+            onDeleted: (id) {
+              if (id != categoryId) return;
+
+              viewModel.add(
+                const CreateTransactionCategoryUpdated(
+                  CategoryDetails.fallbackId,
+                ),
+              );
+            },
           ),
         ],
       ),

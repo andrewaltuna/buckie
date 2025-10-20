@@ -1,24 +1,21 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:expense_tracker/common/enum/view_model_status.dart';
-import 'package:expense_tracker/feature/categories/data/model/category.dart';
+import 'package:expense_tracker/feature/categories/data/model/entity/category.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction_month.dart';
 import 'package:expense_tracker/feature/transactions/data/model/extension/transaction_extension.dart';
-import 'package:expense_tracker/feature/transactions/data/model/output/transaction_stream_output.dart';
+import 'package:expense_tracker/feature/transactions/data/model/transaction_typedefs.dart';
 import 'package:expense_tracker/feature/transactions/data/repository/transaction_repository_interface.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
 
 part 'transactions_event.dart';
 part 'transactions_state.dart';
 
 class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
-  TransactionsViewModel(
-    this._repository, {
-    TransactionMonth? month,
-  }) : super(const TransactionsState()) {
+  TransactionsViewModel(this._repository) : super(const TransactionsState()) {
     on<TransactionsStreamInitialized>(_onStreamInitialized);
     on<TransactionsRequested>(_onRequested);
     on<TransactionsItemUpdated>(_onItemUpdated);
@@ -27,6 +24,7 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
 
   final TransactionRepositoryInterface _repository;
 
+  /// Used for updating [transactionsByMonth] when transactions are added/changed.
   StreamSubscription<TransactionStreamOutput>? _trxSubscription;
 
   void _onStreamInitialized(_, __) {
@@ -34,32 +32,32 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
       (output) {
         final TransactionStreamOutput(
           :operation,
-          :newTransaction,
-          :oldTransaction
+          :previous,
+          :current,
         ) = output;
 
-        final key = (oldTransaction ?? newTransaction)?.monthKey;
+        final key = (previous ?? current)?.monthKey;
 
         // Only continue if transaction month is already loaded.
         if (!state.transactionsByMonth.containsKey(key)) return;
 
         if (operation.isDelete) {
-          add(TransactionsItemDeleted(output.oldTransaction!));
+          add(TransactionsItemDeleted(output.previous!));
         } else if (operation.isUpdate) {
-          if (newTransaction == null || oldTransaction == null) return;
+          if (current == null || previous == null) return;
 
           add(
             TransactionsItemUpdated(
-              newTransaction: newTransaction,
-              oldTransaction: oldTransaction,
+              newTransaction: current,
+              oldTransaction: previous,
             ),
           );
         } else {
-          if (newTransaction == null) return;
+          if (current == null) return;
 
           add(
             TransactionsRequested(
-              month: output.newTransaction!.month,
+              month: output.current!.month,
               refresh: true,
               fetchRecents: true,
             ),
@@ -96,7 +94,7 @@ class TransactionsViewModel extends Bloc<TransactionsEvent, TransactionsState> {
 
       emit(
         state.copyWith(
-          status: ViewModelStatus.loaded,
+          status: ViewModelStatus.success,
           selectedMonth: event.month,
           transactionsByMonth: transactionsByMonth,
           recentTransactions: recents,

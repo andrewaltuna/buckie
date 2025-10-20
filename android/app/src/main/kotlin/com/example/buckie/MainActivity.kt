@@ -1,4 +1,4 @@
-package com.example.buckie
+package com.aslaltuna.buckie
 
 import io.flutter.embedding.android.FlutterActivity
 

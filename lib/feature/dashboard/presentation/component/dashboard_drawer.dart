@@ -1,6 +1,6 @@
-import 'package:expense_tracker/common/extension/context.dart';
+import 'package:expense_tracker/common/extension/context_extension.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
-import 'package:expense_tracker/feature/categories/data/model/category.dart';
+import 'package:expense_tracker/feature/categories/data/model/entity/category.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/category_preview_card.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/dashboard_section.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/component/transaction_preview_card.dart';

@@ -44,6 +44,13 @@ class AppTextStyles {
     color: AppColors.fontPrimary,
   );
 
+  static const labelLarge = TextStyle(
+    fontFamily: _fontFamilyPrimary,
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    color: AppColors.fontPrimary,
+  );
+
   static const labelMedium = TextStyle(
     fontFamily: _fontFamilyPrimary,
     fontSize: 15,
@@ -89,6 +96,13 @@ class AppTextStyles {
   );
 
   // Text Field
+  static const textFieldLabel = TextStyle(
+    fontFamily: _fontFamilyPrimary,
+    fontSize: 13,
+    fontWeight: FontWeight.w500,
+    color: AppColors.accent,
+  );
+
   static const textFieldWarning = TextStyle(
     fontFamily: _fontFamilySecondary,
     fontSize: 12,

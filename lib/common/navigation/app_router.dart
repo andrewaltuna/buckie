@@ -2,7 +2,10 @@ import 'package:expense_tracker/common/global/authenticated_view_models.dart';
 import 'package:expense_tracker/common/helper/navigation_helper.dart';
 import 'package:expense_tracker/feature/account/presentation/screen/login_screen.dart';
 import 'package:expense_tracker/feature/account/presentation/screen/registration_screen.dart';
+import 'package:expense_tracker/feature/categories/data/model/entity/category_details.dart';
 import 'package:expense_tracker/feature/categories/presentation/screen/categories_screen.dart';
+import 'package:expense_tracker/feature/categories/presentation/screen/create_category_screen.dart';
+import 'package:expense_tracker/feature/categories/presentation/screen/update_category_screen.dart';
 import 'package:expense_tracker/feature/dashboard/presentation/screen/dashboard_screen.dart';
 import 'package:expense_tracker/feature/settings/presentation/screen/settings_screen.dart';
 import 'package:expense_tracker/feature/transactions/data/model/entity/transaction.dart';
@@ -76,6 +79,8 @@ class AppNavigation {
               child: const DashboardScreen(),
             ),
           ),
+
+          // Category Routes
           GoRoute(
             name: CategoriesScreen.routeName,
             path: CategoriesScreen.routePath,
@@ -85,6 +90,28 @@ class AppNavigation {
               child: const CategoriesScreen(),
             ),
           ),
+          GoRoute(
+            name: CreateCategoryScreen.routeName,
+            path: CreateCategoryScreen.routePath,
+            pageBuilder: (context, state) =>
+                NavigationHelper.pageWithDefaultTransition(
+              state: state,
+              child: const CreateCategoryScreen(),
+            ),
+          ),
+          GoRoute(
+            name: UpdateCategoryScreen.routeName,
+            path: UpdateCategoryScreen.routePath,
+            pageBuilder: (context, state) =>
+                NavigationHelper.pageWithDefaultTransition(
+              state: state,
+              child: UpdateCategoryScreen(
+                category: state.extra! as CategoryDetails,
+              ),
+            ),
+          ),
+
+          // Transaction Routes
           GoRoute(
             name: TransactionsScreen.routeName,
             path: TransactionsScreen.routePath,
@@ -114,6 +141,8 @@ class AppNavigation {
               ),
             ),
           ),
+
+          // Settings Routes
           GoRoute(
             name: SettingsScreen.routeName,
             path: SettingsScreen.routePath,
