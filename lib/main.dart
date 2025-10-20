@@ -4,6 +4,7 @@ import 'package:expense_tracker/common/di/service_locator.dart';
 import 'package:expense_tracker/common/navigation/app_router.dart';
 import 'package:expense_tracker/common/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,6 +13,11 @@ void main() async {
   //   url: AppConfig.supabaseUrl,
   //   anonKey: AppConfig.supabaseKey,
   // );
+
+  // Lock orientation to portrait only
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
 
   await AppDatabase.instance.initDatabase();
 
