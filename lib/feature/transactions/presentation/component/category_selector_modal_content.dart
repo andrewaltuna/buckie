@@ -11,6 +11,7 @@ import 'package:expense_tracker/feature/categories/data/model/entity/category_de
 import 'package:expense_tracker/feature/categories/presentation/screen/create_category_screen.dart';
 import 'package:expense_tracker/feature/categories/presentation/screen/update_category_screen.dart';
 import 'package:expense_tracker/feature/categories/presentation/view_model/categories_view_model.dart';
+import 'package:expense_tracker/feature/transactions/presentation/component/delete_category_modal_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -87,74 +88,15 @@ class CategorySelectorModalContent extends StatelessWidget {
     BuildContext context,
     int id,
   ) {
-    const fallbackCategory = CategoryDetails.fallback;
-
     ModalHelper.of(context).showModal(
-      builder: (modalCtx) => ModalBase(
-        header: Row(
-          children: [
-            const Expanded(
-              child: Text(
-                'Delete Category?',
-                style: AppTextStyles.titleRegular,
-              ),
-            ),
-            CustomInkWell(
-              width: 36,
-              height: 36,
-              borderRadius: 12,
-              color: AppColors.fontWarning,
-              onTap: () {
-                context
-                    .read<CategoriesViewModel>()
-                    .add(CategoriesItemDeleted(id: id));
-                Navigator.of(modalCtx).pop();
-                onDeleted?.call(id);
-              },
-              child: const Icon(
-                Icons.delete,
-                color: AppColors.fontButtonPrimary,
-              ),
-            ),
-          ],
-        ),
-        body: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            RichText(
-              text: TextSpan(
-                children: [
-                  const TextSpan(
-                    text:
-                        'All transactions in this category will be reassigned to ',
-                    style: AppTextStyles.bodyMedium,
-                  ),
-                  WidgetSpan(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          fallbackCategory.icon.iconData,
-                          size: 12,
-                          color: AppColors.fontPrimary,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          fallbackCategory.name,
-                          style: AppTextStyles.titleExtraSmall,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const TextSpan(
-                    text: ' upon deletion.',
-                    style: AppTextStyles.bodyMedium,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+      builder: (modalCtx) => DeleteCategoryModalContent(
+        onDeleted: () {
+          context
+              .read<CategoriesViewModel>()
+              .add(CategoriesItemDeleted(id: id));
+          Navigator.of(modalCtx).pop();
+          onDeleted?.call(id);
+        },
       ),
     );
   }
